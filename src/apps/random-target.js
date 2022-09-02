@@ -57,8 +57,12 @@ export class RandomTarget extends FormApplication {
     return data;
   }
 
-  async _updateObject(_event, formData) {
+  async _updateObject(event, formData) {
     const { selectedTokens = [] } = formData;
+
+    if (event.submitter.name !== 'submit') {
+      return;
+    }
 
     if (selectedTokens.length < 2) {
       ui.notifications.error('You need to select at least 2 tokens', {});
@@ -73,7 +77,6 @@ export class RandomTarget extends FormApplication {
     super.activateListeners(html);
 
     html.find('.tab .toggleSelection').change(event => this._computeToggleSelection(html, event));
-
     html.find('input[type="checkbox"]').change(event => this._computeTotalSelectionCount(html, event));
   }
 
@@ -91,7 +94,6 @@ export class RandomTarget extends FormApplication {
 
   _computeTotalSelectionCount(html, _event) {
     const inputs = html.find(`[data-group="target-categories"] input[type="checkbox"]:not(.toggleSelection):checked`);
-
     html.find(`.selected-tokens-count`).html(`(${inputs.length})`);
   }
 
