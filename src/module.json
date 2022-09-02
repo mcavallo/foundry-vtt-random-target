@@ -1,0 +1,36 @@
+{
+  "name": "random-target",
+  "title": "Random Target",
+  "description": "Adds a dialog to choose a random target between the tokens present in the scene.",
+  "version": "__VERSION__",
+  "author": "Mariano Cavallo",
+  "authors": [
+    {
+      "name": "Mariano Cavallo",
+      "discord": "iKindred#8997",
+      "url": "https://github.com/mcavallo/"
+    }
+  ],
+  "compatibility": {
+    "minimum": 9,
+    "verified": 9
+  },
+  "minimumCoreVersion": 9,
+  "compatibleCoreVersion": 9,
+  "license": "GPLV3",
+  "esmodules": ["module.mjs"],
+  "scripts": [],
+  "styles": ["/css/module.css"],
+  "packs": [
+    {
+      "name": "random-target-macros",
+      "label": "Random Target",
+      "path": "packs/random-target.db",
+      "type": "Macro",
+      "module": "random-target"
+    }
+  ],
+  "url": "https://github.com/mcavallo/foundry-vtt-random-target",
+  "manifest": "__REPO__/releases/latest/download/module.json",
+  "download": "__REPO__/releases/__RELEASE__/download/foundry-vtt-random-target___RELEASE__.zip"
+}

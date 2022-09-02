@@ -1,0 +1,5 @@
+*.log
+foundryconfig.json
+
+node_modules/
+dist/

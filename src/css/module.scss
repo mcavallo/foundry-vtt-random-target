@@ -1,0 +1,67 @@
+.app.window-app.randomtarget .tabs {
+  justify-content: stretch;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.app.window-app.randomtarget .tabs .item {
+  flex: 1;
+  display: flex;
+  height: 32px;
+  font-size: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
+.app.window-app.randomtarget .tabs .item.active {
+  font-weight: bold;
+}
+
+.app.window-app.randomtarget .target-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: stretch;
+  margin-top: 5px;
+  height: 32px;
+}
+
+.app.window-app.randomtarget .target-item:hover {
+  background: rgba(255,255,255,.1);
+}
+
+.app.window-app.randomtarget .target-item label {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: stretch;
+}
+
+.app.window-app.randomtarget .target-item span {
+  padding: 0 5px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.app.window-app.randomtarget .target-item img {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  display: block;
+  margin-left: 5px;
+}
+
+.app.window-app.randomtarget .scrollable-content {
+  overflow-y: auto;
+  height: 222px; /* (item height + margin) * 6 */
+}
+
+.app.window-app.randomtarget .footer {
+  margin-top: 15px;
+}
+
+.app.window-app.randomtarget .footer .selected-tokens-count {
+  opacity: 0.5;
+}

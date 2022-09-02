@@ -1,0 +1,1 @@
+{"_id":"oIVhNA8Po9HpYdJc","name":"Choose Random Target","type":"script","author":"7tqz3PRTfwzOb562","img":"modules/random-target/assets/icons/random-target.svg","scope":"global","command":"game.randomTarget.run();","folder":null,"sort":0,"permission":{"default":0},"flags":{}}

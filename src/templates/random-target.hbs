@@ -1,0 +1,52 @@
+<form>
+  <nav class='tabs' data-group='target-categories'>
+    {{#each tokenCategories}}
+      <a class='item' data-tab='{{id}}'>{{label}} ({{totalItems}})</a>
+    {{/each}}
+  </nav>
+
+  <div class='scrollable-content'>
+    <section class='content'>
+      {{#each tokenCategories}}
+        <div class='tab' data-tab='{{id}}' data-group='target-categories'>
+          <div class='target-item'>
+            <input
+              type='checkbox'
+              class='toggleSelection'
+              value={{id}}
+              id='{{concat "toggleSelection." id}}'
+              data-dtype='Boolean'
+            />
+            <label for='{{concat "toggleSelection." id}}'>
+              <span>Toggle Selection (All/None)</span>
+            </label>
+          </div>
+          {{#each items}}
+            <div class='target-item'>
+              <input
+                type='checkbox'
+                name='selectedTokens'
+                value={{id}}
+                id='{{concat "selectedTokens." id}}'
+                data-dtype='Boolean'
+                {{checked selected}}
+              />
+              <label for='{{concat "selectedTokens." id}}'>
+                <img src='{{img}}' />
+                <span>{{name}}</span>
+              </label>
+            </div>
+          {{/each}}
+        </div>
+      {{/each}}
+    </section>
+  </div>
+
+  <footer class='flexrow footer'>
+    <button type='submit' name='cancel'>Cancel</button>
+    <button type='submit' name='submit'>
+      Random Target
+      <span class='selected-tokens-count'>(0)</span>
+    </button>
+  </footer>
+</form>
