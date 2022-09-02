@@ -12,11 +12,11 @@
     }
   ],
   "compatibility": {
-    "minimum": 9,
-    "verified": 9
+    "minimum": 10,
+    "verified": 10
   },
-  "minimumCoreVersion": 9,
-  "compatibleCoreVersion": 9,
+  "minimumCoreVersion": 10,
+  "compatibleCoreVersion": 10,
   "license": "GPLV3",
   "esmodules": ["module.mjs"],
   "scripts": [],

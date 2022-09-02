@@ -25,7 +25,7 @@ export class RandomTarget extends FormApplication {
     const tokenCategories = {};
 
     game.scenes.active.tokens.forEach(token => {
-      const type = token.actor.data.type;
+      const type = token._actor.type;
 
       if (!type) {
         return;
@@ -41,10 +41,10 @@ export class RandomTarget extends FormApplication {
       }
 
       tokenCategories[type].items.push({
-        id: token.data._id,
-        img: token.data.img,
-        name: token.data.name,
-        actorId: token.data.actorId,
+        id: token.id,
+        img: token.texture.src,
+        name: token.name,
+        actorId: token.actorId,
         type,
         selected: false,
       });
@@ -52,12 +52,11 @@ export class RandomTarget extends FormApplication {
     });
 
     data.tokenCategories = tokenCategories;
-
     return data;
   }
 
   async _updateObject(event, formData) {
-    const { selectedTokens = [] } = formData;
+    const selectedTokens = (formData.selectedTokens || []).filter(Boolean);
 
     if (event.submitter.name !== 'submit') {
       return;
@@ -99,11 +98,13 @@ export class RandomTarget extends FormApplication {
   _targetToken(tokenId) {
     const target = canvas.tokens.objects.children.find(token => token.id === tokenId);
 
-    if (target) {
-      target.setTarget(true, { releaseOthers: true });
-      ui.notifications.info(`<b>${target.data.name}</b> targeted`, {});
-      canvas.animatePan(target._validPosition);
+    if (!target) {
+      return;
     }
+
+    target.setTarget(true, { releaseOthers: true });
+    ui.notifications.info(`<b>${target.name}</b> targeted`, {});
+    canvas.animatePan(target.position);
   }
 }
 
