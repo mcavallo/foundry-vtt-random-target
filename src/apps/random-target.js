@@ -5,13 +5,12 @@ export class RandomTarget extends FormApplication {
 
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
+      ...game.randomTarget.settings.formSettings,
       classes: ['randomtarget'],
       popOut: true,
       id: 'random-target',
       title: 'Choose Random Target',
       template: 'modules/random-target/templates/random-target.hbs',
-      width: 500,
-      height: 388,
       tabs: [
         {
           navSelector: '.tabs',

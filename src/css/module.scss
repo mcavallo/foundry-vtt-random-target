@@ -1,67 +1,75 @@
-.app.window-app.randomtarget .tabs {
-  justify-content: stretch;
-  align-items: center;
-  margin-bottom: 10px;
-}
+$targetItemsTotal: 6;
+$targetItemHeight: 32;
+$targetItemMarginTop: 5;
 
-.app.window-app.randomtarget .tabs .item {
-  flex: 1;
-  display: flex;
-  height: 32px;
-  font-size: 16px;
-  align-items: center;
-  justify-content: center;
-}
+.app.window-app.randomtarget {
+  .tabs {
+    justify-content: stretch;
+    align-items: center;
+    margin-bottom: 10px;
 
-.app.window-app.randomtarget .tabs .item.active {
-  font-weight: bold;
-}
+    .item {
+      flex: 1;
+      display: flex;
+      height: 32px;
+      font-size: 16px;
+      align-items: center;
+      justify-content: center;
 
-.app.window-app.randomtarget .target-item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: stretch;
-  margin-top: 5px;
-  height: 32px;
-}
+      &.active {
+        font-weight: bold;
+      }
+    }
+  }
 
-.app.window-app.randomtarget .target-item:hover {
-  background: rgba(255,255,255,.1);
-}
+  .target-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: stretch;
+    margin-top: $targetItemMarginTop * 1px;
+    height: $targetItemHeight * 1px;
 
-.app.window-app.randomtarget .target-item label {
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: stretch;
-}
+    &:hover {
+      background: rgba(255, 255, 255, .1);
+    }
 
-.app.window-app.randomtarget .target-item span {
-  padding: 0 5px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-}
+    label {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: stretch;
+    }
 
-.app.window-app.randomtarget .target-item img {
-  width: 32px;
-  height: 32px;
-  border: 0;
-  display: block;
-  margin-left: 5px;
-}
+    span {
+      font-size: 14px;
+      line-height: 1;
+      padding: 0 5px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
 
-.app.window-app.randomtarget .scrollable-content {
-  overflow-y: auto;
-  height: 222px; /* (item height + margin) * 6 */
-}
+    img {
+      width: $targetItemHeight * 1px;
+      height: $targetItemHeight * 1px;
+      border: 0;
+      display: block;
+      margin-left: 5px;
+    }
+  }
 
-.app.window-app.randomtarget .footer {
-  margin-top: 15px;
-}
+  .scrollable-content {
+    overflow-y: auto;
+    height: $targetItemsTotal * ($targetItemHeight + $targetItemMarginTop) * 1px;
+  }
 
-.app.window-app.randomtarget .footer .selected-tokens-count {
-  opacity: 0.5;
+  .footer {
+    margin-top: 15px;
+
+    .selected-tokens-count {
+      opacity: 0.5;
+    }
+  }
 }
