@@ -32,5 +32,5 @@
   ],
   "url": "https://github.com/mcavallo/foundry-vtt-random-target",
   "manifest": "__REPO__/releases/latest/download/module.json",
-  "download": "__REPO__/releases/__RELEASE__/download/foundry-vtt-random-target___RELEASE__.zip"
+  "download": "__REPO__/releases/download/__RELEASE__/foundry-vtt-random-target___RELEASE__.zip"
 }
