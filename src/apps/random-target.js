@@ -97,14 +97,13 @@ export class RandomTarget extends FormApplication {
   }
 
   _targetToken(tokenId) {
-    const item = canvas.tokens.objects.children.find(token => token.id === tokenId);
+    const target = canvas.tokens.objects.children.find(token => token.id === tokenId);
 
-    if (item) {
-      item.setTarget(true, { releaseOthers: true });
-      ui.notifications.info(`<b>${item.data.name}</b> targeted`, {});
+    if (target) {
+      target.setTarget(true, { releaseOthers: true });
+      ui.notifications.info(`<b>${target.data.name}</b> targeted`, {});
+      canvas.animatePan(target._validPosition);
     }
-
-    canvas.animatePan(item._validPosition);
   }
 }
 
