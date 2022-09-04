@@ -6,7 +6,7 @@ This module adds a tool for quickly selecting a random target. Once activated it
 
 # Installation / Usage
 
-1. Install the package following the standard Foundry procedure.
+1. Install the package following the [standard Foundry procedure](https://foundryvtt.wiki/en/basics/Modules).
 2. Open the **Random Target** macro compendium.
 3. Use the **Choose Random Target** macro to activate the tool.
 
@@ -17,5 +17,7 @@ While this package should work without problems with most systems, it has been v
 - [DnD5e](https://foundryvtt.com/packages/dnd5e)
 - [Warhammer Fantasy Roleplay 4th Edition](https://foundryvtt.com/packages/wfrp4e)
 - [Forbidden Lands](https://foundryvtt.com/packages/forbidden-lands)
+- [Call of Cthulhu 7th edition (Unofficial)](https://foundryvtt.com/packages/CoC7)
+- [Robert E. Howard's CONAN: Adventures In An Age Undreamed Of](https://foundryvtt.com/packages/conan2d20)
 
-Please reach out if you'd like to optimize it for any other system.
+Please [reach out](https://github.com/mcavallo/foundry-vtt-random-target/issues) if you'd like to optimize it for any other system.
