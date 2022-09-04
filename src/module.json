@@ -3,17 +3,17 @@
   "title": "Random Target",
   "description": "Adds a dialog to choose a random target between the tokens present in the scene.",
   "version": "__VERSION__",
-  "author": "Mariano Cavallo",
+  "author": "iKindred",
   "authors": [
     {
-      "name": "Mariano Cavallo",
+      "name": "iKindred",
       "discord": "iKindred#8997",
       "url": "https://github.com/mcavallo/"
     }
   ],
   "compatibility": {
-    "minimum": 10,
-    "verified": 10
+    "minimum": "10",
+    "verified": "10.284"
   },
   "minimumCoreVersion": 10,
   "compatibleCoreVersion": 10,
