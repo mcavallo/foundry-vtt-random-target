@@ -52,6 +52,7 @@ export class RandomTarget extends FormApplication {
     });
 
     data.tokenCategories = tokenCategories;
+    data.areThereTokens = !!Object.keys(tokenCategories).length;
     return data;
   }
 

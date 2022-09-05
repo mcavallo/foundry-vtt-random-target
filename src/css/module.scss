@@ -22,6 +22,12 @@ $targetItemMarginTop: 5;
     }
   }
 
+  .error-message {
+    align-self: center;
+    display: flex;
+    align-items: center;
+  }
+
   .target-item {
     display: flex;
     flex-direction: row;
