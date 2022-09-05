@@ -78,4 +78,23 @@ $targetItemMarginTop: 5;
       opacity: 0.5;
     }
   }
+
+  button:disabled {
+    cursor: not-allowed;
+    color: var(--color-text-dark-6);
+  }
+}
+
+// System Overrides
+
+.system-wfrp4e .app.window-app.randomtarget {
+  button:disabled {
+    box-shadow: none !important;
+  }
+}
+
+.system-forbidden-lands .app.window-app.randomtarget {
+  button:disabled {
+    color: var(--color-text-light-5);
+  }
 }

@@ -74,26 +74,42 @@ export class RandomTarget extends FormApplication {
 
   activateListeners(html) {
     super.activateListeners(html);
+    this._computeSubmitState(html);
 
     html.find('.tab .toggleSelection').change(event => this._computeToggleSelection(html, event));
-    html.find('input[type="checkbox"]').change(event => this._computeTotalSelectionCount(html, event));
+    html.find('input[type="checkbox"]').change(event => {
+      this._computeTotalSelectionCount(html, event);
+      this._computeSubmitState(html);
+    });
+  }
+
+  _getCheckedInputs(html, options = { tab: null, checked: false }) {
+    const parts = [
+      options.tab ? `[data-tab="${options.tab}"]` : '',
+      '[data-group="target-categories"] input[type="checkbox"]:not(.toggleSelection)',
+      options.checked ? `:checked` : '',
+    ];
+
+    return html.find(parts.join(''));
   }
 
   _computeToggleSelection(html, event) {
     const type = event.target.value;
     const newState = event.target.checked;
-    const inputs = html.find(
-      `[data-tab="${type}"][data-group="target-categories"] input[type="checkbox"]:not(.toggleSelection)`
-    );
 
-    inputs.each((_, input) => {
+    this._getCheckedInputs(html, { tab: type }).each((_, input) => {
       input.checked = newState;
     });
   }
 
   _computeTotalSelectionCount(html, _event) {
-    const inputs = html.find(`[data-group="target-categories"] input[type="checkbox"]:not(.toggleSelection):checked`);
+    const inputs = this._getCheckedInputs(html, { checked: true });
     html.find(`.selected-tokens-count`).html(`(${inputs.length})`);
+  }
+
+  _computeSubmitState(html) {
+    const totalChecked = this._getCheckedInputs(html, { checked: true }).length;
+    html.find(`button[type="submit"][name="submit"]`).attr('disabled', totalChecked < 2);
   }
 
   _targetToken(tokenId) {
