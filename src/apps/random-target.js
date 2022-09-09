@@ -26,6 +26,7 @@ export class RandomTarget extends FormApplication {
 
     game.scenes.active.tokens.forEach(token => {
       const type = token._actor.type;
+      const defeated = game.randomTarget.utils.isTokenDefeated(token);
 
       if (!type) {
         return;
@@ -47,6 +48,7 @@ export class RandomTarget extends FormApplication {
         actorId: token.actorId,
         type,
         selected: false,
+        defeated,
       });
       tokenCategories[type].totalItems++;
     });

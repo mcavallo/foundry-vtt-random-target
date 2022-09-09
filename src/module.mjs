@@ -26,9 +26,25 @@ function computeSettings() {
   }
 }
 
+function isTokenDefeated(token) {
+  try {
+    switch (game.system.id) {
+      case 'conan2d20':
+        return token.overlayEffect.match('skull.svg');
+      default:
+        return token._actor.effects.some(effect => effect._statusId === 'dead');
+    }
+  } catch (_) {
+    return false;
+  }
+}
+
 Hooks.once('init', function () {
   game.randomTarget = {
     run: run,
     settings: computeSettings(),
+    utils: {
+      isTokenDefeated,
+    },
   };
 });

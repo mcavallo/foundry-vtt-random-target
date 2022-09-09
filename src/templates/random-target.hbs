@@ -23,7 +23,11 @@
               </label>
             </div>
             {{#each items}}
+              {{#if defeated}}
+              <div class='target-item defeated' title="Defeated">
+              {{else}}
               <div class='target-item'>
+              {{/if}}
                 <input
                   type='checkbox'
                   name='selectedTokens'
@@ -33,8 +37,12 @@
                   {{checked selected}}
                 />
                 <label for='{{concat "selectedTokens." id}}'>
-                  <img src='{{img}}' />
-                  <span>{{name}}</span>
+                  <div class="image">
+                    <img src='{{img}}' />
+                  </div>
+                  <div class="name">
+                    {{name}}
+                  </div>
                 </label>
               </div>
             {{/each}}
