@@ -23,8 +23,9 @@ export class RandomTarget extends FormApplication {
   getData() {
     const data = super.getData();
     const tokenCategories = {};
+    const sortedTokens = game.scenes.active.tokens.contents.sort(game.randomTarget.utils.sortTokensByName);
 
-    game.scenes.active.tokens.forEach(token => {
+    sortedTokens.forEach(token => {
       const type = token._actor.type;
       const defeated = game.randomTarget.utils.isTokenDefeated(token);
 
@@ -53,7 +54,15 @@ export class RandomTarget extends FormApplication {
       tokenCategories[type].totalItems++;
     });
 
-    data.tokenCategories = tokenCategories;
+    const sortedCategoryKeys = Object.keys(tokenCategories).sort();
+
+    data.tokenCategories = sortedCategoryKeys.reduce(
+      (accum, key) => ({
+        ...accum,
+        [key]: tokenCategories[key],
+      }),
+      {}
+    );
     data.areThereTokens = !!Object.keys(tokenCategories).length;
     return data;
   }
