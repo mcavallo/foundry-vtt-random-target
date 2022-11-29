@@ -143,7 +143,7 @@ export class RandomTarget extends FormApplication {
     }
 
     if (selectedTokens.length < 2) {
-      ui.notifications.error('You need to select at least 2 tokens', {});
+      this._sendErrorUINotification();
       return;
     }
 
@@ -199,8 +199,16 @@ export class RandomTarget extends FormApplication {
     }
 
     target.setTarget(true, { releaseOthers: true });
-    ui.notifications.info(`<b>${target.name}</b> targeted`, {});
+    this._sendSuccessUINotification(target);
     canvas.animatePan(target.position);
+  }
+
+  _sendSuccessUINotification(target) {
+    ui.notifications.info(`<b>${target.name}</b> targeted`, {});
+  }
+
+  _sendErrorUINotification() {
+    ui.notifications.error('You need to select at least 2 tokens', {});
   }
 }
 
