@@ -1,3 +1,75 @@
+const FIXED_CATEGORIES = {
+  ALL: { id: 'all', order: 3 },
+  SELECTED: { id: 'selected', order: 2 },
+  TARGETED: { id: 'targeted', order: 1 },
+};
+
+class CategoryList {
+  constructor() {
+    this.categories = {};
+  }
+
+  add(id, token) {
+    if (!this.categories[id]) {
+      this.categories[id] = {
+        id,
+        label: id,
+        items: [],
+        totalItems: 0,
+      };
+    }
+
+    this.categories[id].items.push(token);
+    this.categories[id].totalItems++;
+  }
+
+  getSorted() {
+    const orderMap = Object.keys(FIXED_CATEGORIES).reduce(
+      (accum, key) => ({
+        ...accum,
+        [FIXED_CATEGORIES[key].id]: FIXED_CATEGORIES[key].order,
+      }),
+      {}
+    );
+
+    const sortedCategoryKeys = Object.keys(this.categories).sort((a, b) => {
+      if (orderMap[a] && orderMap[b]) {
+        return orderMap[a] - orderMap[b];
+      }
+
+      if (orderMap[a]) {
+        return -1;
+      }
+
+      if (orderMap[b]) {
+        return 1;
+      }
+
+      if (a < b) {
+        return -1;
+      }
+
+      if (a > b) {
+        return 1;
+      }
+
+      return 0;
+    });
+
+    return sortedCategoryKeys.reduce(
+      (accum, key) => ({
+        ...accum,
+        [key]: this.categories[key],
+      }),
+      {}
+    );
+  }
+
+  count() {
+    return Object.keys(this.categories).length;
+  }
+}
+
 export class RandomTarget extends FormApplication {
   constructor(app) {
     super(app);
@@ -22,48 +94,44 @@ export class RandomTarget extends FormApplication {
 
   getData() {
     const data = super.getData();
-    const tokenCategories = {};
+    const tokenCategories = new CategoryList();
     const sortedTokens = game.scenes.active.tokens.contents.sort(game.randomTarget.utils.sortTokensByName);
+    const selectedTokens = new Set(canvas.tokens.controlled.map(token => token.id));
+    const targetedTokens = new Set(game.user.targets.map(token => token.id));
+    const showSelectedCategory = selectedTokens.size > 1;
+    const showTargetedCategory = targetedTokens.size > 1;
 
     sortedTokens.forEach(token => {
       const type = token._actor.type;
-      const defeated = game.randomTarget.utils.isTokenDefeated(token);
 
-      if (!type) {
-        return;
-      }
-
-      if (!tokenCategories[type]) {
-        tokenCategories[type] = {
-          id: type,
-          label: type,
-          items: [],
-          totalItems: 0,
-        };
-      }
-
-      tokenCategories[type].items.push({
+      const categoryListEntry = {
         id: token.id,
         img: token.texture.src,
         name: token.name,
         actorId: token.actorId,
         type,
         selected: false,
-        defeated,
-      });
-      tokenCategories[type].totalItems++;
+        defeated: game.randomTarget.utils.isTokenDefeated(token),
+      };
+
+      tokenCategories.add(FIXED_CATEGORIES.ALL.id, categoryListEntry);
+
+      if (showSelectedCategory && selectedTokens.has(categoryListEntry.id)) {
+        tokenCategories.add(FIXED_CATEGORIES.SELECTED.id, categoryListEntry);
+      }
+
+      if (showTargetedCategory && targetedTokens.has(categoryListEntry.id)) {
+        tokenCategories.add(FIXED_CATEGORIES.TARGETED.id, categoryListEntry);
+      }
+
+      if (type) {
+        tokenCategories.add(type, categoryListEntry);
+      }
     });
 
-    const sortedCategoryKeys = Object.keys(tokenCategories).sort();
+    data.tokenCategories = tokenCategories.getSorted();
+    data.areThereTokens = !!tokenCategories.count();
 
-    data.tokenCategories = sortedCategoryKeys.reduce(
-      (accum, key) => ({
-        ...accum,
-        [key]: tokenCategories[key],
-      }),
-      {}
-    );
-    data.areThereTokens = !!Object.keys(tokenCategories).length;
     return data;
   }
 
