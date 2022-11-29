@@ -160,7 +160,8 @@ export class RandomTarget extends FormApplication {
 
     html.find('.tab .toggleSelection').change(event => this._computeToggleSelection(html, event));
     html.find('input[type="checkbox"]').change(event => {
-      this._computeTotalSelectionCount(html, event);
+      this._computeSelectionChange(html, event.target.value, event.target.checked);
+      this._computeTotalSelectionCount(html);
       this._computeSubmitState(html);
     });
   }
@@ -191,12 +192,23 @@ export class RandomTarget extends FormApplication {
     return selection;
   }
 
+  _getInputsById(html, tokenId) {
+    return html.find(`[data-group="target-categories"] input[type="checkbox"][value="${tokenId}"]`);
+  }
+
+  _computeSelectionChange(html, tokenId, newState) {
+    // Replicate the selection change in other categories that have the same token
+    this._getInputsById(html, tokenId).each((_, input) => {
+      input.checked = newState;
+    });
+  }
+
   _computeToggleSelection(html, event) {
     const type = event.target.value;
     const newState = event.target.checked;
 
     this._getCheckedInputs(html, { tab: type }).each((_, input) => {
-      input.checked = newState;
+      this._computeSelectionChange(html, input.value, newState);
     });
   }
 
