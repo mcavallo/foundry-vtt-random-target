@@ -136,11 +136,14 @@ export class RandomTarget extends FormApplication {
   }
 
   async _updateObject(event, formData) {
-    const selectedTokens = (formData.selectedTokens || []).filter(Boolean);
-
     if (event.submitter.name !== 'submit') {
       return;
     }
+
+    // Keep only unique values
+    const selectedTokens = (formData.selectedTokens || []).filter(
+      (value, idx, arr) => value && arr.indexOf(value) === idx
+    );
 
     if (selectedTokens.length < 2) {
       this._sendErrorUINotification();
@@ -162,14 +165,30 @@ export class RandomTarget extends FormApplication {
     });
   }
 
-  _getCheckedInputs(html, options = { tab: null, checked: false }) {
-    const parts = [
-      options.tab ? `[data-tab="${options.tab}"]` : '',
-      '[data-group="target-categories"] input[type="checkbox"]:not(.toggleSelection)',
-      options.checked ? `:checked` : '',
-    ];
+  _getCheckedInputs(html, options = { tab: null, checked: false, unique: false }) {
+    let taken = [];
+    let selection = html.find(
+      [
+        options.tab ? `[data-tab="${options.tab}"]` : '',
+        '[data-group="target-categories"] input[type="checkbox"]:not(.toggleSelection)',
+        options.checked ? `:checked` : '',
+      ].join('')
+    );
 
-    return html.find(parts.join(''));
+    if (options.unique) {
+      selection = selection.filter((_, input) => {
+        const value = $(input).attr('value');
+
+        if (taken.indexOf(value) === -1) {
+          taken.push(value);
+          return true;
+        }
+
+        return false;
+      });
+    }
+
+    return selection;
   }
 
   _computeToggleSelection(html, event) {
@@ -181,13 +200,13 @@ export class RandomTarget extends FormApplication {
     });
   }
 
-  _computeTotalSelectionCount(html, _event) {
-    const inputs = this._getCheckedInputs(html, { checked: true });
+  _computeTotalSelectionCount(html) {
+    const inputs = this._getCheckedInputs(html, { checked: true, unique: true });
     html.find(`.selected-tokens-count`).html(`(${inputs.length})`);
   }
 
   _computeSubmitState(html) {
-    const totalChecked = this._getCheckedInputs(html, { checked: true }).length;
+    const totalChecked = this._getCheckedInputs(html, { checked: true, unique: true }).length;
     html.find(`button[type="submit"][name="submit"]`).attr('disabled', totalChecked < 2);
   }
 
