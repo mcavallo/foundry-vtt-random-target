@@ -4,20 +4,37 @@ $targetItemMarginTop: 5;
 
 .app.window-app.randomtarget {
   .tabs {
-    justify-content: stretch;
+    display: flex;
+    justify-content: unset;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
     align-items: center;
-    margin-bottom: 10px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    scrollbar-width: thin;
 
     .item {
-      flex: 1;
-      display: flex;
-      height: 32px;
-      font-size: 16px;
+      flex: 0 0 auto;
+      display: inline-flex;
+      height: 30px;
+      font-size: 15px;
       align-items: center;
-      justify-content: center;
+      justify-content: center;      
+      overflow: auto;
+      padding: 0 6px;
 
       &.active {
         font-weight: bold;
+      }
+
+      &:first-of-type {
+        margin-left: auto;
+      }
+
+      &:last-of-type {
+        margin-right: auto;
       }
     }
   }
@@ -40,6 +57,10 @@ $targetItemMarginTop: 5;
       background: rgba(255, 255, 255, .1);
     }
 
+    &:first-of-type {
+      margin-top: 0;
+    }
+
     label {
       flex: 1;
       display: flex;
@@ -47,11 +68,12 @@ $targetItemMarginTop: 5;
       align-items: center;
       justify-content: stretch;
       color: var(--color-text-dark-1);
+      overflow: hidden;
     }
 
     .name {
       font-size: 14px;
-      line-height: 1;
+      line-height: normal;
       padding: 0 5px;
       text-overflow: ellipsis;
       overflow: hidden;
@@ -59,6 +81,7 @@ $targetItemMarginTop: 5;
     }
 
     .image {
+      flex: 0 0 $targetItemHeight * 1px;
       width: $targetItemHeight * 1px;
       height: $targetItemHeight * 1px;
       position: relative;
@@ -82,7 +105,8 @@ $targetItemMarginTop: 5;
 
   .scrollable-content {
     overflow-y: auto;
-    height: $targetItemsTotal * ($targetItemHeight + $targetItemMarginTop) * 1px;
+    height: $targetItemHeight + ($targetItemsTotal - 1) * ($targetItemHeight + $targetItemMarginTop) * 1px;
+    scrollbar-width: thin;
   }
 
   .footer {
@@ -102,6 +126,29 @@ $targetItemMarginTop: 5;
 // System Overrides
 
 .system-wfrp4e .app.window-app.randomtarget {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-button {
+    display: none !important;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #782e22;
+    border-image: none;
+    border-radius: 0;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #111;
+  }
+
+  .tabs {
+    background: rgba(0, 0, 0, 0.4);
+  }
+
   button:disabled {
     box-shadow: none !important;
   }
@@ -118,7 +165,7 @@ $targetItemMarginTop: 5;
 }
 
 .system-forbidden-lands .app.window-app.randomtarget {
-.target-item.defeated .name {
+  .target-item.defeated .name {
     color: var(--color-text-light-4);
   }
 
