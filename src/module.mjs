@@ -12,21 +12,21 @@ function computeSettings() {
       return {
         formSettings: {
           width: 500,
-          height: 372,
+          height: 362,
         },
       };
     case SYSTEM_IDS.WFRP4E:
       return {
         formSettings: {
           width: 500,
-          height: 388,
+          height: 380,
         },
       };
     default:
       return {
         formSettings: {
           width: 500,
-          height: 359,
+          height: 352,
         },
       };
   }
