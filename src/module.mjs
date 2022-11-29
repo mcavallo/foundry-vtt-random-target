@@ -1,15 +1,21 @@
 import { run } from './apps/random-target.js';
 
+const SYSTEM_IDS = {
+  WFRP4E: 'wfrp4e',
+  FL: 'forbidden-lands',
+  CONAN: 'conan2d20',
+};
+
 function computeSettings() {
   switch (game.system.id) {
-    case 'forbidden-lands':
+    case SYSTEM_IDS.FL:
       return {
         formSettings: {
           width: 500,
           height: 372,
         },
       };
-    case 'wfrp4e':
+    case SYSTEM_IDS.WFRP4E:
       return {
         formSettings: {
           width: 500,
@@ -29,7 +35,7 @@ function computeSettings() {
 function isTokenDefeated(token) {
   try {
     switch (game.system.id) {
-      case 'conan2d20':
+      case SYSTEM_IDS.CONAN:
         return token.overlayEffect.match('skull.svg');
       default:
         return token._actor.effects.some(effect => effect._statusId === 'dead');
