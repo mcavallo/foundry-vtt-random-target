@@ -136,14 +136,17 @@ export class RandomTarget extends FormApplication {
   }
 
   async _updateObject(event, formData) {
-    const selectedTokens = (formData.selectedTokens || []).filter(Boolean);
-
     if (event.submitter.name !== 'submit') {
       return;
     }
 
+    // Keep only unique values
+    const selectedTokens = (formData.selectedTokens || []).filter(
+      (value, idx, arr) => value && arr.indexOf(value) === idx
+    );
+
     if (selectedTokens.length < 2) {
-      ui.notifications.error('You need to select at least 2 tokens', {});
+      this._sendErrorUINotification();
       return;
     }
 
@@ -157,19 +160,47 @@ export class RandomTarget extends FormApplication {
 
     html.find('.tab .toggleSelection').change(event => this._computeToggleSelection(html, event));
     html.find('input[type="checkbox"]').change(event => {
-      this._computeTotalSelectionCount(html, event);
+      this._computeSelectionChange(html, event.target.value, event.target.checked);
+      this._computeTotalSelectionCount(html);
       this._computeSubmitState(html);
     });
   }
 
-  _getCheckedInputs(html, options = { tab: null, checked: false }) {
-    const parts = [
-      options.tab ? `[data-tab="${options.tab}"]` : '',
-      '[data-group="target-categories"] input[type="checkbox"]:not(.toggleSelection)',
-      options.checked ? `:checked` : '',
-    ];
+  _getCheckedInputs(html, options = { tab: null, checked: false, unique: false }) {
+    let taken = [];
+    let selection = html.find(
+      [
+        options.tab ? `[data-tab="${options.tab}"]` : '',
+        '[data-group="target-categories"] input[type="checkbox"]:not(.toggleSelection)',
+        options.checked ? `:checked` : '',
+      ].join('')
+    );
 
-    return html.find(parts.join(''));
+    if (options.unique) {
+      selection = selection.filter((_, input) => {
+        const value = $(input).attr('value');
+
+        if (taken.indexOf(value) === -1) {
+          taken.push(value);
+          return true;
+        }
+
+        return false;
+      });
+    }
+
+    return selection;
+  }
+
+  _getInputsById(html, tokenId) {
+    return html.find(`[data-group="target-categories"] input[type="checkbox"][value="${tokenId}"]`);
+  }
+
+  _computeSelectionChange(html, tokenId, newState) {
+    // Replicate the selection change in other categories that have the same token
+    this._getInputsById(html, tokenId).each((_, input) => {
+      input.checked = newState;
+    });
   }
 
   _computeToggleSelection(html, event) {
@@ -177,17 +208,17 @@ export class RandomTarget extends FormApplication {
     const newState = event.target.checked;
 
     this._getCheckedInputs(html, { tab: type }).each((_, input) => {
-      input.checked = newState;
+      this._computeSelectionChange(html, input.value, newState);
     });
   }
 
-  _computeTotalSelectionCount(html, _event) {
-    const inputs = this._getCheckedInputs(html, { checked: true });
+  _computeTotalSelectionCount(html) {
+    const inputs = this._getCheckedInputs(html, { checked: true, unique: true });
     html.find(`.selected-tokens-count`).html(`(${inputs.length})`);
   }
 
   _computeSubmitState(html) {
-    const totalChecked = this._getCheckedInputs(html, { checked: true }).length;
+    const totalChecked = this._getCheckedInputs(html, { checked: true, unique: true }).length;
     html.find(`button[type="submit"][name="submit"]`).attr('disabled', totalChecked < 2);
   }
 
@@ -199,8 +230,16 @@ export class RandomTarget extends FormApplication {
     }
 
     target.setTarget(true, { releaseOthers: true });
-    ui.notifications.info(`<b>${target.name}</b> targeted`, {});
+    this._sendSuccessUINotification(target);
     canvas.animatePan(target.position);
+  }
+
+  _sendSuccessUINotification(target) {
+    ui.notifications.info(`<b>${target.name}</b> targeted`, {});
+  }
+
+  _sendErrorUINotification() {
+    ui.notifications.error('You need to select at least 2 tokens', {});
   }
 }
 
