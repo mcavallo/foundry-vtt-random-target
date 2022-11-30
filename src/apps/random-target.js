@@ -1,8 +1,5 @@
-const FIXED_CATEGORIES = {
-  ALL: { id: 'all', order: 3 },
-  SELECTED: { id: 'selected', order: 2 },
-  TARGETED: { id: 'targeted', order: 1 },
-};
+import { MODULE, FIXED_CATEGORIES } from '../constants.js';
+import { isTokenDefeated, sortTokensByName } from '../utils.js';
 
 class CategoryList {
   constructor() {
@@ -78,11 +75,11 @@ export class RandomTarget extends FormApplication {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       ...game.randomTarget.settings.formSettings,
-      classes: ['randomtarget'],
+      classes: [MODULE.ID],
       popOut: true,
-      id: 'random-target',
+      id: MODULE.ID,
       title: 'Choose Random Target',
-      template: 'modules/random-target/templates/random-target.hbs',
+      template: `modules/${MODULE.ID}/templates/random-target.hbs`,
       tabs: [
         {
           navSelector: '.tabs',
@@ -95,7 +92,7 @@ export class RandomTarget extends FormApplication {
   getData() {
     const data = super.getData();
     const tokenCategories = new CategoryList();
-    const sortedTokens = game.scenes.active.tokens.contents.sort(game.randomTarget.utils.sortTokensByName);
+    const sortedTokens = game.scenes.active.tokens.contents.sort(sortTokensByName);
     const selectedTokens = new Set(canvas.tokens.controlled.map(token => token.id));
     const targetedTokens = new Set(game.user.targets.map(token => token.id));
     const showSelectedCategory = selectedTokens.size > 1;
@@ -111,7 +108,7 @@ export class RandomTarget extends FormApplication {
         actorId: token.actorId,
         type,
         selected: false,
-        defeated: game.randomTarget.utils.isTokenDefeated(token),
+        defeated: isTokenDefeated(token),
       };
 
       tokenCategories.add(FIXED_CATEGORIES.ALL.id, categoryListEntry);

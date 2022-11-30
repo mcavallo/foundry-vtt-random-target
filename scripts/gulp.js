@@ -17,6 +17,7 @@ const GLOBS = {
   TEMPLATES: 'src/templates/**/*',
   PACKS: 'src/packs/**/*',
   APPS: 'src/apps/**/*',
+  ROOT_JS: 'src/*.js',
   MAIN_JS: 'src/module.mjs',
   MANIFEST: 'src/module.json',
   LICENSE: 'LICENSE',
@@ -105,6 +106,7 @@ async function buildPacks() {
  */
 async function copyScripts() {
   gulp.src(GLOBS.APPS).pipe(gulp.dest(path.resolve(DIST_DIR, 'apps')));
+  gulp.src(GLOBS.ROOT_JS).pipe(gulp.dest(path.resolve(DIST_DIR)));
   gulp.src(GLOBS.MAIN_JS).pipe(gulp.dest(path.resolve(DIST_DIR)));
 }
 
@@ -148,7 +150,7 @@ async function buildSass() {
  */
 async function watch() {
   gulp.watch([GLOBS.ASSETS, GLOBS.TEMPLATES, GLOBS.PACKS]).on('change', async () => await copyAssets());
-  gulp.watch([GLOBS.APPS, GLOBS.MAIN_JS]).on('change', async () => await copyScripts());
+  gulp.watch([GLOBS.APPS, GLOBS.ROOT_JS, GLOBS.MAIN_JS]).on('change', async () => await copyScripts());
   gulp.watch(GLOBS.STYLES).on('change', async () => await buildSass());
   gulp.watch(GLOBS.MANIFEST).on('change', async () => await buildManifest());
 }
