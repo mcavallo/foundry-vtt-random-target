@@ -12,7 +12,7 @@ This module adds a tool for quickly selecting a random target. Once activated it
 
 # Supported Systems
 
-While this package should work without problems with most systems, it has been visually optimized for:
+While this module should work without problems with most systems, it has been tested and visually optimized for:
 
 - [DnD5e](https://foundryvtt.com/packages/dnd5e)
 - [Warhammer Fantasy Roleplay 4th Edition](https://foundryvtt.com/packages/wfrp4e)
@@ -21,3 +21,9 @@ While this package should work without problems with most systems, it has been v
 - [Robert E. Howard's CONAN: Adventures In An Age Undreamed Of](https://foundryvtt.com/packages/conan2d20)
 
 Please [reach out](https://github.com/mcavallo/foundry-vtt-random-target/issues) if you'd like to optimize it for any other system.
+
+# Support the Project
+
+Please consider [supporting me](https://www.buymeacoffee.com/ikindred) if you find this module useful.
+
+<a href="https://www.buymeacoffee.com/ikindred" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="40"></a>
