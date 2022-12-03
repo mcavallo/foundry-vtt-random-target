@@ -3,6 +3,14 @@ export const MODULE = {
   NAMESPACE: 'randomTarget',
 };
 
+export const SETTING_IDS = {
+  FORM_SETTINGS: 'formSettings',
+  CHAT_NOTIFICATION: 'chatNotification',
+  CHAT_NOTIFICATION_PUBLIC: 'chatNotificationPublic',
+};
+
+export const FOUNDRY_SETTING_IDS = [SETTING_IDS.CHAT_NOTIFICATION, SETTING_IDS.CHAT_NOTIFICATION_PUBLIC];
+
 export const SYSTEM_IDS = {
   WFRP4E: 'wfrp4e',
   FL: 'forbidden-lands',

@@ -1,4 +1,4 @@
-import { MODULE, FIXED_CATEGORIES } from '../constants.js';
+import { MODULE, FIXED_CATEGORIES, SETTING_IDS } from '../constants.js';
 import { isTokenDefeated, sortTokensByName } from '../utils.js';
 
 class CategoryList {
@@ -74,7 +74,7 @@ export class RandomTarget extends FormApplication {
 
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
-      ...game.randomTarget.settings.formSettings,
+      ...game.randomTarget.settings[SETTING_IDS.FORM_SETTINGS],
       classes: [MODULE.ID],
       popOut: true,
       id: MODULE.ID,
