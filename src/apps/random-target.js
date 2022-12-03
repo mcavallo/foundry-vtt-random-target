@@ -1,8 +1,5 @@
-const FIXED_CATEGORIES = {
-  ALL: { id: 'all', order: 3 },
-  SELECTED: { id: 'selected', order: 2 },
-  TARGETED: { id: 'targeted', order: 1 },
-};
+import { MODULE, FIXED_CATEGORIES, SETTING_IDS } from '../constants.js';
+import { isTokenDefeated, sortTokensByName } from '../utils.js';
 
 class CategoryList {
   constructor() {
@@ -77,12 +74,12 @@ export class RandomTarget extends FormApplication {
 
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
-      ...game.randomTarget.settings.formSettings,
-      classes: ['randomtarget'],
+      ...game.randomTarget.settings[SETTING_IDS.FORM_SETTINGS],
+      classes: [MODULE.ID],
       popOut: true,
-      id: 'random-target',
+      id: MODULE.ID,
       title: 'Choose Random Target',
-      template: 'modules/random-target/templates/random-target.hbs',
+      template: `modules/${MODULE.ID}/templates/random-target.hbs`,
       tabs: [
         {
           navSelector: '.tabs',
@@ -95,7 +92,7 @@ export class RandomTarget extends FormApplication {
   getData() {
     const data = super.getData();
     const tokenCategories = new CategoryList();
-    const sortedTokens = game.scenes.active.tokens.contents.sort(game.randomTarget.utils.sortTokensByName);
+    const sortedTokens = game.scenes.active.tokens.contents.sort(sortTokensByName);
     const selectedTokens = new Set(canvas.tokens.controlled.map(token => token.id));
     const targetedTokens = new Set(game.user.targets.map(token => token.id));
     const showSelectedCategory = selectedTokens.size > 1;
@@ -111,7 +108,7 @@ export class RandomTarget extends FormApplication {
         actorId: token.actorId,
         type,
         selected: false,
-        defeated: game.randomTarget.utils.isTokenDefeated(token),
+        defeated: isTokenDefeated(token),
       };
 
       tokenCategories.add(FIXED_CATEGORIES.ALL.id, categoryListEntry);
@@ -151,7 +148,7 @@ export class RandomTarget extends FormApplication {
     }
 
     const randomPick = selectedTokens[Math.floor(Math.random() * selectedTokens.length)];
-    this._targetToken(randomPick);
+    this._targetToken(randomPick, selectedTokens);
   }
 
   activateListeners(html) {
@@ -222,7 +219,7 @@ export class RandomTarget extends FormApplication {
     html.find(`button[type="submit"][name="submit"]`).attr('disabled', totalChecked < 2);
   }
 
-  _targetToken(tokenId) {
+  _targetToken(tokenId, candidatesIds) {
     const target = canvas.tokens.objects.children.find(token => token.id === tokenId);
 
     if (!target) {
@@ -231,6 +228,7 @@ export class RandomTarget extends FormApplication {
 
     target.setTarget(true, { releaseOthers: true });
     this._sendSuccessUINotification(target);
+    this._sendChatNotification(target, candidatesIds);
     canvas.animatePan(target.position);
   }
 
@@ -240,6 +238,47 @@ export class RandomTarget extends FormApplication {
 
   _sendErrorUINotification() {
     ui.notifications.error('You need to select at least 2 tokens', {});
+  }
+
+  _sendChatNotification(target, candidatesIds) {
+    if (!game.randomTarget.settings[SETTING_IDS.CHAT_NOTIFICATION]) {
+      return;
+    }
+
+    const candidatesPool = candidatesIds
+      .map(tokenId => {
+        const candidate = canvas.tokens.objects.children.find(token => token.id === tokenId);
+        const isSelected = candidate && candidate.id === target.id;
+        const name = candidate ? candidate.name : `Unknown token (${tokenId})`;
+        return `<li><span${isSelected ? ' class="target"' : ''}>${name}</span></li>`;
+      })
+      .join('');
+
+    const recipients = game.randomTarget.settings[SETTING_IDS.CHAT_NOTIFICATION_PUBLIC]
+      ? null
+      : ChatMessage.getWhisperRecipients('GM').map(recipient => recipient.id);
+
+    ChatMessage.create({
+      speaker: { alias: 'Random Target' },
+      whisper: recipients,
+      content: `
+        <div class="${MODULE.ID}-message">
+          <div class="dice-roll">
+              <div class="dice-result">
+                <div>
+                  <strong>${target.name}</strong> was randomly selected.
+                </div>
+                <div class="dice-tooltip">
+                  <section>
+                    The pool of candidates for this selection:
+                    <ul>${candidatesPool}</ul>
+                  </section>
+                </div>
+              </div>
+            </div>
+        </div>
+      `,
+    });
   }
 }
 
