@@ -174,3 +174,31 @@ $targetItemMarginTop: 5;
     color: var(--color-text-light-5);
   }
 }
+
+#chat-log {
+  .#{$module}-message {
+    .dice-roll {
+      cursor: pointer;
+
+      .dice-tooltip section {
+        margin-top: 5px;
+        background: rgba(0, 0, 0, .08);
+        padding: 8px;
+        border-radius: 3px;
+        color: var(--color-border-dark-3);
+
+        ul {
+          margin: 5px 0 0 0;
+
+          span {
+            margin-left: -2px;
+
+            &.target {
+              font-weight: bold;
+            }
+          }
+        }
+      }
+    }
+  }
+}
