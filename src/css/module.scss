@@ -22,7 +22,7 @@ $targetItemMarginTop: 5;
       height: 30px;
       font-size: 15px;
       align-items: center;
-      justify-content: center;      
+      justify-content: center;
       overflow: auto;
       padding: 0 6px;
 
@@ -54,8 +54,13 @@ $targetItemMarginTop: 5;
     margin-top: $targetItemMarginTop * 1px;
     height: $targetItemHeight * 1px;
 
+    &,
+    & * {
+      cursor: pointer !important;
+    }
+
     &:hover {
-      background: rgba(255, 255, 255, .1);
+      background: rgba(255, 255, 255, 0.1);
     }
 
     &:first-of-type {
@@ -78,7 +83,7 @@ $targetItemMarginTop: 5;
       padding: 0 5px;
       text-overflow: ellipsis;
       overflow: hidden;
-      white-space: nowrap;      
+      white-space: nowrap;
     }
 
     .image {
@@ -182,7 +187,7 @@ $targetItemMarginTop: 5;
 
       .dice-tooltip section {
         margin-top: 5px;
-        background: rgba(0, 0, 0, .08);
+        background: rgba(0, 0, 0, 0.08);
         padding: 8px;
         border-radius: 3px;
         color: var(--color-border-dark-3);
