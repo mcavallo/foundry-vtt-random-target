@@ -135,9 +135,11 @@ async function buildManifest() {
  * @task
  */
 async function buildSass() {
+  const { release } = getArgs();
+
   return gulp
     .src('src/css/module.scss')
-    .pipe(gulpsass().on('error', gulpsass.logError))
+    .pipe(gulpsass({ outputStyle: release ? 'compressed' : 'expanded' }).on('error', gulpsass.logError))
     .pipe(gulp.dest(path.resolve(DIST_DIR, 'css')));
 }
 
