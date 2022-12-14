@@ -1,76 +1,12 @@
-import { MODULE, FIXED_CATEGORIES, SETTING_IDS } from '../constants.js';
+import { MODULE, CATEGORY_IDS, SETTING_IDS } from '../constants.js';
 import { isTokenDefeated, sortTokensByName } from '../utils.js';
-
-class CategoryList {
-  constructor() {
-    this.categories = {};
-  }
-
-  add(id, token) {
-    if (!this.categories[id]) {
-      this.categories[id] = {
-        id,
-        label: id,
-        items: [],
-        totalItems: 0,
-      };
-    }
-
-    this.categories[id].items.push(token);
-    this.categories[id].totalItems++;
-  }
-
-  getSorted() {
-    const orderMap = Object.keys(FIXED_CATEGORIES).reduce(
-      (accum, key) => ({
-        ...accum,
-        [FIXED_CATEGORIES[key].id]: FIXED_CATEGORIES[key].order,
-      }),
-      {}
-    );
-
-    const sortedCategoryKeys = Object.keys(this.categories).sort((a, b) => {
-      if (orderMap[a] && orderMap[b]) {
-        return orderMap[a] - orderMap[b];
-      }
-
-      if (orderMap[a]) {
-        return -1;
-      }
-
-      if (orderMap[b]) {
-        return 1;
-      }
-
-      if (a < b) {
-        return -1;
-      }
-
-      if (a > b) {
-        return 1;
-      }
-
-      return 0;
-    });
-
-    return sortedCategoryKeys.reduce(
-      (accum, key) => ({
-        ...accum,
-        [key]: this.categories[key],
-      }),
-      {}
-    );
-  }
-
-  count() {
-    return Object.keys(this.categories).length;
-  }
-}
+import { CategoryList } from '../lib/CategoryList.js';
 
 export class RandomTarget extends FormApplication {
-  constructor(app) {
-    super(app);
-  }
+  #settingTimeout;
+  #controlOrTargetTimeout;
+  #settingSavedHandler;
+  #tokenControlOrTargetChangedHandler;
 
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
@@ -89,17 +25,93 @@ export class RandomTarget extends FormApplication {
     });
   }
 
+  constructor(app) {
+    super(app);
+    this.#settingTimeout = null;
+    this.#controlOrTargetTimeout = null;
+    this.#settingSavedHandler ||= this._onSettingsSaved.bind(this);
+    this.#tokenControlOrTargetChangedHandler ||= this._onTokenControlOrTargetChanged.bind(this);
+
+    Hooks.on('updateSetting', this.#settingSavedHandler);
+    Hooks.on('targetToken', this.#tokenControlOrTargetChangedHandler);
+    Hooks.on('controlToken', this.#tokenControlOrTargetChangedHandler);
+  }
+
+  async close(options = {}) {
+    clearTimeout(this.#settingTimeout);
+    clearTimeout(this.#controlOrTargetTimeout);
+    Hooks.off('updateSetting', this.#settingSavedHandler);
+    Hooks.off('targetToken', this.#tokenControlOrTargetChangedHandler);
+    Hooks.off('controlToken', this.#tokenControlOrTargetChangedHandler);
+
+    this.diceThrow = null; //remove circular reference
+    return super.close(options);
+  }
+
+  _getHeaderButtons() {
+    const buttons = super._getHeaderButtons();
+
+    return [
+      {
+        label: 'Settings',
+        class: 'settings',
+        icon: 'fas fa-gear',
+        onclick: () => this._openSettings(),
+      },
+      ...buttons,
+    ];
+  }
+
+  _openSettings() {
+    const settingsApp = new SettingsConfig().render(true);
+    let callLimit = 20;
+
+    // Nasty hack to get the right settings page open
+    const attemptTabSwitch = () => {
+      clearTimeout(this.#settingTimeout);
+      callLimit--;
+
+      if (callLimit < 0) {
+        return;
+      }
+
+      try {
+        settingsApp.activateTab('random-target');
+        return;
+      } catch (_) {
+        this.#settingTimeout = setTimeout(attemptTabSwitch, 100);
+      }
+    };
+
+    attemptTabSwitch();
+  }
+
+  _onSettingsSaved(event) {
+    if (event && event.key === `${MODULE.ID}.${SETTING_IDS.CATEGORIES}`) {
+      this.render(true);
+    }
+  }
+
+  _onTokenControlOrTargetChanged() {
+    clearTimeout(this.#controlOrTargetTimeout);
+
+    this.#controlOrTargetTimeout = setTimeout(() => {
+      this.render(true);
+    }, 100);
+  }
+
   getData() {
     const data = super.getData();
     const tokenCategories = new CategoryList();
     const sortedTokens = game.scenes.active.tokens.contents.sort(sortTokensByName);
     const selectedTokens = new Set(canvas.tokens.controlled.map(token => token.id));
     const targetedTokens = new Set(game.user.targets.map(token => token.id));
-    const showSelectedCategory = selectedTokens.size > 1;
-    const showTargetedCategory = targetedTokens.size > 1;
+    const hasEnoughSelected = selectedTokens.size > 1;
+    const hasEnoughTargeted = targetedTokens.size > 1;
 
     sortedTokens.forEach(token => {
-      const type = token._actor.type;
+      const type = CategoryList.formatTypeId(token._actor.type);
+      const disposition = CategoryList.formatDispositionId(token.disposition);
 
       const categoryListEntry = {
         id: token.id,
@@ -111,23 +123,27 @@ export class RandomTarget extends FormApplication {
         defeated: isTokenDefeated(token),
       };
 
-      tokenCategories.add(FIXED_CATEGORIES.ALL.id, categoryListEntry);
+      tokenCategories.addItem(CATEGORY_IDS.ALL, categoryListEntry);
 
-      if (showSelectedCategory && selectedTokens.has(categoryListEntry.id)) {
-        tokenCategories.add(FIXED_CATEGORIES.SELECTED.id, categoryListEntry);
+      if (hasEnoughSelected && selectedTokens.has(categoryListEntry.id)) {
+        tokenCategories.addItem(CATEGORY_IDS.SELECTED, categoryListEntry);
       }
 
-      if (showTargetedCategory && targetedTokens.has(categoryListEntry.id)) {
-        tokenCategories.add(FIXED_CATEGORIES.TARGETED.id, categoryListEntry);
+      if (hasEnoughTargeted && targetedTokens.has(categoryListEntry.id)) {
+        tokenCategories.addItem(CATEGORY_IDS.TARGETED, categoryListEntry);
       }
 
       if (type) {
-        tokenCategories.add(type, categoryListEntry);
+        tokenCategories.addItem(type, categoryListEntry);
+      }
+
+      if (disposition) {
+        tokenCategories.addItem(disposition, categoryListEntry);
       }
     });
 
-    data.tokenCategories = tokenCategories.getSorted();
-    data.areThereTokens = !!tokenCategories.count();
+    data.tokenCategories = tokenCategories.getSortedAndFiltered();
+    data.areThereTokens = !!tokenCategories.getTotalItems();
 
     return data;
   }

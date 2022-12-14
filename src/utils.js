@@ -13,12 +13,28 @@ export function isTokenDefeated(token) {
   }
 }
 
-export function sortTokensByName(a, b) {
-  if (a.name > b.name) {
-    return 1;
-  } else if (b.name > a.name) {
+export function sortAlphabetically(a, b) {
+  if (a < b) {
     return -1;
-  } else {
-    return 0;
   }
+
+  if (a > b) {
+    return 1;
+  }
+
+  return 0;
+}
+
+export function sortTokensByName(a, b) {
+  return sortAlphabetically(a.name, b.name);
+}
+
+export function getDispositionName(num) {
+  const disposition = Object.entries(CONST.TOKEN_DISPOSITIONS).filter(pair => pair[1] === num);
+
+  if (!disposition || disposition.length === 0) {
+    return;
+  }
+
+  return disposition[0][0].toLowerCase();
 }

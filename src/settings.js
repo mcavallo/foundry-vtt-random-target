@@ -1,4 +1,18 @@
-import { MODULE, SYSTEM_IDS, FOUNDRY_SETTING_IDS, SETTING_IDS } from './constants.js';
+import { MODULE, SYSTEM_IDS, FOUNDRY_SETTING_IDS, SETTING_IDS, CATEGORY_IDS } from './constants.js';
+import { CategoriesSettings } from './apps/categoriesSettings.js';
+
+export function getDefaultCategories() {
+  const baseCategories = [CATEGORY_IDS.TARGETED, CATEGORY_IDS.SELECTED, CATEGORY_IDS.ALL];
+
+  switch (game.system.id) {
+    case SYSTEM_IDS.COC:
+      return [...baseCategories, 'type.character', 'type.creature', 'type.npc'];
+    case SYSTEM_IDS.FL:
+      return [...baseCategories, 'type.character', 'type.monster'];
+    default:
+      return [...baseCategories, 'type.character', 'type.npc'];
+  }
+}
 
 export function computeSettings() {
   const baseSettings = FOUNDRY_SETTING_IDS.reduce(
@@ -42,6 +56,23 @@ export function updateSettings() {
 }
 
 export function registerSettings() {
+  game.settings.registerMenu(MODULE.ID, SETTING_IDS.CATEGORIES + 'Menu', {
+    name: 'Categories',
+    label: 'Configure Categories',
+    hint: 'Manage the available categories.',
+    icon: 'fa fa-list-check',
+    type: CategoriesSettings,
+    restricted: true,
+  });
+
+  game.settings.register(MODULE.ID, SETTING_IDS.CATEGORIES, {
+    scope: 'world',
+    config: false,
+    type: Array,
+    default: getDefaultCategories(),
+    onChange: updateSettings,
+  });
+
   game.settings.register(MODULE.ID, SETTING_IDS.CHAT_NOTIFICATION, {
     name: 'Post chat message',
     hint: 'Wheter a chat message should be sent whenever a target is selected.',
@@ -63,4 +94,8 @@ export function registerSettings() {
   });
 
   return computeSettings();
+}
+
+export function saveSetting(key, value) {
+  game.settings.set(MODULE.ID, key, value);
 }
