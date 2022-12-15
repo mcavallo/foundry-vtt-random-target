@@ -1,5 +1,5 @@
 import { MODULE, SYSTEM_IDS, FOUNDRY_SETTING_IDS, SETTING_IDS, CATEGORY_IDS } from './constants.js';
-import { CategoriesSettings } from './apps/categoriesSettings.js';
+import { CategoriesSettings } from './apps/CategoriesSettings.js';
 
 export function getDefaultCategories() {
   const baseCategories = [CATEGORY_IDS.TARGETED, CATEGORY_IDS.SELECTED, CATEGORY_IDS.ALL];

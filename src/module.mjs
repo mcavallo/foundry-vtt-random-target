@@ -1,4 +1,4 @@
-import { run } from './apps/random-target.js';
+import { run } from './apps/RandomTarget.js';
 import { MODULE } from './constants.js';
 import { registerSettings, saveSetting } from './settings.js';
 
