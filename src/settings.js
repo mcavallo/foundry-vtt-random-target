@@ -9,6 +9,8 @@ export function getDefaultCategories() {
       return [...baseCategories, 'type.character', 'type.creature', 'type.npc'];
     case SYSTEM_IDS.FL:
       return [...baseCategories, 'type.character', 'type.monster'];
+    case SYSTEM_IDS.PF2E:
+      return [...baseCategories, 'type.character', 'type.familiar', 'type.npc'];
     default:
       return [...baseCategories, 'type.character', 'type.npc'];
   }

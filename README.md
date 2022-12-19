@@ -15,6 +15,7 @@ This module adds a tool for quickly selecting a random target. Once activated it
 While this module should work without problems with most systems, it has been tested and visually optimized for:
 
 - [DnD5e](https://foundryvtt.com/packages/dnd5e)
+- [Pathfinder Second Edition (Official)](https://foundryvtt.com/packages/pf2e)
 - [Warhammer Fantasy Roleplay 4th Edition](https://foundryvtt.com/packages/wfrp4e)
 - [Forbidden Lands](https://foundryvtt.com/packages/forbidden-lands)
 - [Call of Cthulhu 7th edition (Unofficial)](https://foundryvtt.com/packages/CoC7)
