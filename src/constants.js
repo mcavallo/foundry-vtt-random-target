@@ -22,6 +22,7 @@ export const SYSTEM_IDS = {
   CONAN: 'conan2d20',
   DND5E: 'dnd5e',
   FL: 'forbidden-lands',
+  PF2E: 'pf2e',
   WFRP4E: 'wfrp4e',
 };
 
