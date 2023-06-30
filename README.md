@@ -10,6 +10,15 @@ This module adds a tool for quickly selecting a random target. Once activated it
 2. Open the **Random Target** macro compendium.
 3. Use the **Choose Random Target** macro to activate the tool.
 
+# Upgrading
+
+If you are having issues after upgrading the module please follow this instructions:
+
+1. **Uninstall** the module completely
+2. Install the **latest version** of the module
+3. Delete the **Random Target** macro from your toolbar
+4. Import the macro again from the **Random Target** macro compendium
+
 # Supported Systems
 
 While this module should work without problems with most systems, it has been tested and visually optimized for:
