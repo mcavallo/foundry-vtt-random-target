@@ -107,6 +107,6 @@ export class CategoriesSettings extends FormApplication {
       throw new Error();
     }
 
-    game.randomTarget.saveSetting(SETTING_IDS.CATEGORIES, selectedCategories);
+    window[MODULE.NAMESPACE].saveSetting(SETTING_IDS.CATEGORIES, selectedCategories);
   }
 }

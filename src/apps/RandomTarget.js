@@ -1,6 +1,6 @@
-import { MODULE, CATEGORY_IDS, SETTING_IDS } from '../constants.js';
-import { isTokenDefeated, sortTokensByName } from '../utils.js';
+import { CATEGORY_IDS, MODULE, SETTING_IDS } from '../constants.js';
 import { CategoryList } from '../lib/CategoryList.js';
+import { isTokenDefeated, sortTokensByName } from '../utils.js';
 
 export class RandomTarget extends FormApplication {
   #settingTimeout;
@@ -10,7 +10,7 @@ export class RandomTarget extends FormApplication {
 
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
-      ...game.randomTarget.settings[SETTING_IDS.FORM_SETTINGS],
+      ...window[MODULE.NAMESPACE].settings[SETTING_IDS.FORM_SETTINGS],
       classes: [MODULE.ID],
       popOut: true,
       id: MODULE.ID,
@@ -103,14 +103,14 @@ export class RandomTarget extends FormApplication {
   getData() {
     const data = super.getData();
     const tokenCategories = new CategoryList();
-    const sortedTokens = game.scenes.active.tokens.contents.sort(sortTokensByName);
+    const sortedTokens = canvas.scene.tokens.contents.sort(sortTokensByName);
     const selectedTokens = new Set(canvas.tokens.controlled.map(token => token.id));
     const targetedTokens = new Set(game.user.targets.map(token => token.id));
     const hasEnoughSelected = selectedTokens.size > 1;
     const hasEnoughTargeted = targetedTokens.size > 1;
 
     sortedTokens.forEach(token => {
-      const type = CategoryList.formatTypeId(token._actor.type);
+      const type = CategoryList.formatTypeId(token.actor.type);
       const disposition = CategoryList.formatDispositionId(token.disposition);
 
       const categoryListEntry = {
@@ -257,7 +257,7 @@ export class RandomTarget extends FormApplication {
   }
 
   _sendChatNotification(target, candidatesIds) {
-    if (!game.randomTarget.settings[SETTING_IDS.CHAT_NOTIFICATION]) {
+    if (!window[MODULE.NAMESPACE].settings[SETTING_IDS.CHAT_NOTIFICATION]) {
       return;
     }
 
@@ -270,7 +270,7 @@ export class RandomTarget extends FormApplication {
       })
       .join('');
 
-    const recipients = game.randomTarget.settings[SETTING_IDS.CHAT_NOTIFICATION_PUBLIC]
+    const recipients = window[MODULE.NAMESPACE].settings[SETTING_IDS.CHAT_NOTIFICATION_PUBLIC]
       ? null
       : ChatMessage.getWhisperRecipients('GM').map(recipient => recipient.id);
 

@@ -1,5 +1,5 @@
-import { CATEGORY_IDS, SETTING_IDS } from '../constants.js';
-import { sortAlphabetically, getDispositionName } from '../utils.js';
+import { CATEGORY_IDS, MODULE, SETTING_IDS } from '../constants.js';
+import { getDispositionName, sortAlphabetically } from '../utils.js';
 
 export class CategoryList {
   static formatTypeId(raw) {
@@ -27,7 +27,7 @@ export class CategoryList {
   }
 
   constructor() {
-    const savedValues = game.randomTarget.settings[SETTING_IDS.CATEGORIES];
+    const savedValues = window[MODULE.NAMESPACE].settings[SETTING_IDS.CATEGORIES];
     this.totalItems = 0;
 
     let categories = [

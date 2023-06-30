@@ -5,7 +5,7 @@ import { registerSettings, saveSetting } from './settings.js';
 Hooks.once('init', function () {
   const initialSettings = registerSettings();
 
-  game[MODULE.NAMESPACE] = {
+  window[MODULE.NAMESPACE] = {
     run,
     saveSetting,
     settings: initialSettings,
