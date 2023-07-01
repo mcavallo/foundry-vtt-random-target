@@ -187,7 +187,49 @@ async function linkFoundryData() {
 
     return Promise.resolve();
   } catch (err) {
-    Promise.reject(err);
+    return Promise.reject(err);
+  }
+}
+
+/**
+ * Unlinks the foundry data directory
+ *
+ * @task
+ */
+async function unlinkFoundryData() {
+  const config = fs.readJSONSync('foundryconfig.json');
+  const moduleConfig = fs.readJSONSync(path.resolve(process.cwd(), 'src', 'module.json'));
+  const moduleName = moduleConfig.name;
+
+  const foundryModulesPath = path.join(config.dataPath, 'modules');
+
+  try {
+    if (!config.dataPath) {
+      throw Error(`No 'dataPath' defined in foundryconfig.json`);
+    }
+
+    if (!fs.existsSync(foundryModulesPath)) {
+      throw Error(`The specified 'dataPath' is invalid. Couldn't find the 'modules' directory.`);
+    }
+
+    const linkDir = path.join(foundryModulesPath, moduleName);
+
+    if (!fs.existsSync(linkDir)) {
+      throw Error(`The specified 'dataPath' is not linked.`);
+    }
+
+    const linkDirStats = await fs.lstat(linkDir);
+
+    if (!linkDirStats.isSymbolicLink()) {
+      throw Error(`The specified 'dataPath' is not linked.`);
+    }
+
+    console.log(`Unlinking '${chalk.blueBright(linkDir)}'...`);
+    await fs.unlink(linkDir);
+
+    return Promise.resolve();
+  } catch (err) {
+    return Promise.reject(err);
   }
 }
 
@@ -198,3 +240,4 @@ exports.build = gulp.series(copyAssets, buildPacks, copyScripts, buildSass, buil
 exports.rebuild = gulp.series(cleanDist, exports.build);
 exports.watch = gulp.series(exports.rebuild, watch);
 exports.link = linkFoundryData;
+exports.unlink = unlinkFoundryData;
