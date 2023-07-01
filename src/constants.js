@@ -2,6 +2,8 @@ export const MODULE = {
   NAME: 'Random Target',
   ID: 'random-target',
   NAMESPACE: 'randomTarget',
+  MACRO_COMPENDIUM: 'random-target-macros',
+  MACRO_ID: 'oIVhNA8Po9HpYdJc',
 };
 
 export const SETTING_IDS = {
