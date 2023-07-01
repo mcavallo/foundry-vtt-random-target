@@ -26,6 +26,7 @@
     "node-fetch": "^2.6.7",
     "prettier": "^2.7.1",
     "rimraf": "^5.0.1",
+    "rollup": "^3.26.0",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-output-manifest": "^2.0.0",
     "rollup-plugin-styles": "^4.0.0",
