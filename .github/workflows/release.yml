@@ -51,7 +51,7 @@ jobs:
       - name: 'Build'
         shell: 'bash'
         run: |
-          gulp build --release=${{ needs.versioning.outputs.new_tag }}
+          RELEASE_VERSION=${{ needs.versioning.outputs.new_tag }} yarn build
 
       - name: Create zip
         run: |

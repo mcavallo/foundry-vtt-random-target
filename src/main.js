@@ -3,6 +3,8 @@ import { MODULE } from './constants.js';
 import { MacroMigration } from './lib/MacroMigration.js';
 import { registerSettings, saveSetting } from './settings.js';
 
+import './styles/module.scss';
+
 Hooks.once('init', function () {
   const initialSettings = registerSettings();
 
