@@ -53,17 +53,19 @@ export class CategoryList {
       }),
     ];
 
-    Object.keys(game.system.model.Actor).forEach(key => {
-      categories.push(
-        this.newCategoryEntry({
-          id: CategoryList.formatTypeId(key),
-          type: 'type',
-          label: CategoryList.formatCategoryName(key),
-          description: `Lists tokens of type <code>${key}</code>`,
-          info: 'Only appears if there is at least 1 matching token.',
-        })
-      );
-    });
+    if (game.system.model && game.system.model.Actor) {
+      Object.keys(game.system.model.Actor).forEach(key => {
+        categories.push(
+          this.newCategoryEntry({
+            id: CategoryList.formatTypeId(key),
+            type: 'type',
+            label: CategoryList.formatCategoryName(key),
+            description: `Lists tokens of type <code>${key}</code>`,
+            info: 'Only appears if there is at least 1 matching token.',
+          })
+        );
+      });
+    }
 
     Object.values(CONST.TOKEN_DISPOSITIONS).forEach(key => {
       const dispositionName = getDispositionName(key);

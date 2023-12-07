@@ -6,7 +6,9 @@ export function isTokenDefeated(token) {
       case SYSTEM_IDS.CONAN:
         return token.overlayEffect.match('skull.svg');
       default:
-        return token._actor.effects.some(effect => effect._statusId === 'dead');
+        return token._actor && token._actor.effects
+          ? token._actor.effects.some(effect => effect._statusId === 'dead')
+          : false;
     }
   } catch (_) {
     return false;

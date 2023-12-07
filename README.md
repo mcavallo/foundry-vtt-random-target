@@ -14,7 +14,7 @@ This module adds a tool for quickly selecting a random target. Once activated it
 
 If you are having issues after upgrading the module please follow this instructions:
 
-1. **Uninstall** the module completely
+1. **Uninstall** the module completely by removing it from your server
 2. Install the **latest version** of the module
 3. Delete the **Random Target** macro from your toolbar
 4. Import the macro again from the **Random Target** macro compendium

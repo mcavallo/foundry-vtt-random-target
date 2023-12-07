@@ -17,4 +17,4 @@
     default: 0
   flags:
     random-target:
-      version: 2.0.0
+      version: 2.3.0

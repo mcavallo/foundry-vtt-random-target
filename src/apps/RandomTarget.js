@@ -100,25 +100,65 @@ export class RandomTarget extends FormApplication {
     }, 100);
   }
 
+  _getSceneTokens() {
+    if (!canvas.scene || !canvas.scene.tokens || !canvas.scene.tokens.contents) {
+      return [];
+    }
+
+    return canvas.scene.tokens.contents.sort(sortTokensByName);
+  }
+
+  _getSelectedTokens() {
+    if (!canvas.tokens || !canvas.tokens.controlled) {
+      return [];
+    }
+
+    return canvas.tokens.controlled.map(token => token.id);
+  }
+
+  _getTargetedTokens() {
+    if (!game.user || !game.user.targets) {
+      return [];
+    }
+
+    return game.user.targets.map(token => token.id);
+  }
+
+  _getTokenType(token) {
+    if (!token.actor || !token.actor.type) {
+      return;
+    }
+
+    return CategoryList.formatTypeId(token.actor.type);
+  }
+
+  _getTokenDisposition(token) {
+    if (!token.disposition) {
+      return;
+    }
+
+    return CategoryList.formatDispositionId(token.disposition);
+  }
+
   getData() {
     const data = super.getData();
     const tokenCategories = new CategoryList();
-    const sortedTokens = canvas.scene.tokens.contents.sort(sortTokensByName);
-    const selectedTokens = new Set(canvas.tokens.controlled.map(token => token.id));
-    const targetedTokens = new Set(game.user.targets.map(token => token.id));
+    const sortedTokens = this._getSceneTokens().sort(sortTokensByName);
+    const selectedTokens = new Set(this._getSelectedTokens());
+    const targetedTokens = new Set(this._getTargetedTokens());
     const hasEnoughSelected = selectedTokens.size > 1;
     const hasEnoughTargeted = targetedTokens.size > 1;
 
     sortedTokens.forEach(token => {
-      const type = CategoryList.formatTypeId(token.actor.type);
-      const disposition = CategoryList.formatDispositionId(token.disposition);
+      const type = this._getTokenType(token);
+      const disposition = this._getTokenDisposition(token);
 
       const categoryListEntry = {
         id: token.id,
         img: token.texture.src,
         name: token.name,
         actorId: token.actorId,
-        type,
+        type: type, // Avoid using object property shorthand
         selected: false,
         defeated: isTokenDefeated(token),
       };
@@ -299,6 +339,11 @@ export class RandomTarget extends FormApplication {
 }
 
 export function run() {
+  if (!canvas || !canvas.scene) {
+    ui.notifications.error('You need to have an active scene to select random targets', { console: false });
+    return;
+  }
+
   const app = new RandomTarget();
   app.render(true);
   return app;

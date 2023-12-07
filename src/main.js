@@ -9,8 +9,8 @@ Hooks.once('init', function () {
   const initialSettings = registerSettings();
 
   window[MODULE.NAMESPACE] = {
-    run,
-    saveSetting,
+    run: run, // Avoid using object property shorthand
+    saveSetting: saveSetting, // Avoid using object property shorthand
     settings: initialSettings,
   };
 });
