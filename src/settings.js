@@ -61,7 +61,7 @@ export function registerSettings() {
   game.settings.registerMenu(MODULE.ID, SETTING_IDS.CATEGORIES + 'Menu', {
     name: 'Categories',
     label: 'Configure Categories',
-    hint: 'Manage the available categories.',
+    hint: 'Manage the available target categories.',
     icon: 'fa fa-list-check',
     type: CategoriesSettings,
     restricted: true,
@@ -77,7 +77,7 @@ export function registerSettings() {
 
   game.settings.register(MODULE.ID, SETTING_IDS.CHAT_NOTIFICATION, {
     name: 'Post chat message',
-    hint: 'Wheter a chat message should be sent whenever a target is selected.',
+    hint: 'Whether a chat message should be sent when a random target is selected.',
     scope: 'world',
     config: true,
     type: Boolean,
@@ -87,11 +87,47 @@ export function registerSettings() {
 
   game.settings.register(MODULE.ID, SETTING_IDS.CHAT_NOTIFICATION_PUBLIC, {
     name: 'Show chat message to the players',
-    hint: 'Wheter the chat message should be shown to the players.',
+    hint: 'Whether the chat message should be shown to the players.',
     scope: 'world',
     config: true,
     type: Boolean,
     default: false,
+    onChange: updateSettings,
+  });
+
+  game.settings.register(MODULE.ID, SETTING_IDS.PERSIST_SELECTION, {
+    name: 'Persist selection',
+    hint: 'Whether the pre-selected targets should persist and be automatically selected in subsequent runs.',
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+    onChange: updateSettings,
+  });
+
+  game.settings.register(MODULE.ID, SETTING_IDS.AVOID_SELECTING_SAME_TARGET, {
+    name: 'Avoid selecting the same target',
+    hint: 'Whether the same target can be selected twice in a row.',
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+    onChange: updateSettings,
+  });
+
+  game.settings.register(MODULE.ID, SETTING_IDS.PREV_TARGET_ID, {
+    scope: 'world',
+    config: false,
+    type: String,
+    default: '',
+    onChange: updateSettings,
+  });
+
+  game.settings.register(MODULE.ID, SETTING_IDS.PREV_SELECTION, {
+    scope: 'world',
+    config: false,
+    type: Array,
+    default: [],
     onChange: updateSettings,
   });
 
