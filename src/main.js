@@ -7,11 +7,13 @@ import './styles/module.scss';
 
 Hooks.once('init', function () {
   const initialSettings = registerSettings();
+  const seed = Math.floor(Math.random() * 100000);
 
   window[MODULE.NAMESPACE] = {
     run: run, // Avoid using object property shorthand
     saveSetting: saveSetting, // Avoid using object property shorthand
     settings: initialSettings,
+    mt: new MersenneTwister(seed),
   };
 });
 

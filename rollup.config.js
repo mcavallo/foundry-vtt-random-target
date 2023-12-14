@@ -10,8 +10,11 @@ const REPO_URL = 'https://github.com/mcavallo/foundry-vtt-random-target';
 
 export default async () => {
   const releaseData = await getReleaseData(REPO_URL);
+  const { outputFileName, outputStyle, sourcemap, showReleaseLog } = releaseData.isReleaseBuild
+    ? { outputFileName: '[name]-[hash:12]', outputStyle: 'compressed', sourcemap: false, showReleaseLog: false }
+    : { outputFileName: '[name]', outputStyle: 'expanded', sourcemap: true, showReleaseLog: false };
 
-  if (releaseData.isReleaseBuild) {
+  if (showReleaseLog) {
     console.log(`Building release '${chalk.blueBright(releaseData.version)}'...`);
   }
 
@@ -20,18 +23,18 @@ export default async () => {
       module: 'src/main.js',
     },
     output: {
-      entryFileNames: '[name]-[hash:12].js',
-      assetFileNames: '[name]-[hash:12].[ext]',
+      entryFileNames: `${outputFileName}.js`,
+      assetFileNames: `${outputFileName}.[ext]`,
       dir: './dist/',
       format: 'iife',
-      sourcemap: releaseData.isReleaseBuild ? false : true,
+      sourcemap,
     },
     plugins: [
       watch({ dir: 'src' }),
       styles({
         mode: 'extract',
         sass: {
-          outputStyle: releaseData.isReleaseBuild ? 'compressed' : 'expanded',
+          outputStyle,
         },
       }),
       copy({

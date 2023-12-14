@@ -7,16 +7,24 @@ export const MODULE = {
 };
 
 export const SETTING_IDS = {
-  FORM_SETTINGS: 'formSettings',
+  AVOID_SELECTING_SAME_TARGET: 'avoidSelectingSameTarget',
   CATEGORIES: 'categories',
-  CHAT_NOTIFICATION: 'chatNotification',
   CHAT_NOTIFICATION_PUBLIC: 'chatNotificationPublic',
+  CHAT_NOTIFICATION: 'chatNotification',
+  FORM_SETTINGS: 'formSettings',
+  PERSIST_SELECTION: 'persistSelection',
+  PREV_SELECTION: 'previousSelection',
+  PREV_TARGET_ID: 'previousTargetId',
 };
 
 export const FOUNDRY_SETTING_IDS = [
+  SETTING_IDS.AVOID_SELECTING_SAME_TARGET,
   SETTING_IDS.CATEGORIES,
-  SETTING_IDS.CHAT_NOTIFICATION,
   SETTING_IDS.CHAT_NOTIFICATION_PUBLIC,
+  SETTING_IDS.CHAT_NOTIFICATION,
+  SETTING_IDS.PERSIST_SELECTION,
+  SETTING_IDS.PREV_SELECTION,
+  SETTING_IDS.PREV_TARGET_ID,
 ];
 
 export const SYSTEM_IDS = {

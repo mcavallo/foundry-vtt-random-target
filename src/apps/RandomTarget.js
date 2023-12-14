@@ -140,6 +140,14 @@ export class RandomTarget extends FormApplication {
     return CategoryList.formatDispositionId(token.disposition);
   }
 
+  _getCanvasToken(tokenId) {
+    if (!canvas.tokens || !canvas.tokens.objects || !canvas.tokens.objects.children) {
+      return;
+    }
+
+    return canvas.tokens.objects.children.find(token => token.id === tokenId);
+  }
+
   getData() {
     const data = super.getData();
     const tokenCategories = new CategoryList();
@@ -148,6 +156,10 @@ export class RandomTarget extends FormApplication {
     const targetedTokens = new Set(this._getTargetedTokens());
     const hasEnoughSelected = selectedTokens.size > 1;
     const hasEnoughTargeted = targetedTokens.size > 1;
+
+    const previousSelection = window[MODULE.NAMESPACE].settings[SETTING_IDS.PERSIST_SELECTION]
+      ? window[MODULE.NAMESPACE].settings[SETTING_IDS.PREV_SELECTION]
+      : [];
 
     sortedTokens.forEach(token => {
       const type = this._getTokenType(token);
@@ -159,7 +171,7 @@ export class RandomTarget extends FormApplication {
         name: token.name,
         actorId: token.actorId,
         type: type, // Avoid using object property shorthand
-        selected: false,
+        selected: previousSelection.includes(token.id),
         defeated: isTokenDefeated(token),
       };
 
@@ -203,8 +215,10 @@ export class RandomTarget extends FormApplication {
       return;
     }
 
-    const randomPick = selectedTokens[Math.floor(Math.random() * selectedTokens.length)];
+    const randomPick = this._pickRandomToken(selectedTokens);
     this._targetToken(randomPick, selectedTokens);
+
+    window[MODULE.NAMESPACE].saveSetting(SETTING_IDS.PREV_SELECTION, selectedTokens);
   }
 
   activateListeners(html) {
@@ -275,8 +289,22 @@ export class RandomTarget extends FormApplication {
     html.find(`button[type="submit"][name="submit"]`).attr('disabled', totalChecked < 2);
   }
 
+  _pickRandomToken(selectedTokens) {
+    const previousTarget = window[MODULE.NAMESPACE].settings[SETTING_IDS.PREV_TARGET_ID];
+    let randomPick;
+
+    while (
+      !randomPick ||
+      (window[MODULE.NAMESPACE].settings[SETTING_IDS.AVOID_SELECTING_SAME_TARGET] && randomPick === previousTarget)
+    ) {
+      randomPick = selectedTokens[Math.floor(window[MODULE.NAMESPACE].mt.random() * selectedTokens.length)];
+    }
+
+    return randomPick;
+  }
+
   _targetToken(tokenId, candidatesIds) {
-    const target = canvas.tokens.objects.children.find(token => token.id === tokenId);
+    const target = this._getCanvasToken(tokenId);
 
     if (!target) {
       return;
@@ -286,6 +314,8 @@ export class RandomTarget extends FormApplication {
     this._sendSuccessUINotification(target);
     this._sendChatNotification(target, candidatesIds);
     canvas.animatePan(target.position);
+
+    window[MODULE.NAMESPACE].saveSetting(SETTING_IDS.PREV_TARGET_ID, tokenId);
   }
 
   _sendSuccessUINotification(target) {
@@ -303,7 +333,7 @@ export class RandomTarget extends FormApplication {
 
     const candidatesPool = candidatesIds
       .map(tokenId => {
-        const candidate = canvas.tokens.objects.children.find(token => token.id === tokenId);
+        const candidate = this._getCanvasToken(tokenId);
         const isSelected = candidate && candidate.id === target.id;
         const name = candidate ? candidate.name : `Unknown token (${tokenId})`;
         return `<li><span${isSelected ? ' class="target"' : ''}>${name}</span></li>`;
@@ -315,7 +345,7 @@ export class RandomTarget extends FormApplication {
       : ChatMessage.getWhisperRecipients('GM').map(recipient => recipient.id);
 
     ChatMessage.create({
-      speaker: { alias: 'Random Target' },
+      speaker: { alias: MODULE.NAME },
       whisper: recipients,
       content: `
         <div class="${MODULE.ID}-message">
