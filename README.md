@@ -19,6 +19,10 @@ If you are having issues after upgrading the module please follow this instructi
 3. Delete the **Random Target** macro from your toolbar
 4. Import the macro again from the **Random Target** macro compendium
 
+# Settings
+
+The module has a settings page that you can use to customize the experience to your liking. Read more about it [here](https://github.com/mcavallo/foundry-vtt-random-target/wiki/Settings).
+
 # Supported Systems
 
 While this module should work without problems with most systems, it has been tested and visually optimized for:

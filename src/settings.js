@@ -107,7 +107,7 @@ export function registerSettings() {
 
   game.settings.register(MODULE.ID, SETTING_IDS.AVOID_SELECTING_SAME_TARGET, {
     name: 'Avoid selecting the same target',
-    hint: 'Whether the same target can be selected twice in a row.',
+    hint: 'Whether to prevent the same target from being targeted twice in a row.',
     scope: 'world',
     config: true,
     type: Boolean,
