@@ -1,4 +1,4 @@
-$module: "random-target";
+$module: 'random-target';
 $targetItemsTotal: 6;
 $targetItemHeight: 32;
 $targetItemMarginTop: 5;
@@ -215,7 +215,13 @@ $targetItemMarginTop: 5;
   }
 }
 
-// System Overrides
+// Foundry settings style overrides
+
+#client-settings section.category[data-tab='#{$module}'] .form-group .form-fields {
+  flex: 0;
+}
+
+// System overrides
 
 .system-wfrp4e {
   .app.window-app.#{$module} {
