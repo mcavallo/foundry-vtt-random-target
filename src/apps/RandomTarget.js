@@ -196,6 +196,7 @@ export class RandomTarget extends FormApplication {
 
     data.tokenCategories = tokenCategories.getSortedAndFiltered();
     data.areThereTokens = !!tokenCategories.getTotalItems();
+    data.initialSelectionCount = previousSelection.length;
 
     return data;
   }
