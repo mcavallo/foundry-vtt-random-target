@@ -10,7 +10,7 @@ export class CategoriesSettings extends FormApplication {
   }
 
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ['form', MODULE.ID],
       popOut: true,
       id: `${MODULE.ID}-categories-setting`,
