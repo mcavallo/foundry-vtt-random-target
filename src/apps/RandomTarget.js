@@ -9,7 +9,7 @@ export class RandomTarget extends FormApplication {
   #tokenControlOrTargetChangedHandler;
 
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       ...window[MODULE.NAMESPACE].settings[SETTING_IDS.FORM_SETTINGS],
       classes: [MODULE.ID],
       popOut: true,

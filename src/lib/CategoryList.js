@@ -53,8 +53,8 @@ export class CategoryList {
       }),
     ];
 
-    if (game.system.model && game.system.model.Actor) {
-      Object.keys(game.system.model.Actor).forEach(key => {
+    if (game.system.documentTypes && game.system.documentTypes.Actor) {
+      Object.keys(game.system.documentTypes.Actor).forEach(key => {
         categories.push(
           this.newCategoryEntry({
             id: CategoryList.formatTypeId(key),
