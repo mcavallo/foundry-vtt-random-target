@@ -3,6 +3,8 @@ $targetItemsTotal: 6;
 $targetItemHeight: 32;
 $targetItemMarginTop: 5;
 
+$systemsPath: '../../systems';
+
 .window-app.#{$module} {
   .tabs {
     display: flex;
@@ -268,9 +270,9 @@ $targetItemMarginTop: 5;
       text-align: center;
       height: 30px;
       width: 30px;
-      margin: 0px;
-      padding: 0px;
-      background: url(/systems/wfrp4e/ui/buttons/button-configure-sheet.webp);
+      margin: 0;
+      padding: 0;
+      background: url(#{$systemsPath}/wfrp4e/ui/buttons/button-configure-sheet.webp);
     }
   }
 
