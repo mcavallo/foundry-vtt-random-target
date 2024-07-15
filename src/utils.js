@@ -1,4 +1,4 @@
-import { SYSTEM_IDS } from './constants.js';
+import { MODULE, SYSTEM_IDS } from './constants.js';
 
 export function isTokenDefeated(token) {
   try {
@@ -39,4 +39,8 @@ export function getDispositionName(num) {
   }
 
   return disposition[0][0].toLowerCase();
+}
+
+export function $M() {
+  return window[MODULE.NAMESPACE];
 }

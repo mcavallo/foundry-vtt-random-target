@@ -1,5 +1,5 @@
-import { CATEGORY_IDS, MODULE, SETTING_IDS } from '../constants.js';
-import { getDispositionName, sortAlphabetically } from '../utils.js';
+import { CATEGORY_IDS, SETTING_IDS } from '../constants.js';
+import { $M, getDispositionName, sortAlphabetically } from '../utils.js';
 
 export class CategoryList {
   static formatTypeId(raw) {
@@ -27,7 +27,7 @@ export class CategoryList {
   }
 
   constructor() {
-    const savedValues = window[MODULE.NAMESPACE].settings[SETTING_IDS.CATEGORIES];
+    const savedValues = $M().settings.get(SETTING_IDS.CATEGORIES);
     this.totalItems = 0;
 
     let categories = [
@@ -44,6 +44,13 @@ export class CategoryList {
         label: 'Selected',
         description: 'Lists the selected tokens in the scene',
         info: 'Only appears if there is at least 2 tokens selected.',
+      }),
+      this.newCategoryEntry({
+        id: CATEGORY_IDS.PREVIOUS,
+        type: 'core',
+        label: 'Previous',
+        description: 'Lists tokens pre-selected from the previous run',
+        info: 'Only appears if there was a previous selection and the "Persistent selection" option is enabled.',
       }),
       this.newCategoryEntry({
         id: CATEGORY_IDS.ALL,

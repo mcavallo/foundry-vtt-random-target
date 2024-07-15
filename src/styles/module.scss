@@ -133,6 +133,14 @@ $systemsPath: '../../systems';
 
 #chat-log {
   .#{$module}-message {
+    .#{$module}-message-target {
+      font-weight: bold;
+
+      .fas {
+        margin-right: 2px;
+      }
+    }
+
     .dice-roll {
       cursor: pointer;
 
@@ -273,6 +281,20 @@ $systemsPath: '../../systems';
       margin: 0;
       padding: 0;
       background: url(#{$systemsPath}/wfrp4e/ui/buttons/button-configure-sheet.webp);
+    }
+  }
+
+  #chat-log {
+    .#{$module}-message {
+      .#{$module}-message-target {
+        i {
+          color: black;
+        }
+      }
+
+      .dice-roll {
+        cursor: url(#{$systemsPath}/wfrp4e/ui/cursors/pointer.png), pointer;
+      }
     }
   }
 
