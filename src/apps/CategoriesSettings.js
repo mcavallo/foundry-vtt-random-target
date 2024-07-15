@@ -1,5 +1,6 @@
 import { MODULE, SETTING_IDS } from '../constants.js';
 import { CategoryList } from '../lib/CategoryList.js';
+import { $M } from '../utils.js';
 
 export class CategoriesSettings extends FormApplication {
   #dragEndHandler;
@@ -103,10 +104,10 @@ export class CategoriesSettings extends FormApplication {
     const selectedCategories = (formData.categories || []).filter(Boolean);
 
     if (selectedCategories.length === 0) {
-      ui.notifications.error('You need to select at least 1 category', { console: false });
+      $M().notifications.sendMinimumCategoriesError();
       throw new Error();
     }
 
-    window[MODULE.NAMESPACE].saveSetting(SETTING_IDS.CATEGORIES, selectedCategories);
+    $M().settings.set(SETTING_IDS.CATEGORIES, selectedCategories);
   }
 }

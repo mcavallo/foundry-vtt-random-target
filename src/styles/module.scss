@@ -3,6 +3,8 @@ $targetItemsTotal: 6;
 $targetItemHeight: 32;
 $targetItemMarginTop: 5;
 
+$systemsPath: '../../systems';
+
 .window-app.#{$module} {
   .tabs {
     display: flex;
@@ -131,6 +133,14 @@ $targetItemMarginTop: 5;
 
 #chat-log {
   .#{$module}-message {
+    .#{$module}-message-target {
+      font-weight: bold;
+
+      .fas {
+        margin-right: 2px;
+      }
+    }
+
     .dice-roll {
       cursor: pointer;
 
@@ -250,6 +260,7 @@ $targetItemMarginTop: 5;
 
     button:disabled {
       box-shadow: none !important;
+      opacity: .6;
     }
 
     .target-item {
@@ -267,9 +278,23 @@ $targetItemMarginTop: 5;
       text-align: center;
       height: 30px;
       width: 30px;
-      margin: 0px;
-      padding: 0px;
-      background: url(/systems/wfrp4e/ui/buttons/button-configure-sheet.webp);
+      margin: 0;
+      padding: 0;
+      background: url(#{$systemsPath}/wfrp4e/ui/buttons/button-configure-sheet.webp);
+    }
+  }
+
+  #chat-log {
+    .#{$module}-message {
+      .#{$module}-message-target {
+        i {
+          color: black;
+        }
+      }
+
+      .dice-roll {
+        cursor: url(#{$systemsPath}/wfrp4e/ui/cursors/pointer.png), pointer;
+      }
     }
   }
 

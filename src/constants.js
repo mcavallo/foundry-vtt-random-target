@@ -38,6 +38,9 @@ export const SYSTEM_IDS = {
 
 export const CATEGORY_IDS = {
   ALL: 'core.all',
+  PREVIOUS: 'core.previous',
   SELECTED: 'core.selected',
   TARGETED: 'core.targeted',
 };
+
+export const BASE_CATEGORIES = [CATEGORY_IDS.TARGETED, CATEGORY_IDS.SELECTED, CATEGORY_IDS.PREVIOUS, CATEGORY_IDS.ALL];

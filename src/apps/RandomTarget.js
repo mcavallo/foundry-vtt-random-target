@@ -1,6 +1,6 @@
 import { CATEGORY_IDS, MODULE, SETTING_IDS } from '../constants.js';
 import { CategoryList } from '../lib/CategoryList.js';
-import { isTokenDefeated, sortTokensByName } from '../utils.js';
+import { $M, isTokenDefeated } from '../utils.js';
 
 export class RandomTarget extends FormApplication {
   #settingTimeout;
@@ -10,7 +10,7 @@ export class RandomTarget extends FormApplication {
 
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      ...window[MODULE.NAMESPACE].settings[SETTING_IDS.FORM_SETTINGS],
+      ...$M().settings.get(SETTING_IDS.FORM_SETTINGS),
       classes: [MODULE.ID],
       popOut: true,
       id: MODULE.ID,
@@ -87,7 +87,11 @@ export class RandomTarget extends FormApplication {
   }
 
   _onSettingsSaved(event) {
-    if (event && event.key === `${MODULE.ID}.${SETTING_IDS.CATEGORIES}`) {
+    if (
+      event &&
+      (event.key === `${MODULE.ID}.${SETTING_IDS.CATEGORIES}` ||
+        event.key === `${MODULE.ID}.${SETTING_IDS.PERSIST_SELECTION}`)
+    ) {
       this.render(true);
     }
   }
@@ -98,30 +102,6 @@ export class RandomTarget extends FormApplication {
     this.#controlOrTargetTimeout = setTimeout(() => {
       this.render(true);
     }, 100);
-  }
-
-  _getSceneTokens() {
-    if (!canvas.scene || !canvas.scene.tokens || !canvas.scene.tokens.contents) {
-      return [];
-    }
-
-    return canvas.scene.tokens.contents.sort(sortTokensByName);
-  }
-
-  _getSelectedTokens() {
-    if (!canvas.tokens || !canvas.tokens.controlled) {
-      return [];
-    }
-
-    return canvas.tokens.controlled.map(token => token.id);
-  }
-
-  _getTargetedTokens() {
-    if (!game.user || !game.user.targets) {
-      return [];
-    }
-
-    return game.user.targets.map(token => token.id);
   }
 
   _getTokenType(token) {
@@ -140,30 +120,22 @@ export class RandomTarget extends FormApplication {
     return CategoryList.formatDispositionId(token.disposition);
   }
 
-  _getCanvasToken(tokenId) {
-    if (!canvas.tokens || !canvas.tokens.objects || !canvas.tokens.objects.children) {
-      return;
-    }
-
-    return canvas.tokens.objects.children.find(token => token.id === tokenId);
-  }
-
   getData() {
     const data = super.getData();
+    const persistSelection = $M().settings.get(SETTING_IDS.PERSIST_SELECTION);
+
     const tokenCategories = new CategoryList();
-    const sortedTokens = this._getSceneTokens().sort(sortTokensByName);
-    const selectedTokens = new Set(this._getSelectedTokens());
-    const targetedTokens = new Set(this._getTargetedTokens());
+    const sortedTokens = $M().game.getSceneTokens();
+    const selectedTokens = new Set($M().game.getSelectedTokens());
+    const targetedTokens = new Set($M().game.getTargetedTokens());
+    const previousSelection = persistSelection ? $M().settings.get(SETTING_IDS.PREV_SELECTION) : [];
     const hasEnoughSelected = selectedTokens.size > 1;
     const hasEnoughTargeted = targetedTokens.size > 1;
-
-    const previousSelection = window[MODULE.NAMESPACE].settings[SETTING_IDS.PERSIST_SELECTION]
-      ? window[MODULE.NAMESPACE].settings[SETTING_IDS.PREV_SELECTION]
-      : [];
 
     sortedTokens.forEach(token => {
       const type = this._getTokenType(token);
       const disposition = this._getTokenDisposition(token);
+      const wasPreviouslySelected = previousSelection.includes(token.id);
 
       const categoryListEntry = {
         id: token.id,
@@ -171,11 +143,15 @@ export class RandomTarget extends FormApplication {
         name: token.name,
         actorId: token.actorId,
         type: type, // Avoid using object property shorthand
-        selected: previousSelection.includes(token.id),
+        selected: wasPreviouslySelected,
         defeated: isTokenDefeated(token),
       };
 
       tokenCategories.addItem(CATEGORY_IDS.ALL, categoryListEntry);
+
+      if (persistSelection && wasPreviouslySelected) {
+        tokenCategories.addItem(CATEGORY_IDS.PREVIOUS, categoryListEntry);
+      }
 
       if (hasEnoughSelected && selectedTokens.has(categoryListEntry.id)) {
         tokenCategories.addItem(CATEGORY_IDS.SELECTED, categoryListEntry);
@@ -196,6 +172,7 @@ export class RandomTarget extends FormApplication {
 
     data.tokenCategories = tokenCategories.getSortedAndFiltered();
     data.areThereTokens = !!tokenCategories.getTotalItems();
+    data.initialSelectionCount = previousSelection.length;
 
     return data;
   }
@@ -211,14 +188,14 @@ export class RandomTarget extends FormApplication {
     );
 
     if (selectedTokens.length < 2) {
-      this._sendErrorUINotification();
+      $M().notifications.sendMinimumSelectionError();
       return;
     }
 
     const randomPick = this._pickRandomToken(selectedTokens);
     this._targetToken(randomPick, selectedTokens);
 
-    window[MODULE.NAMESPACE].saveSetting(SETTING_IDS.PREV_SELECTION, selectedTokens);
+    $M().settings.set(SETTING_IDS.PREV_SELECTION, selectedTokens);
   }
 
   activateListeners(html) {
@@ -233,17 +210,18 @@ export class RandomTarget extends FormApplication {
     });
   }
 
-  _getCheckedInputs(html, options = { tab: null, checked: false, unique: false }) {
+  _getCheckedInputs(html, options = {}) {
+    const opt = Object.assign({ tab: null, checked: false, unique: false }, options);
     let taken = [];
     let selection = html.find(
       [
-        options.tab ? `[data-tab="${options.tab}"]` : '',
+        opt.tab ? `[data-tab="${opt.tab}"]` : '',
         '[data-group="target-categories"] input[type="checkbox"]:not(.toggleSelection)',
-        options.checked ? `:checked` : '',
+        opt.checked ? `:checked` : '',
       ].join('')
     );
 
-    if (options.unique) {
+    if (opt.unique) {
       selection = selection.filter((_, input) => {
         const value = $(input).attr('value');
 
@@ -290,87 +268,32 @@ export class RandomTarget extends FormApplication {
   }
 
   _pickRandomToken(selectedTokens) {
-    const previousTarget = window[MODULE.NAMESPACE].settings[SETTING_IDS.PREV_TARGET_ID];
+    const previousTarget = $M().settings.get(SETTING_IDS.PREV_TARGET_ID);
+    const avoidSelectingSameTarget = $M().settings.get(SETTING_IDS.AVOID_SELECTING_SAME_TARGET);
     let randomPick;
 
-    while (
-      !randomPick ||
-      (window[MODULE.NAMESPACE].settings[SETTING_IDS.AVOID_SELECTING_SAME_TARGET] && randomPick === previousTarget)
-    ) {
-      randomPick = selectedTokens[Math.floor(window[MODULE.NAMESPACE].mt.random() * selectedTokens.length)];
+    while (!randomPick || (avoidSelectingSameTarget && randomPick === previousTarget)) {
+      const idx = $M().random.getOne(selectedTokens.length);
+      randomPick = selectedTokens[idx];
     }
 
     return randomPick;
   }
 
   _targetToken(tokenId, candidatesIds) {
-    const target = this._getCanvasToken(tokenId);
+    const target = $M().game.targetToken(tokenId);
 
-    if (!target) {
-      return;
+    if (target) {
+      $M().settings.set(SETTING_IDS.PREV_TARGET_ID, tokenId);
+      $M().chat.sendTargetNotificationMessage(tokenId, candidatesIds);
+      $M().notifications.sendTargetNotification(target.name);
     }
-
-    target.setTarget(true, { releaseOthers: true });
-    this._sendSuccessUINotification(target);
-    this._sendChatNotification(target, candidatesIds);
-    canvas.animatePan(target.position);
-
-    window[MODULE.NAMESPACE].saveSetting(SETTING_IDS.PREV_TARGET_ID, tokenId);
-  }
-
-  _sendSuccessUINotification(target) {
-    ui.notifications.info(`<b>${target.name}</b> targeted`, {});
-  }
-
-  _sendErrorUINotification() {
-    ui.notifications.error('You need to select at least 2 tokens', {});
-  }
-
-  _sendChatNotification(target, candidatesIds) {
-    if (!window[MODULE.NAMESPACE].settings[SETTING_IDS.CHAT_NOTIFICATION]) {
-      return;
-    }
-
-    const candidatesPool = candidatesIds
-      .map(tokenId => {
-        const candidate = this._getCanvasToken(tokenId);
-        const isSelected = candidate && candidate.id === target.id;
-        const name = candidate ? candidate.name : `Unknown token (${tokenId})`;
-        return `<li><span${isSelected ? ' class="target"' : ''}>${name}</span></li>`;
-      })
-      .join('');
-
-    const recipients = window[MODULE.NAMESPACE].settings[SETTING_IDS.CHAT_NOTIFICATION_PUBLIC]
-      ? null
-      : ChatMessage.getWhisperRecipients('GM').map(recipient => recipient.id);
-
-    ChatMessage.create({
-      speaker: { alias: MODULE.NAME },
-      whisper: recipients,
-      content: `
-        <div class="${MODULE.ID}-message">
-          <div class="dice-roll">
-              <div class="dice-result">
-                <div>
-                  <strong>${target.name}</strong> was randomly selected.
-                </div>
-                <div class="dice-tooltip">
-                  <section>
-                    The pool of candidates for this selection:
-                    <ul>${candidatesPool}</ul>
-                  </section>
-                </div>
-              </div>
-            </div>
-        </div>
-      `,
-    });
   }
 }
 
 export function run() {
-  if (!canvas || !canvas.scene) {
-    ui.notifications.error('You need to have an active scene to select random targets', { console: false });
+  if (!$M().game.getScene()) {
+    $M().notifications.sendMissingSceneError();
     return;
   }
 

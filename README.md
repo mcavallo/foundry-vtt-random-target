@@ -12,7 +12,7 @@ This module adds a tool for quickly selecting a random target. Once activated it
 
 # Upgrading
 
-If you are having issues after upgrading the module please follow this instructions:
+If you are having issues after upgrading the module please follow these instructions:
 
 1. **Uninstall** the module completely by removing it from your server
 2. Install the **latest version** of the module
