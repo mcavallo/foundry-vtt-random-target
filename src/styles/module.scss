@@ -94,14 +94,17 @@ $systemsPath: '../../systems';
       height: $targetItemHeight * 1px;
       position: relative;
       margin-left: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    img {
-      width: $targetItemHeight * 1px;
-      height: $targetItemHeight * 1px;
+    video, img {
       border: 0;
       display: block;
-      object-fit: cover;
+      object-fit: contain;
+      height: 100%;
+      width: 100%;
     }
 
     &.defeated {
