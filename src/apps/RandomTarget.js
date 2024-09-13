@@ -89,8 +89,11 @@ export class RandomTarget extends FormApplication {
   _onSettingsSaved(event) {
     if (
       event &&
-      (event.key === `${MODULE.ID}.${SETTING_IDS.CATEGORIES}` ||
-        event.key === `${MODULE.ID}.${SETTING_IDS.PERSIST_SELECTION}`)
+      [
+        `${MODULE.ID}.${SETTING_IDS.CATEGORIES}`,
+        `${MODULE.ID}.${SETTING_IDS.PERSIST_SELECTION}`,
+        `${MODULE.ID}.${SETTING_IDS.PREFERRED_IMAGE}`,
+      ].includes(event.key)
     ) {
       this.render(true);
     }
