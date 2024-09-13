@@ -1,5 +1,13 @@
 import { CategoriesSettings } from '../apps/CategoriesSettings.js';
-import { BASE_CATEGORIES, FOUNDRY_SETTING_IDS, MODULE, SETTING_IDS, SYSTEM_IDS } from '../constants.js';
+import {
+  BASE_CATEGORIES,
+  FOUNDRY_SETTING_IDS,
+  MODULE,
+  PREFERRED_IMAGE,
+  PREFERRED_IMAGE_OPTIONS,
+  SETTING_IDS,
+  SYSTEM_IDS,
+} from '../constants.js';
 
 export class SettingsManager {
   constructor() {
@@ -71,6 +79,18 @@ export class SettingsManager {
       type: Boolean,
       default: false,
       onChange: this._updateSettings.bind(this),
+    });
+
+    game.settings.register(MODULE.ID, SETTING_IDS.PREFERRED_IMAGE, {
+      name: 'Preferred target image',
+      hint: 'Specify the preferred image to be displayed in the list of targets.',
+      scope: 'world',
+      config: true,
+      type: String,
+      choices: PREFERRED_IMAGE_OPTIONS,
+      default: PREFERRED_IMAGE.TOKEN,
+      onChange: this._updateSettings.bind(this),
+      requiresReload: false,
     });
 
     game.settings.register(MODULE.ID, SETTING_IDS.PREV_TARGET_ID, {

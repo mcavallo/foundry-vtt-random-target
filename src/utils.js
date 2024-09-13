@@ -41,6 +41,10 @@ export function getDispositionName(num) {
   return disposition[0][0].toLowerCase();
 }
 
+export function getIsAnimatedImage(src) {
+  return src && src.toLowerCase().match(/(?:mp4|ogv|webm)$/);
+}
+
 export function $M() {
   return window[MODULE.NAMESPACE];
 }

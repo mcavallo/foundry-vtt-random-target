@@ -38,7 +38,11 @@
                 />
                 <label for='{{concat "selectedTokens." id}}'>
                   <div class="image">
-                    <img src='{{img}}' />
+                    {{#if img.animated}}
+                    <video src='{{img.src}}' autoplay muted loop></video>
+                    {{else}}
+                    <img src='{{img.src}}' />
+                    {{/if}}
                   </div>
                   <div class="name">
                     {{name}}

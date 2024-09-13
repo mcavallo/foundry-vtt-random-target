@@ -1,6 +1,6 @@
-import { CATEGORY_IDS, MODULE, SETTING_IDS } from '../constants.js';
+import { CATEGORY_IDS, MODULE, PREFERRED_IMAGE, SETTING_IDS } from '../constants.js';
 import { CategoryList } from '../lib/CategoryList.js';
-import { $M, isTokenDefeated } from '../utils.js';
+import { $M, getIsAnimatedImage, isTokenDefeated } from '../utils.js';
 
 export class RandomTarget extends FormApplication {
   #settingTimeout;
@@ -89,8 +89,11 @@ export class RandomTarget extends FormApplication {
   _onSettingsSaved(event) {
     if (
       event &&
-      (event.key === `${MODULE.ID}.${SETTING_IDS.CATEGORIES}` ||
-        event.key === `${MODULE.ID}.${SETTING_IDS.PERSIST_SELECTION}`)
+      [
+        `${MODULE.ID}.${SETTING_IDS.CATEGORIES}`,
+        `${MODULE.ID}.${SETTING_IDS.PERSIST_SELECTION}`,
+        `${MODULE.ID}.${SETTING_IDS.PREFERRED_IMAGE}`,
+      ].includes(event.key)
     ) {
       this.render(true);
     }
@@ -110,6 +113,20 @@ export class RandomTarget extends FormApplication {
     }
 
     return CategoryList.formatTypeId(token.actor.type);
+  }
+
+  _getTokenImage(token) {
+    const preferredImage = $M().settings.get(SETTING_IDS.PREFERRED_IMAGE);
+    let image = token.texture.src;
+
+    if (token.actor.img && preferredImage === PREFERRED_IMAGE.ACTOR) {
+      image = token.actor.img;
+    }
+
+    return {
+      src: image,
+      animated: getIsAnimatedImage(image),
+    };
   }
 
   _getTokenDisposition(token) {
@@ -136,10 +153,11 @@ export class RandomTarget extends FormApplication {
       const type = this._getTokenType(token);
       const disposition = this._getTokenDisposition(token);
       const wasPreviouslySelected = previousSelection.includes(token.id);
+      const image = this._getTokenImage(token);
 
       const categoryListEntry = {
         id: token.id,
-        img: token.texture.src,
+        img: image,
         name: token.name,
         actorId: token.actorId,
         type: type, // Avoid using object property shorthand
@@ -207,6 +225,11 @@ export class RandomTarget extends FormApplication {
       this._computeSelectionChange(html, event.target.value, event.target.checked);
       this._computeTotalSelectionCount(html);
       this._computeSubmitState(html);
+    });
+
+    // Force animated tokens to play
+    html.find('video[autoplay]').each((_, el) => {
+      el.play();
     });
   }
 
