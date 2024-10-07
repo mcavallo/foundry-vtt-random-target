@@ -115,12 +115,21 @@ export class RandomTarget extends FormApplication {
     return CategoryList.formatTypeId(token.actor.type);
   }
 
+  _getTokenActorImage(token) {
+    if (!token.actor || !token.actor.img) {
+      return;
+    }
+
+    return token.actor.img;
+  }
+
   _getTokenImage(token) {
     const preferredImage = $M().settings.get(SETTING_IDS.PREFERRED_IMAGE);
+    const actorImage = this._getTokenActorImage(token);
     let image = token.texture.src;
 
-    if (token.actor.img && preferredImage === PREFERRED_IMAGE.ACTOR) {
-      image = token.actor.img;
+    if (preferredImage === PREFERRED_IMAGE.ACTOR && actorImage) {
+      image = actorImage;
     }
 
     return {
