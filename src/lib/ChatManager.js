@@ -5,21 +5,33 @@ export class ChatManager {
   #renderHandler;
 
   constructor() {
-    this.#renderHandler = this._onRenderChatLog.bind(this);
-    Hooks.on('renderChatLog', this.#renderHandler);
+    this.#renderHandler = this._onRenderChatMessage.bind(this);
+    Hooks.on('renderChatMessage', this.#renderHandler);
   }
 
-  _onRenderChatLog(_app, html) {
-    $(html).on('click', `.${MODULE.ID}-message-target`, e => {
-      e.stopPropagation();
-      const tokenId = $(e.target)[0].dataset.targetId;
+  _onRenderChatMessage(message, html) {
+    if (!message?.flags?.[MODULE.NAMESPACE]?.type) {
+      return;
+    }
 
-      if (!tokenId) {
-        return;
-      }
+    if (message.flags[MODULE.NAMESPACE].type === 'target') {
+      html.find('[data-action="target-actor"]').click(this._targetActorAction);
+      html.find('[data-action="toggle-message"]').click(this._toggleMessageAction);
+    }
+  }
 
+  _targetActorAction(e) {
+    e.stopPropagation();
+    const tokenId = $(e.target)[0].dataset.targetId;
+
+    if (tokenId) {
       $M().game.targetToken(tokenId);
-    });
+    }
+  }
+
+  _toggleMessageAction(e) {
+    e.stopPropagation();
+    $(e.target).closest('[data-action="toggle-message"]').toggleClass('expanded');
   }
 
   sendTargetNotificationMessage(tokenId, candidatesIds) {
@@ -51,25 +63,31 @@ export class ChatManager {
     ChatMessage.create({
       speaker: { alias: MODULE.NAME },
       whisper: recipients,
+      flags: {
+        [MODULE.NAMESPACE]: {
+          type: 'target',
+        },
+      },
       content: `
         <div class="${MODULE.ID}-message">
-          <div class="dice-roll">
-              <div class="dice-result">
-                <div>
-                  <a
-                    class="content-link ${MODULE.ID}-message-target"
-                    data-target-id="${target.id}"
-                    data-tooltip="${targetTooltip}"
-                  ><i class="fas fa-bullseye"></i>${target.name}</a> was randomly selected.
-                </div>
-                <div class="dice-tooltip">
-                  <section>
-                    The pool of candidates for this selection:
-                    <ul>${candidatesPool}</ul>
-                  </section>
-                </div>
+          <div class="target-result" data-action="toggle-message">          
+            <p>
+              <a
+                class="content-link ${MODULE.ID}-message-target"
+                data-action="target-actor"
+                data-target-id="${target.id}"
+                data-tooltip="${targetTooltip}"
+              ><i class="fas fa-bullseye"></i>${target.name}</a> was randomly selected.
+            </p>
+            <div class="target-details">
+              <div>
+                <section>
+                  The pool of candidates for this selection:
+                  <ul>${candidatesPool}</ul>
+                </section>
               </div>
             </div>
+          </div>
         </div>
       `,
     });

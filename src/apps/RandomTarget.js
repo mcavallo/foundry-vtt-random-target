@@ -56,34 +56,15 @@ export class RandomTarget extends FormApplication {
         label: 'Settings',
         class: 'settings',
         icon: 'fas fa-gear',
-        onclick: () => this._openSettings(),
+        onclick: async () => this._openSettings(),
       },
       ...buttons,
     ];
   }
 
-  _openSettings() {
-    const settingsApp = new SettingsConfig().render(true);
-    let callLimit = 20;
-
-    // Nasty hack to get the right settings page open
-    const attemptTabSwitch = () => {
-      clearTimeout(this.#settingTimeout);
-      callLimit--;
-
-      if (callLimit < 0) {
-        return;
-      }
-
-      try {
-        settingsApp.activateTab('random-target');
-        return;
-      } catch (_) {
-        this.#settingTimeout = setTimeout(attemptTabSwitch, 100);
-      }
-    };
-
-    attemptTabSwitch();
+  async _openSettings() {
+    const settingsApp = new foundry.applications.settings.SettingsConfig({ initialCategory: 'random-target' });
+    return settingsApp.render(true);
   }
 
   _onSettingsSaved(event) {

@@ -134,39 +134,53 @@ $systemsPath: '../../systems';
   }
 }
 
-#chat-log {
-  .#{$module}-message {
-    .#{$module}-message-target {
-      font-weight: bold;
+.#{$module}-message {
+  .#{$module}-message-target {
+    font-weight: bold;
+    border-radius: 3px;
 
-      .fas {
-        margin-right: 2px;
-      }
+    .fas {
+      margin-right: 2px;
     }
+  }
 
-    .dice-roll {
-      cursor: pointer;
+  p {
+    margin: 0;
+    padding: 4px 0 4px 0;
+  }
 
-      .dice-tooltip section {
-        margin-top: 5px;
-        background: rgba(0, 0, 0, 0.08);
-        padding: 8px;
-        border-radius: 3px;
-        color: var(--color-border-dark-3);
+  .target-result.expanded .target-details {
+    grid-template-rows: 1fr;
+  }
 
-        ul {
-          margin: 5px 0 0 0;
+  .target-details {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 250ms ease;
 
-          span {
-            margin-left: -2px;
+    ul {
+      margin: 5px 0 0 0;
 
-            &.target {
-              font-weight: bold;
-            }
-          }
+      span {
+        margin-left: -2px;
+
+        &.target {
+          font-weight: bold;
         }
       }
     }
+  }
+
+  .target-details > div {
+    overflow: hidden;
+  }
+
+  .target-details section {
+    background: rgba(0, 0, 0, 0.08);
+    margin-top: 4px;
+    padding: 8px;
+    border-radius: 3px;
+    color: var(--color-border-dark-3);
   }
 }
 
@@ -217,6 +231,9 @@ $systemsPath: '../../systems';
             border-radius: 3px;
             font-family: inherit;
             margin: 0 2px;
+            display: inline-block;
+            border: 0;
+            pointer-events: none;
           }
         }
       }
@@ -237,67 +254,19 @@ $systemsPath: '../../systems';
 // System overrides
 
 .system-wfrp4e {
-  .app.window-app.#{$module} {
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-
-    ::-webkit-scrollbar-button {
-      display: none !important;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #782e22;
-      border-image: none;
-      border-radius: 0;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #111;
-    }
-
-    .tabs {
-      background: rgba(0, 0, 0, 0.4);
-    }
-
-    button:disabled {
-      box-shadow: none !important;
-      opacity: .6;
-    }
-
-    .target-item {
-      label {
-        color: white;
-      }
-
-      &.defeated .name {
-        color: var(--color-text-light-7);
+  .#{$module}-message {
+    .#{$module}-message-target {
+      i {
+        color: black;
       }
     }
 
-    .window-header a.header-button.settings {
-      color: #00e5ff00;
-      text-align: center;
-      height: 30px;
-      width: 30px;
-      margin: 0;
-      padding: 0;
-      background: url(#{$systemsPath}/wfrp4e/ui/buttons/button-configure-sheet.webp);
+    p {
+      padding-top: 8px;
     }
-  }
 
-  #chat-log {
-    .#{$module}-message {
-      .#{$module}-message-target {
-        i {
-          color: black;
-        }
-      }
-
-      .dice-roll {
-        cursor: url(#{$systemsPath}/wfrp4e/ui/cursors/pointer.png), pointer;
-      }
+    .dice-roll, & > * {
+      cursor: var(--cursor-pointer);
     }
   }
 
