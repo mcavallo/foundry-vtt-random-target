@@ -145,14 +145,6 @@ export class SettingsManager {
             height: 362,
           },
         };
-      case SYSTEM_IDS.WFRP4E:
-        return {
-          ...baseSettings,
-          [SETTING_IDS.FORM_SETTINGS]: {
-            width: 500,
-            height: 380,
-          },
-        };
       default:
         return {
           ...baseSettings,
