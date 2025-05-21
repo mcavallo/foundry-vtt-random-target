@@ -1,4 +1,5 @@
 {
+  "id": "random-target",
   "name": "random-target",
   "title": "Random Target",
   "description": "Adds a dialog to choose a random target between the tokens present in the scene.",
@@ -13,10 +14,10 @@
   ],
   "compatibility": {
     "minimum": "12",
-    "verified": "12.328"
+    "verified": "13.342"
   },
   "minimumCoreVersion": 12,
-  "compatibleCoreVersion": 12,
+  "compatibleCoreVersion": 13,
   "license": "GPLV3",
   "esmodules": ["module.mjs"],
   "scripts": [],
