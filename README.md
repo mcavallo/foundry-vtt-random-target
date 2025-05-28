@@ -2,7 +2,7 @@
 
 This module adds a tool for quickly selecting a random target. Once activated it will list all tokens in the current scene grouped by type where you can pre-select which tokens are eligible for the random selection.
 
-![Random target dialog](.github/docs/cover.jpg)
+![Random target dialog](.github/docs/cover.gif)
 
 # Installation / Usage
 
