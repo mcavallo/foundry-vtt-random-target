@@ -6,9 +6,11 @@ export function isTokenDefeated(token) {
       case SYSTEM_IDS.CONAN:
         return token.overlayEffect.match('skull.svg');
       default:
-        return token._actor && token._actor.effects
-          ? token._actor.effects.some(effect => effect._statusId === 'dead')
-          : false;
+        try {
+          return token.actor.statuses.has('dead');
+        } catch {
+          return false;
+        }
     }
   } catch (_) {
     return false;
@@ -43,6 +45,15 @@ export function getDispositionName(num) {
 
 export function getIsAnimatedImage(src) {
   return src && src.toLowerCase().match(/(?:mp4|ogv|webm)$/);
+}
+
+export function stripSettingNamespace(name) {
+  if (typeof name !== 'string') {
+    return name;
+  }
+
+  const [, ...rest] = name.split('.');
+  return rest.join('.');
 }
 
 export function $M() {

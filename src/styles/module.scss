@@ -1,51 +1,94 @@
 $module: 'random-target';
-$targetItemsTotal: 6;
-$targetItemHeight: 32;
-$targetItemMarginTop: 5;
+$namespace: 'rt';
 
-$systemsPath: '../../systems';
+$maxVisible: 6;
+$inputWidth: 32;
+$rowHeight: 36;
+$rowVerticalPadding: 4;
 
-.window-app.#{$module} {
-  .tabs {
-    display: flex;
-    justify-content: unset;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-    align-items: center;
-    height: 40px;
-    margin: 0;
-    padding: 0;
-    scrollbar-width: thin;
+$imageSize: $rowHeight;
+$rowLabelHeight: $rowHeight + (2 * $rowVerticalPadding);
+$scrollableMaxHeight: $rowLabelHeight + (($maxVisible - 1) * ($rowLabelHeight + 1)) * 1px;
 
-    .item {
-      flex: 0 0 auto;
-      display: inline-flex;
-      height: 30px;
-      font-size: 15px;
-      align-items: center;
-      justify-content: center;
-      overflow: auto;
-      padding: 0 6px;
 
-      &.active {
-        font-weight: bold;
-      }
+body {
+  &.theme-light .application.#{$module} {
+    --#{$namespace}-color-bg-selected: rgba(255, 255, 255, .3);
+    --#{$namespace}-color-border: rgba(0, 0, 0, .2);
+    --#{$namespace}-color-default: var(--color-dark-1);
+    --#{$namespace}-color-defeated: var(--color-warm-3);
+    --#{$namespace}-color-selected: var(--color-text-accent);
+    --#{$namespace}-color-icon: var(--color-dark-6);
+  }
 
-      &:first-of-type {
-        margin-left: auto;
-      }
+  &.theme-dark .application.#{$module} {
+    --#{$namespace}-color-bg-selected: rgba(255, 255, 255, .05);
+    --#{$namespace}-color-border: rgba(255, 255, 255, .1);
+    --#{$namespace}-color-default: var(--color-light-1);
+    --#{$namespace}-color-defeated: var(--color-warm-3);
+    --#{$namespace}-color-selected: var(--color-text-accent);
+    --#{$namespace}-color-icon: var(--color-light-5);
+  }
+}
 
-      &:last-of-type {
-        margin-right: auto;
-      }
+/**
+ * Main app styles
+ */
+
+.application.#{$module} {
+  [data-application-part="error"] {
+    display: none !important;
+  }
+
+  &.error-mode {
+    [data-application-part="error"] {
+      display: block !important;
+    }
+
+    [data-application-part]:not([data-application-part="error"]) {
+      display: none !important;
     }
   }
 
-  .error-message {
-    align-self: center;
+  .window-content {
+    padding: 0;
+  }
+
+  .form-footer {
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    gap: 8px;
+    padding: 8px;
+    border-top: 1px solid var(--color-tabs-border);
+
+    button {
+      --button-size: calc(#{$imageSize * 1px});
+      flex: 1;
+    }
+  }
+
+  .scrollable-content {
+    overflow-y: auto;
+    height: auto;
+    max-height: $scrollableMaxHeight;
+    scrollbar-width: thin;
+    display: flex;
+
+    .content {
+      flex: 1;
+    }
+
+    .error-message {
+      flex: 1;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      padding: 32px 0;
+    }
+  }
+
+  .target-item, .target-item * {
+    cursor: var(--cursor-pointer);
   }
 
   .target-item {
@@ -53,47 +96,89 @@ $systemsPath: '../../systems';
     flex-direction: row;
     align-items: center;
     justify-content: stretch;
-    margin-top: $targetItemMarginTop * 1px;
-    height: $targetItemHeight * 1px;
-
-    &,
-    & * {
-      cursor: pointer !important;
-    }
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
+    height: $rowHeight * 1px;
+    padding: ($rowVerticalPadding * 1px) 0;
+    box-sizing: content-box;
+    position: relative;
+    border-top: 1px solid var(--#{$namespace}-color-border);
 
     &:first-of-type {
+      border-top: 0;
       margin-top: 0;
     }
 
+    &.target-defeated {
+      .target-name-text {
+        color: var(--#{$namespace}-color-defeated);
+        text-decoration: line-through;
+      }
+    }
+
+    input[type="checkbox"] {
+      z-index: 2;
+      margin-left: 6px;
+      margin-right: 6px;
+      margin-top: 4px;
+    }
+
     label {
+      height: $rowLabelHeight * 1px;
       flex: 1;
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: stretch;
-      color: var(--color-text-dark-1);
+      color: var(--#{$namespace}-color-default);
       overflow: hidden;
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      z-index: 1;
+      padding-left: $inputWidth * 1px;
+      transition: background 150ms ease;
+
+      span {
+        margin-left: 6px;
+        color: var(--color-text-secondary);
+      }
     }
 
-    .name {
+    input[type="checkbox"]:checked ~ label.target-label {
+      background: var(--#{$namespace}-color-bg-selected);
+      color: var(--#{$namespace}-color-selected);
+    }
+
+    .target-name {
       font-size: 14px;
       line-height: normal;
-      padding: 0 5px;
+      padding: 0 6px;
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+      align-items: center;
+      gap: 4px;
+
+      i {
+        flex: 0 0 auto;
+        font-size: 12px;
+        color: var(--#{$namespace}-color-icon);
+      }
+    }
+
+    .target-name-text {
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
+      font-weight: 600;
+      flex: 1;
     }
 
-    .image {
-      flex: 0 0 $targetItemHeight * 1px;
-      width: $targetItemHeight * 1px;
-      height: $targetItemHeight * 1px;
+    .target-image {
+      flex: 0 0 $imageSize * 1px;
+      width: $imageSize * 1px;
+      height: $imageSize * 1px;
       position: relative;
-      margin-left: 5px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -106,33 +191,12 @@ $systemsPath: '../../systems';
       height: 100%;
       width: 100%;
     }
-
-    &.defeated {
-      .name {
-        color: var(--color-text-dark-6);
-      }
-    }
-  }
-
-  .scrollable-content {
-    overflow-y: auto;
-    height: $targetItemHeight + ($targetItemsTotal - 1) * ($targetItemHeight + $targetItemMarginTop) * 1px;
-    scrollbar-width: thin;
-  }
-
-  .footer {
-    margin-top: 15px;
-
-    .selected-tokens-count {
-      opacity: 0.5;
-    }
-  }
-
-  button:disabled {
-    cursor: not-allowed;
-    color: var(--color-text-dark-6);
   }
 }
+
+/**
+ * Chat styles
+ */
 
 .#{$module}-message {
   .#{$module}-message-target {
@@ -245,15 +309,25 @@ $systemsPath: '../../systems';
   }
 }
 
-// Foundry settings style overrides
-
-#client-settings section.category[data-tab='#{$module}'] .form-group .form-fields {
-  flex: 0;
-}
-
-// System overrides
+/**
+ * System overrides: WFRP
+ */
 
 .system-wfrp4e {
+  .application.#{$module} {
+    .window-content {
+      padding: 14px 12px;
+    }
+
+    .tabs {
+      margin-bottom: 4px;
+    }
+
+    .form-footer {
+      border-color: transparent;
+    }
+  }
+
   .#{$module}-message {
     .#{$module}-message-target {
       i {
@@ -288,20 +362,5 @@ $systemsPath: '../../systems';
         color: var(--color-text-light-5);
       }
     }
-  }
-}
-
-.system-forbidden-lands .app.window-app.#{$module} {
-  .target-item.defeated .name {
-    color: var(--color-text-light-4);
-  }
-
-  button:disabled {
-    color: var(--color-text-light-5);
-  }
-
-  .window-header a.header-button.settings:hover {
-    max-width: 200px;
-    color: #292929f0;
   }
 }

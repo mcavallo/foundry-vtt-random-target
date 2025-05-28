@@ -11,6 +11,10 @@ export class CategoryList {
     return `type.${normalizedKey}`;
   }
 
+  static formatTabId(id) {
+    return id.replace(/[^a-z0-9]/gi, '_');
+  }
+
   static formatDispositionId(raw) {
     const disposition = getDispositionName(raw);
     return `disposition.${disposition}`;
@@ -44,13 +48,6 @@ export class CategoryList {
         label: 'Selected',
         description: 'Lists the selected tokens in the scene',
         info: 'Only appears if there is at least 2 tokens selected.',
-      }),
-      this.newCategoryEntry({
-        id: CATEGORY_IDS.PREVIOUS,
-        type: 'core',
-        label: 'Previous',
-        description: 'Lists tokens pre-selected from the previous run',
-        info: 'Only appears if there was a previous selection and the "Persistent selection" option is enabled.',
       }),
       this.newCategoryEntry({
         id: CATEGORY_IDS.ALL,
@@ -128,6 +125,7 @@ export class CategoryList {
   newCategoryEntry(attrs) {
     return {
       ...attrs,
+      tabId: CategoryList.formatTabId(attrs.id),
       enabled: false,
       items: [],
       totalItems: 0,
