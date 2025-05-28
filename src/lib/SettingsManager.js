@@ -8,6 +8,7 @@ import {
   SETTING_IDS,
   SYSTEM_IDS,
 } from '../constants.js';
+import { stripSettingNamespace } from '../utils.js';
 
 export class SettingsManager {
   constructor() {
@@ -21,6 +22,19 @@ export class SettingsManager {
 
   set(key, value) {
     game.settings.set(MODULE.ID, key, value);
+  }
+
+  isModuleSetting(name) {
+    return typeof name === 'string' && name.startsWith(MODULE.ID);
+  }
+
+  shouldTriggerReRender(key) {
+    if (!this.isModuleSetting(key)) {
+      return false;
+    }
+
+    const name = stripSettingNamespace(key);
+    return [SETTING_IDS.CATEGORIES, SETTING_IDS.PREFERRED_IMAGE].includes(name);
   }
 
   _registerSettings() {
@@ -41,6 +55,16 @@ export class SettingsManager {
       onChange: this._updateSettings.bind(this),
     });
 
+    game.settings.register(MODULE.ID, SETTING_IDS.CLOSE_AFTER, {
+      name: 'Close after selection',
+      hint: 'Whether the target selection window should close after a target is selected.',
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: true,
+      onChange: this._updateSettings.bind(this),
+    });
+
     game.settings.register(MODULE.ID, SETTING_IDS.CHAT_NOTIFICATION, {
       name: 'Post chat message',
       hint: 'Whether a chat message should be sent when a random target is selected.',
@@ -54,16 +78,6 @@ export class SettingsManager {
     game.settings.register(MODULE.ID, SETTING_IDS.CHAT_NOTIFICATION_PUBLIC, {
       name: 'Show chat message to the players',
       hint: 'Whether the chat message should be shown to the players.',
-      scope: 'world',
-      config: true,
-      type: Boolean,
-      default: false,
-      onChange: this._updateSettings.bind(this),
-    });
-
-    game.settings.register(MODULE.ID, SETTING_IDS.PERSIST_SELECTION, {
-      name: 'Persist selection',
-      hint: 'Whether the pre-selected targets should persist and be automatically selected in subsequent runs.',
       scope: 'world',
       config: true,
       type: Boolean,

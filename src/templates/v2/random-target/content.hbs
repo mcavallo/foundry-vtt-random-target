@@ -1,0 +1,48 @@
+<div class='scrollable-content'>
+  {{#if areThereTokens}}
+    <section class='content'>
+      {{#each categories}}
+        <div class='tab {{#if (eq @root.activeTabId tabId)}}active{{/if}}' data-tab='{{tabId}}' data-group='{{@root.tabGroupName}}'>
+          <div class='target-item'>
+            <input
+              type='checkbox'
+              class='toggleSelection'
+              value={{id}}
+              id='{{concat "toggleSelection." id}}'
+              data-dtype='Boolean'
+            />
+            <label for='{{concat "toggleSelection." id}}'>
+              <span>Toggle Selection (All/None)</span>
+            </label>
+          </div>
+          {{#each items}}
+            <div class='target-item {{#if defeated}} target-defeated{{/if}}'>
+              <input
+                type='checkbox'
+                name='selectedTokens'
+                value={{id}}
+                id='{{concat "selectedTokens." id}}'
+                data-dtype='String'
+                {{checked selected}}
+              />
+              <label class='target-label' for='{{concat "selectedTokens." id}}'>
+                <div class="target-image">
+                  {{#if img.animated}}
+                    <video src='{{img.src}}' autoplay muted loop></video>
+                  {{else}}
+                    <img src='{{img.src}}' />
+                  {{/if}}
+                </div>
+                <div class="target-name">
+                  <div class='target-name-text'>{{name}}</div>
+                  {{#if hidden}}<i class='icon fa-solid fa-eye-slash' title='Hidden'></i>{{/if}}
+                  {{#if defeated}}<i class='icon fa-solid fa-skull' title='Defeated'></i>{{/if}}
+                </div>
+              </label>
+            </div>
+          {{/each}}
+        </div>
+      {{/each}}
+    </section>
+  {{/if}}
+</div>

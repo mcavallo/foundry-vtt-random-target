@@ -1,4 +1,4 @@
-import { run } from './apps/RandomTarget.js';
+import { runV2 } from './apps/RandomTargetV2.mjs';
 import { MODULE } from './constants.js';
 import { ChatManager } from './lib/ChatManager.js';
 import { GameManager } from './lib/GameManager.js';
@@ -18,11 +18,8 @@ Hooks.once('init', function () {
   const notificationsManager = new NotificationsManager();
   const randomManager = new RandomManager(seed);
 
-  /**
-   * Important: Avoid using object property shorthands as it can fail in some browsers.
-   */
   window[MODULE.NAMESPACE] = {
-    run: run,
+    run: runV2,
     settings: settingsManager,
     chat: chatManager,
     game: gameManager,

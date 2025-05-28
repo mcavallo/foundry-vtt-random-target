@@ -6,7 +6,7 @@ export class ChatManager {
 
   constructor() {
     this.#renderHandler = this._onRenderChatMessage.bind(this);
-    Hooks.on('renderChatMessage', this.#renderHandler);
+    Hooks.on('renderChatMessageHTML', this.#renderHandler);
   }
 
   _onRenderChatMessage(message, html) {
@@ -15,14 +15,14 @@ export class ChatManager {
     }
 
     if (message.flags[MODULE.NAMESPACE].type === 'target') {
-      html.find('[data-action="target-actor"]').click(this._targetActorAction);
-      html.find('[data-action="toggle-message"]').click(this._toggleMessageAction);
+      html.querySelector('[data-action="target-actor"]').addEventListener('click', this._targetActorAction);
+      html.querySelector('[data-action="toggle-message"]').addEventListener('click', this._toggleMessageAction);
     }
   }
 
   _targetActorAction(e) {
     e.stopPropagation();
-    const tokenId = $(e.target)[0].dataset.targetId;
+    const tokenId = e.target.dataset.targetId;
 
     if (tokenId) {
       $M().game.targetToken(tokenId);
@@ -31,7 +31,7 @@ export class ChatManager {
 
   _toggleMessageAction(e) {
     e.stopPropagation();
-    $(e.target).closest('[data-action="toggle-message"]').toggleClass('expanded');
+    e.target.closest('[data-action="toggle-message"]').classList.toggle('expanded');
   }
 
   sendTargetNotificationMessage(tokenId, candidatesIds) {

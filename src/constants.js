@@ -11,8 +11,8 @@ export const SETTING_IDS = {
   CATEGORIES: 'categories',
   CHAT_NOTIFICATION: 'chatNotification',
   CHAT_NOTIFICATION_PUBLIC: 'chatNotificationPublic',
+  CLOSE_AFTER: 'closeAfter',
   FORM_SETTINGS: 'formSettings',
-  PERSIST_SELECTION: 'persistSelection',
   PREFERRED_IMAGE: 'imagePriority',
   PREV_SELECTION: 'previousSelection',
   PREV_TARGET_ID: 'previousTargetId',
@@ -23,7 +23,7 @@ export const FOUNDRY_SETTING_IDS = [
   SETTING_IDS.CATEGORIES,
   SETTING_IDS.CHAT_NOTIFICATION,
   SETTING_IDS.CHAT_NOTIFICATION_PUBLIC,
-  SETTING_IDS.PERSIST_SELECTION,
+  SETTING_IDS.CLOSE_AFTER,
   SETTING_IDS.PREFERRED_IMAGE,
   SETTING_IDS.PREV_SELECTION,
   SETTING_IDS.PREV_TARGET_ID,
@@ -40,12 +40,11 @@ export const SYSTEM_IDS = {
 
 export const CATEGORY_IDS = {
   ALL: 'core.all',
-  PREVIOUS: 'core.previous',
   SELECTED: 'core.selected',
   TARGETED: 'core.targeted',
 };
 
-export const BASE_CATEGORIES = [CATEGORY_IDS.TARGETED, CATEGORY_IDS.SELECTED, CATEGORY_IDS.PREVIOUS, CATEGORY_IDS.ALL];
+export const BASE_CATEGORIES = [CATEGORY_IDS.TARGETED, CATEGORY_IDS.SELECTED, CATEGORY_IDS.ALL];
 
 export const PREFERRED_IMAGE = {
   TOKEN: 'TOKEN',
@@ -56,3 +55,6 @@ export const PREFERRED_IMAGE_OPTIONS = {
   [PREFERRED_IMAGE.TOKEN]: 'Token image',
   [PREFERRED_IMAGE.ACTOR]: 'Actor image',
 };
+
+export const RERENDER_DEBOUNCE_TIME = 100;
+export const CHANGE_DEBOUNCE_TIME = 100;
