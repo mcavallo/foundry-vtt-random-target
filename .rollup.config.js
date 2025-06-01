@@ -1,21 +1,39 @@
-import chalk from 'chalk';
+import 'dotenv/config';
+
 import copy from 'rollup-plugin-copy';
 import styles from 'rollup-plugin-styles';
 import { terser } from 'rollup-plugin-terser';
-import watch from 'rollup-plugin-watch';
 import outputManifest from './rollup/plugin-manifest.js';
-import { buildManifest, compilePack, getReleaseData } from './rollup/utils.js';
-
-const REPO_URL = 'https://github.com/mcavallo/foundry-vtt-random-target';
+import {
+  assertPackageJsonProperties,
+  blue,
+  buildManifest,
+  compilePack,
+  getReleaseData,
+  readPackageJson,
+} from './rollup/utils.js';
 
 export default async () => {
-  const releaseData = await getReleaseData(REPO_URL);
+  const packageJson = await readPackageJson();
+  assertPackageJsonProperties(packageJson);
+
+  const releaseData = await getReleaseData(packageJson);
   const { outputFileName, outputStyle, sourcemap, showReleaseLog } = releaseData.isReleaseBuild
-    ? { outputFileName: '[name]-[hash:12]', outputStyle: 'compressed', sourcemap: false, showReleaseLog: false }
-    : { outputFileName: '[name]', outputStyle: 'expanded', sourcemap: true, showReleaseLog: false };
+    ? {
+        outputFileName: '[name]-[hash:12]',
+        outputStyle: 'compressed',
+        sourcemap: false,
+        showReleaseLog: true,
+      }
+    : {
+        outputFileName: '[name]',
+        outputStyle: 'expanded',
+        sourcemap: true,
+        showReleaseLog: false,
+      };
 
   if (showReleaseLog) {
-    console.log(`Building release '${chalk.blueBright(releaseData.version)}'...`);
+    console.log(`Building release '${blue(releaseData.version)}'...`);
   }
 
   return {
@@ -30,7 +48,6 @@ export default async () => {
       sourcemap,
     },
     plugins: [
-      watch({ dir: 'src' }),
       styles({
         mode: 'extract',
         sass: {
@@ -63,9 +80,14 @@ export default async () => {
         fileName: 'module.json',
         generate: () => chunks => {
           const mainModuleName = chunks.find(chunk => chunk.type === 'chunk' && chunk.name === 'module').fileName;
+
           const stylesName = chunks.find(chunk => chunk.type === 'asset' && chunk.name === 'module.css').fileName;
 
-          return buildManifest({ releaseData, scripts: [mainModuleName], styles: [stylesName] });
+          return buildManifest({
+            releaseData,
+            scripts: [mainModuleName],
+            styles: [stylesName],
+          });
         },
       }),
       releaseData.isReleaseBuild && terser(),

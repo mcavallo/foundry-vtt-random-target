@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
 jobs:
   versioning:
     name: Versioning
@@ -14,11 +18,9 @@ jobs:
       release_type: ${{ steps.bump.outputs.release_type }}
       changelog: ${{ steps.bump.outputs.changelog }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # all commits
-
       - name: Bump and tag new version
         id: bump
         uses: mathieudutour/github-tag-action@v6.0
@@ -35,33 +37,38 @@ jobs:
     needs:
       - versioning
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Install node
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: '16.x'
-
-      - name: 'Install dependencies'
-        shell: 'bash'
+          node-version: "22.x"
+      - uses: ./.github/local-actions/yarn-install-and-cache
+      - name: Create .env and credentials files
+        shell: bash
         run: |
-          yarn install --prefer-offline --frozen-lockfile
-
+          echo -n "" > .env
+          echo FOUNDRY_RELEASE_TOKEN="\"${{ secrets.FOUNDRY_RELEASE_TOKEN }}\"" >> .env
+          echo GH_API_TOKEN=${{ secrets.GH_API_TOKEN }} >> .env
       - name: 'Build'
         shell: 'bash'
         run: |
           RELEASE_VERSION=${{ needs.versioning.outputs.new_tag }} yarn build
-
+      - name: Read module id
+        id: module_id
+        shell: bash
+        run: |
+          echo "out=$(cat package.json | jq -r '.foundryModule.id')" >> $GITHUB_OUTPUT
       - name: Create zip
         run: |
           cd dist/
-          zip -r ../foundry-vtt-random-target_${{ needs.versioning.outputs.new_tag }}.zip *
-
-      - name: Create release
+          zip -r ../${{ steps.module_id.outputs.out }}_${{ needs.versioning.outputs.new_tag }}.zip *
+      - name: Create Github release
         uses: ncipollo/release-action@v1.9.0
         with:
           token: ${{ secrets.GH_TOKEN }}
           tag: ${{ needs.versioning.outputs.new_tag }}
-          artifacts: './dist/module.json,foundry-vtt-random-target_${{ needs.versioning.outputs.new_tag }}.zip'
+          artifacts: "./dist/module.json,${{ steps.module_id.outputs.out }}_${{ needs.versioning.outputs.new_tag }}.zip"
           body: ${{ needs.versioning.outputs.changelog }}
+      - name: Push release to Foundry
+        shell: bash
+        run: |
+          yarn foundry:release
