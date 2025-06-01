@@ -1,17 +1,8 @@
-import { MODULE, SYSTEM_IDS } from './constants.js';
+import { MODULE } from './constants.js';
 
 export function isTokenDefeated(token) {
   try {
-    switch (game.system.id) {
-      case SYSTEM_IDS.CONAN:
-        return token.overlayEffect.match('skull.svg');
-      default:
-        try {
-          return token.actor.statuses.has('dead');
-        } catch {
-          return false;
-        }
-    }
+    return token.actor.statuses.has('dead');
   } catch (_) {
     return false;
   }
