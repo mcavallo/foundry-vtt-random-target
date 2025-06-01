@@ -164,15 +164,12 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
       return;
     }
 
-    // Pick random target
-    const previousTarget = $M().settings.get(SETTING_IDS.PREV_TARGET_ID);
-    const avoidSelectingSameTarget = $M().settings.get(SETTING_IDS.AVOID_SELECTING_SAME_TARGET);
-    let randomPick;
-
-    while (!randomPick || (avoidSelectingSameTarget && randomPick === previousTarget)) {
-      const idx = $M().random.getOne(selectedTokens.length);
-      randomPick = selectedTokens[idx];
-    }
+    // Select a random target from the pool of candidates
+    const randomPick = $M().random.pickFromPool({
+      pool: selectedTokens,
+      previousTarget: $M().settings.get(SETTING_IDS.PREV_TARGET_ID),
+      avoidSelectingSameTarget: $M().settings.get(SETTING_IDS.AVOID_SELECTING_SAME_TARGET),
+    });
 
     // Target token
     const target = $M().game.targetToken(randomPick);
