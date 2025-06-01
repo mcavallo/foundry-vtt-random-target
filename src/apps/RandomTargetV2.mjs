@@ -4,6 +4,7 @@ import { $M, isTokenDefeated } from '../utils.js';
 
 const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
 const { SettingsConfig } = foundry.applications.settings;
+const { expandObject, mergeObject } = foundry.utils;
 
 export default class RandomTargetV2 extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
@@ -154,7 +155,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
       return;
     }
 
-    const settings = foundry.utils.expandObject(formData.object);
+    const settings = expandObject(formData.object);
     const selectedTokens = Array.from(new Set(settings.selectedTokens.filter(Boolean)));
 
     // Check for enough selections
@@ -259,7 +260,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     const computedTabs = this._computeAvailableTabs(sortedCategories);
     const computedButtons = this._computeButtons(totalPreselected);
 
-    context = foundry.utils.mergeObject(context, {
+    context = mergeObject(context, {
       totalSceneTokens: sceneTokens.length,
       tabGroupName: RandomTargetV2.TAB_GROUP,
       activeTabId: this.tabGroups[RandomTargetV2.TAB_GROUP],
@@ -337,7 +338,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
 
     return categories.reduce((acc, category) => {
       acc[category.tabId] = {
-        cssClass: this.tabGroups[RandomTargetV2.TAB_GROUP] === category.tabId ? 'active' : '',
+        cssClass: this.tabGroups?.[RandomTargetV2.TAB_GROUP] === category.tabId ? 'active' : '',
         group: RandomTargetV2.TAB_GROUP,
         id: category.tabId,
         label: `${category.label} (${category.totalItems})`,
@@ -377,28 +378,36 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     });
   }
 
+  /**
+   * Computes the state of the submit button based on the amount of selections.
+   */
   _computeSubmitButtonState() {
-    const checkedIds = new Set(
-      Array.from(this.element.querySelectorAll('input[type="checkbox"]:not(.toggleSelection):checked'))
-        .map(el => el.value),
-    );
-
     const submit = this.element.querySelector('button[type="submit"][name="submit"]');
 
     if (submit) {
+      const checkedIds = this._getSelectedTokenIds();
       const submitContent = submit.querySelector('span');
       submit.disabled = checkedIds.size < 2;
       submitContent.innerText = submitContent.innerText.replace(/\(\d+\)/, `(${checkedIds.size})`);
     }
   }
 
+  /**
+   * Persists the temporary selection.
+   */
   _saveTemporarySelection(e) {
-    const checkedIds = new Set(
+    const checkedIds = this._getSelectedTokenIds();
+    $M().settings.set(SETTING_IDS.PREV_SELECTION, Array.from(checkedIds));
+  }
+
+  /**
+   * Returns a set of all selected token ids.
+   */
+  _getSelectedTokenIds() {
+    return new Set(
       Array.from(this.element.querySelectorAll('input[type="checkbox"]:not(.toggleSelection):checked'))
         .map(el => el.value),
     );
-
-    $M().settings.set(SETTING_IDS.PREV_SELECTION, Array.from(checkedIds));
   }
 }
 
