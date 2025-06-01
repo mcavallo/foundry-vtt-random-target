@@ -36,21 +36,21 @@ export function assertPackageJson(filePath) {
   }
 }
 
-export function assertValidModuleName(name) {
+export function assertValidModuleId(name) {
   if (!name.match(/^[a-z](?:[\w\d]+)*(?:-[\w\d]+)*$/)) {
     console.log(`The module name '%s' is not valid. Pick another.`, blue(name));
     process.exit(0);
   }
 }
 
-export function readModuleName() {
+export function readModuleId() {
   const packageJsonPath = path.resolve(process.cwd(), 'package.json');
   assertPackageJson(packageJsonPath);
 
   const packageJson = fs.readJSONSync(packageJsonPath);
-  assertValidModuleName(packageJson.foundryModule.name);
+  assertValidModuleId(packageJson.foundryModule.id);
 
-  return packageJson.foundryModule.name;
+  return packageJson.foundryModule.id;
 }
 
 export function getLinkDir() {
@@ -62,8 +62,8 @@ export function getLinkDir() {
   const moduleConfigPath = path.resolve(process.cwd(), 'src/module.json');
   assertModuleConfigPath(moduleConfigPath);
 
-  const moduleName = readModuleName();
-  return path.resolve(path.join(foundryModulesPath, moduleName));
+  const moduleId = readModuleId();
+  return path.resolve(path.join(foundryModulesPath, moduleId));
 }
 
 export function getSymlinkType() {
