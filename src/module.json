@@ -1,43 +1,30 @@
 {
-  "id": "random-target",
-  "name": "random-target",
-  "title": "Random Target",
-  "description": "Adds a dialog to choose a random target between the tokens present in the scene.",
+  "id": "__MODULE_ID__",
+  "name": "__MODULE_ID__",
+  "title": "__MODULE_TITLE__",
+  "description": "__MODULE_DESCRIPTION__",
   "version": "__VERSION__",
-  "author": "iKindred",
-  "authors": [
-    {
-      "name": "iKindred",
-      "discord": "iKindred#8997",
-      "url": "https://github.com/mcavallo/"
-    }
-  ],
+  "author": "__AUTHOR__",
+  "authors": [],
   "compatibility": {
-    "minimum": "13",
-    "verified": "13.342"
+    "minimum": "__MODULE_COMPATIBILITY_MINIMUM__",
+    "verified": "__MODULE_COMPATIBILITY_VERIFIED__"
   },
-  "minimumCoreVersion": 13,
-  "compatibleCoreVersion": 13,
-  "license": "GPLV3",
-  "esmodules": ["module.mjs"],
+  "license": "__LICENSE__",
+  "esmodules": [],
   "scripts": [],
-  "styles": ["/css/module.css"],
+  "styles": [],
   "packs": [
     {
       "name": "random-target-macros",
-      "label": "Random Target",
+      "label": "__MODULE_TITLE__",
       "path": "packs/random-target.db",
       "type": "Macro",
-      "module": "random-target"
+      "module": "__MODULE_ID__"
     }
   ],
-  "media": [
-    {
-      "type": "cover",
-      "url": "https://raw.githubusercontent.com/mcavallo/foundry-vtt-random-target/master/.github/docs/cover.jpg"
-    }
-  ],
-  "url": "__REPO__",
-  "manifest": "__REPO__/releases/latest/download/module.json",
-  "download": "__REPO__/releases/download/__RELEASE__/foundry-vtt-random-target___RELEASE__.zip"
+  "media": [],
+  "url": "__REPO_URL__",
+  "manifest": "__REPO_URL__/releases/latest/download/module.json",
+  "download": "__REPO_URL__/releases/download/__RELEASE__/foundry-vtt-random-target___RELEASE__.zip"
 }
