@@ -15,8 +15,12 @@ export class ChatManager {
     }
 
     if (message.flags[MODULE.NAMESPACE].type === 'target') {
-      html.querySelector('[data-action="target-actor"]').addEventListener('click', this._targetActorAction);
-      html.querySelector('[data-action="toggle-message"]').addEventListener('click', this._toggleMessageAction);
+      html
+        .querySelector('[data-action="target-actor"]')
+        .addEventListener('click', this._targetActorAction);
+      html
+        .querySelector('[data-action="toggle-message"]')
+        .addEventListener('click', this._toggleMessageAction);
     }
   }
 

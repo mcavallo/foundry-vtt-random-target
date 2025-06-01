@@ -2,7 +2,6 @@ import chalk from 'chalk';
 import fs from 'fs-extra';
 import yaml from 'js-yaml';
 import lodash from 'lodash';
-import fetch from 'node-fetch';
 
 const { get } = lodash;
 
@@ -67,16 +66,21 @@ export function assertGithubApiToken() {
  * @async
  */
 export async function getLatestGithubRelease(repoUrl) {
-  const [, repoOwner, repoName] = repoUrl.match(/^https?:\/\/(?:www.)?github.com\/([^/]+)\/(.+)$/);
+  const [, repoOwner, repoName] = repoUrl.match(
+    /^https?:\/\/(?:www.)?github.com\/([^/]+)\/(.+)$/
+  );
 
   try {
-    const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/releases?per_page=1`, {
-      headers: {
-        Accept: 'application/vnd.github+json',
-        Authorization: `Bearer ${process.env.GH_API_TOKEN}`,
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-    });
+    const response = await fetch(
+      `https://api.github.com/repos/${repoOwner}/${repoName}/releases?per_page=1`,
+      {
+        headers: {
+          Accept: 'application/vnd.github+json',
+          Authorization: `Bearer ${process.env.GH_API_TOKEN}`,
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      }
+    );
 
     if (response.ok) {
       const data = await response.json();
@@ -87,7 +91,9 @@ export async function getLatestGithubRelease(repoUrl) {
       }
 
       if (!data[0] || !data[0].tag_name) {
-        throw new Error(`Couldn't read the tag name from the latest Github release.`);
+        throw new Error(
+          `Couldn't read the tag name from the latest Github release.`
+        );
       }
 
       return data[0].tag_name;
@@ -99,10 +105,14 @@ export async function getLatestGithubRelease(repoUrl) {
     }
 
     if (response.status === 403 || response.status === 429) {
-      throw new Error(`Couldn't fetch the latest Github release due to rate limiting.`);
+      throw new Error(
+        `Couldn't fetch the latest Github release due to rate limiting.`
+      );
     }
 
-    throw new Error(`Failed to fetch the latest Github release with status ${response.status}.`);
+    throw new Error(
+      `Failed to fetch the latest Github release with status ${response.status}.`
+    );
   } catch (err) {
     console.log(err);
     process.exit(0);
@@ -125,7 +135,10 @@ export async function getReleaseVersion(repoUrl) {
 
   assertGithubApiToken();
   const githubReleaseVersion = await getLatestGithubRelease(repoUrl);
-  const releaseVersion = [githubReleaseVersion, process.env.ROLLUP_WATCH ? '-dev' : ''].join('');
+  const releaseVersion = [
+    githubReleaseVersion,
+    process.env.ROLLUP_WATCH ? '-dev' : '',
+  ].join('');
 
   return {
     version: releaseVersion.replace(/^(v)/, ''),
@@ -157,7 +170,12 @@ export async function getReleaseData(packageJson) {
  * @param {string[]} input.styles
  * @returns {ReleaseData}
  */
-export function buildManifest({ releaseData, esmodules = [], scripts = [], styles = [] }) {
+export function buildManifest({
+  releaseData,
+  esmodules = [],
+  scripts = [],
+  styles = [],
+}) {
   const rawManifest = fs.readFileSync('src/module.json', 'utf8');
   const jsonManifest = JSON.parse(
     rawManifest
@@ -165,9 +183,18 @@ export function buildManifest({ releaseData, esmodules = [], scripts = [], style
       .replaceAll('__LICENSE__', releaseData.package.license)
       .replaceAll('__MODULE_ID__', releaseData.package.foundryModule.id)
       .replaceAll('__MODULE_TITLE__', releaseData.package.foundryModule.title)
-      .replaceAll('__MODULE_DESCRIPTION__', releaseData.package.foundryModule.description)
-      .replaceAll('__MODULE_COMPATIBILITY_MINIMUM__', releaseData.package.foundryModule.compatibilityMinimum)
-      .replaceAll('__MODULE_COMPATIBILITY_VERIFIED__', releaseData.package.foundryModule.compatibilityVerified)
+      .replaceAll(
+        '__MODULE_DESCRIPTION__',
+        releaseData.package.foundryModule.description
+      )
+      .replaceAll(
+        '__MODULE_COMPATIBILITY_MINIMUM__',
+        releaseData.package.foundryModule.compatibilityMinimum
+      )
+      .replaceAll(
+        '__MODULE_COMPATIBILITY_VERIFIED__',
+        releaseData.package.foundryModule.compatibilityVerified
+      )
       .replaceAll('__RELEASE__', releaseData.release)
       .replaceAll('__REPO_URL__', releaseData.package.repository.url)
       .replaceAll('__VERSION__', releaseData.version)

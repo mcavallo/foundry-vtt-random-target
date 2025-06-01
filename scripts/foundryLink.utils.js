@@ -67,7 +67,9 @@ export function getLinkDir() {
 }
 
 export function getSymlinkType() {
-  return process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE) ? 'junction' : 'dir';
+  return process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE)
+    ? 'junction'
+    : 'dir';
 }
 
 export function dirOrSymlinkExists(dirPath) {

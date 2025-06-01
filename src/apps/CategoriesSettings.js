@@ -17,7 +17,9 @@ export class CategoriesSettings extends FormApplication {
       id: `${MODULE.ID}-categories-setting`,
       title: `${MODULE.NAME}: Categories`,
       template: `modules/${MODULE.ID}/templates/categories-setting.hbs`,
-      dragDrop: [{ dragSelector: '.item-list .item', dropSelector: '.item-list .item' }],
+      dragDrop: [
+        { dragSelector: '.item-list .item', dropSelector: '.item-list .item' },
+      ],
       width: 400,
     });
   }
@@ -82,8 +84,12 @@ export class CategoriesSettings extends FormApplication {
     const targetId = this.getDragDropId(target);
     this.clearDropTarget();
 
-    const $source = $(this.element).find(`input[value="${this.draggedId}"]`).closest('.item');
-    const $target = $(this.element).find(`input[value="${targetId}"]`).closest('.item');
+    const $source = $(this.element)
+      .find(`input[value="${this.draggedId}"]`)
+      .closest('.item');
+    const $target = $(this.element)
+      .find(`input[value="${targetId}"]`)
+      .closest('.item');
 
     const placeholder = document.createElement('div');
     const parent = $source.parent();

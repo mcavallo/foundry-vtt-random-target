@@ -1,6 +1,6 @@
-import { CATEGORY_IDS, CHANGE_DEBOUNCE_TIME, MODULE, RERENDER_DEBOUNCE_TIME, SETTING_IDS } from "../constants.js";
-import { CategoryList } from "../lib/CategoryList.js";
-import { $M, isTokenDefeated } from "../utils.js";
+import { CATEGORY_IDS, CHANGE_DEBOUNCE_TIME, MODULE, RERENDER_DEBOUNCE_TIME, SETTING_IDS } from '../constants.js';
+import { CategoryList } from '../lib/CategoryList.js';
+import { $M, isTokenDefeated } from '../utils.js';
 
 const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
 const { SettingsConfig } = foundry.applications.settings;
@@ -11,23 +11,23 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     uniqueId: MODULE.ID,
     position: {
       width: 450,
-      height: "auto",
+      height: 'auto',
     },
-    tag: "form",
+    tag: 'form',
     window: {
-      title: "Random Target",
+      title: 'Random Target',
       controls: [
         {
-          action: "openSettings",
-          label: "Settings"
+          action: 'openSettings',
+          label: 'Settings',
         },
         {
-          action: "openHelp",
-          label: "Help"
-        }
+          action: 'openHelp',
+          label: 'Help',
+        },
       ],
-      icon: "fa-solid fa-crosshairs",
-      resizable: false
+      icon: 'fa-solid fa-crosshairs',
+      resizable: false,
     },
     actions: {
       openSettings: RandomTargetV2.#handleOpenSettingsAction,
@@ -36,8 +36,8 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     },
     form: {
       handler: RandomTargetV2.#handleFormSubmit,
-      closeOnSubmit: false
-    }
+      closeOnSubmit: false,
+    },
   };
 
   static PARTS = {
@@ -45,10 +45,10 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
       template: 'templates/generic/tab-navigation.hbs',
     },
     content: {
-      template: `modules/${MODULE.ID}/templates/v2/random-target/content.hbs`
+      template: `modules/${MODULE.ID}/templates/v2/random-target/content.hbs`,
     },
     error: {
-      template: `modules/${MODULE.ID}/templates/v2/random-target/error.hbs`
+      template: `modules/${MODULE.ID}/templates/v2/random-target/error.hbs`,
     },
     footer: {
       template: 'templates/generic/form-footer.hbs',
@@ -63,7 +63,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     this.reRenderTimeout = undefined;
     this.changeTimeout = undefined;
     this.lastSceneId = undefined;
-    
+
     // Register the initial scene
     const scene = $M().game.getScene();
     if (scene) {
@@ -109,9 +109,9 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     });
 
     // Trigger a re-render whenever a token changes in the scene
-    Hooks.on('createToken', this._triggerDebouncedReRender.bind(this))
-    Hooks.on('deleteToken', this._triggerDebouncedReRender.bind(this))
-    Hooks.on('updateToken', this._triggerDebouncedReRender.bind(this))
+    Hooks.on('createToken', this._triggerDebouncedReRender.bind(this));
+    Hooks.on('deleteToken', this._triggerDebouncedReRender.bind(this));
+    Hooks.on('updateToken', this._triggerDebouncedReRender.bind(this));
   }
 
   /**
@@ -155,7 +155,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     }
 
     const settings = foundry.utils.expandObject(formData.object);
-    const selectedTokens = Array.from(new Set(settings.selectedTokens.filter(Boolean)))
+    const selectedTokens = Array.from(new Set(settings.selectedTokens.filter(Boolean)));
 
     // Check for enough selections
     if (selectedTokens.length < 2) {
@@ -192,14 +192,14 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
    * Creates context data for the UI.
    */
   async _prepareContext(options) {
-    let context = await super._prepareContext(options);    
+    let context = await super._prepareContext(options);
     const sceneTokens = $M().game.getSceneTokens();
 
     // If the scene has no tokens avoid preparing the data and return early
     if (sceneTokens.length === 0) {
       return {
         totalSceneTokens: 0,
-      }
+      };
     }
 
     const selectedTokens = new Set($M().game.getSelectedTokens());
@@ -223,7 +223,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
         type: type, // Avoid using object property shorthand
         selected: wasPreviouslySelected,
         defeated: isTokenDefeated(token),
-        hidden: token.hidden
+        hidden: token.hidden,
       };
 
       if (wasPreviouslySelected) {
@@ -267,7 +267,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
       categories: sortedCategories,
       areThereTokens: !!categories.getTotalItems(),
       initialSelectionCount: totalPreselected,
-      buttons: computedButtons
+      buttons: computedButtons,
     });
 
     return context;
@@ -284,7 +284,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
       this.element.classList.remove('error-mode');
     }
 
-    const scrollableContent = this.element.querySelector(".scrollable-content");
+    const scrollableContent = this.element.querySelector('.scrollable-content');
 
     // Restore the scroll position
     if (this.lastKnownScrollTop > 0) {
@@ -292,36 +292,36 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     }
 
     // Record the scroll position
-    scrollableContent.addEventListener("scroll", e => {
+    scrollableContent.addEventListener('scroll', e => {
       this.lastKnownScrollTop = e.target.scrollTop;
     });
 
     // Reset the scroll position whenever a tab changes
-    this.element.querySelector("[data-tab]")?.addEventListener("click", () => {
+    this.element.querySelector('[data-tab]')?.addEventListener('click', () => {
       this.lastKnownScrollTop = 0;
     });
 
     // Handle bulk selection toggle
-    this.element.querySelectorAll(".tab .toggleSelection").forEach((el) => {
-      el.addEventListener("change", this._toggleBulkSelection.bind(this));
-    })
+    this.element.querySelectorAll('.tab .toggleSelection').forEach((el) => {
+      el.addEventListener('change', this._toggleBulkSelection.bind(this));
+    });
 
     // Handle selection change
     this.element.querySelectorAll('input[type="checkbox"]:not(.toggleSelection)').forEach((el) => {
-      el.addEventListener("change", this._replicateSelectionAcrossTabs.bind(this));
-      el.addEventListener("change", () => {
+      el.addEventListener('change', this._replicateSelectionAcrossTabs.bind(this));
+      el.addEventListener('change', () => {
         clearTimeout(this.changeTimeout);
         this.changeTimeout = setTimeout(() => {
           this._computeSubmitButtonState();
           this._saveTemporarySelection();
         }, CHANGE_DEBOUNCE_TIME);
       });
-    })
+    });
 
     // Force animated tokens to play
     this.element.querySelectorAll('video[autoplay]').forEach((el) => {
       el.play();
-    })
+    });
 
     // Compute initial button state
     this._computeSubmitButtonState();
@@ -340,11 +340,11 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
         cssClass: this.tabGroups[RandomTargetV2.TAB_GROUP] === category.tabId ? 'active' : '',
         group: RandomTargetV2.TAB_GROUP,
         id: category.tabId,
-        label: `${category.label} (${category.totalItems})`
+        label: `${category.label} (${category.totalItems})`,
       };
 
       return acc;
-    }, {})
+    }, {});
   }
 
   /**
@@ -352,9 +352,9 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
    */
   _computeButtons(selectedTotal) {
     return [
-      { type: "button", label: "Cancel", action: 'closeApp' },
-      { type: "submit", label: `Choose Random Target (${selectedTotal})`, name: 'submit' },
-    ]
+      { type: 'button', label: 'Cancel', action: 'closeApp' },
+      { type: 'submit', label: `Choose Random Target (${selectedTotal})`, name: 'submit' },
+    ];
   }
 
   /**
@@ -365,7 +365,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     e.target.closest('.tab').querySelectorAll('input[type="checkbox"]:not(.toggleSelection)').forEach((el) => {
       el.checked = newValue;
       el.dispatchEvent(new Event('change', { bubbles: true }));
-    })
+    });
   }
 
   /**
@@ -374,29 +374,29 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
   _replicateSelectionAcrossTabs(e) {
     this.element.querySelectorAll(`input[type="checkbox"][value="${e.target.value}"]`).forEach((el) => {
       el.checked = e.target.checked;
-    })
+    });
   }
 
   _computeSubmitButtonState() {
     const checkedIds = new Set(
       Array.from(this.element.querySelectorAll('input[type="checkbox"]:not(.toggleSelection):checked'))
-        .map(el => el.value)
-    )
+        .map(el => el.value),
+    );
 
     const submit = this.element.querySelector('button[type="submit"][name="submit"]');
 
     if (submit) {
       const submitContent = submit.querySelector('span');
       submit.disabled = checkedIds.size < 2;
-      submitContent.innerText = submitContent.innerText.replace(/\(\d+\)/, `(${checkedIds.size})`)
+      submitContent.innerText = submitContent.innerText.replace(/\(\d+\)/, `(${checkedIds.size})`);
     }
   }
 
   _saveTemporarySelection(e) {
     const checkedIds = new Set(
       Array.from(this.element.querySelectorAll('input[type="checkbox"]:not(.toggleSelection):checked'))
-        .map(el => el.value)
-    )
+        .map(el => el.value),
+    );
 
     $M().settings.set(SETTING_IDS.PREV_SELECTION, Array.from(checkedIds));
   }

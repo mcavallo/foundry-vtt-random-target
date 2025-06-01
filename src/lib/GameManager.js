@@ -20,7 +20,12 @@ export class GameManager {
    * @returns {TokenDocument[]}
    */
   getSceneTokens() {
-    if (!canvas || !canvas.scene || !canvas.scene.tokens || !canvas.scene.tokens.contents) {
+    if (
+      !canvas ||
+      !canvas.scene ||
+      !canvas.scene.tokens ||
+      !canvas.scene.tokens.contents
+    ) {
       return [];
     }
 
@@ -28,7 +33,12 @@ export class GameManager {
   }
 
   getToken(tokenId) {
-    if (!canvas || !canvas.tokens || !canvas.tokens.objects || !canvas.tokens.objects.children) {
+    if (
+      !canvas ||
+      !canvas.tokens ||
+      !canvas.tokens.objects ||
+      !canvas.tokens.objects.children
+    ) {
       return;
     }
 
@@ -108,7 +118,10 @@ export class GameManager {
     const actorImage = token?.actor?.img;
     let image = token?.texture?.src;
 
-    if ((preferredImage === PREFERRED_IMAGE.ACTOR && actorImage) || (!image && actorImage)) {
+    if (
+      (preferredImage === PREFERRED_IMAGE.ACTOR && actorImage) ||
+      (!image && actorImage)
+    ) {
       image = actorImage;
     }
 

@@ -7,12 +7,16 @@ export class MacroMigration {
   }
 
   _getGameMacros() {
-    return Array.from(game.macros).filter(macro => macro._source?.flags?.core?.sourceId === this.macroSourceId);
+    return Array.from(game.macros).filter(
+      macro => macro._source?.flags?.core?.sourceId === this.macroSourceId
+    );
   }
 
   async _getLatestCompendiumVersionCommand() {
     const compendiumMacros = await game.packs.get(this.compendiumId).getDocuments();
-    const latestMacro = compendiumMacros.find(macro => macro._id === MODULE.MACRO_ID);
+    const latestMacro = compendiumMacros.find(
+      macro => macro._id === MODULE.MACRO_ID
+    );
 
     if (!latestMacro) {
       return null;

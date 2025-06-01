@@ -38,7 +38,7 @@
     "lodash": "^4.17.21",
     "minimist": "^1.2.6",
     "neverthrow": "^8.2.0",
-    "prettier": "^2.7.1",
+    "prettier": "^3.5.3",
     "rimraf": "^5.0.1",
     "rollup": "^3.29.5",
     "rollup-plugin-copy": "^3.5.0",
