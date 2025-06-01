@@ -34,7 +34,9 @@ export function sortTokensByName(a, b) {
 }
 
 export function getDispositionName(num) {
-  const disposition = Object.entries(CONST.TOKEN_DISPOSITIONS).filter(pair => pair[1] === num);
+  const disposition = Object.entries(CONST.TOKEN_DISPOSITIONS).filter(
+    pair => pair[1] === num
+  );
 
   if (!disposition || disposition.length === 0) {
     return;

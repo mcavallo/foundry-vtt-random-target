@@ -2,7 +2,8 @@
   {{#if areThereTokens}}
     <section class='content'>
       {{#each categories}}
-        <div class='tab {{#if (eq @root.activeTabId tabId)}}active{{/if}}' data-tab='{{tabId}}' data-group='{{@root.tabGroupName}}'>
+        <div class='tab {{#if (eq @root.activeTabId tabId)}}active{{/if}}' data-tab='{{tabId}}'
+             data-group='{{@root.tabGroupName}}'>
           <div class='target-item'>
             <input
               type='checkbox'

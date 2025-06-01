@@ -115,7 +115,9 @@ export class CategoryList {
   }
 
   getSortedAndFiltered() {
-    return this.categories.filter(category => category.totalItems > 0 && category.enabled);
+    return this.categories.filter(
+      category => category.totalItems > 0 && category.enabled
+    );
   }
 
   getTotalItems() {
@@ -133,7 +135,9 @@ export class CategoryList {
   }
 
   addItem(categoryId, token) {
-    const targetIndex = this.categories.findIndex(category => category.id === categoryId);
+    const targetIndex = this.categories.findIndex(
+      category => category.id === categoryId
+    );
 
     if (targetIndex === -1) {
       console.error(`Category ${categoryId} doesn't exist.`);
