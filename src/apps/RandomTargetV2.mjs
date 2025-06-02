@@ -1,4 +1,11 @@
-import { CATEGORY_IDS, CHANGE_DEBOUNCE_TIME, MODULE, RERENDER_DEBOUNCE_TIME, SETTING_IDS } from '../constants.js';
+import {
+  CATEGORY_IDS,
+  CHANGE_DEBOUNCE_TIME,
+  MODULE,
+  POSITION_UPDATE_DEBOUNCE_TIME,
+  RERENDER_DEBOUNCE_TIME,
+  SETTING_IDS,
+} from '../constants.js';
 import { CategoryList } from '../lib/CategoryList.js';
 import { $M, isTokenDefeated } from '../utils.js';
 
@@ -63,6 +70,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     this.lastKnownScrollTop = 0;
     this.reRenderTimeout = undefined;
     this.changeTimeout = undefined;
+    this.positionUpdateTimeout = undefined;
     this.lastSceneId = undefined;
 
     // Register the initial scene
@@ -187,6 +195,27 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
   }
 
   /**
+   * Registers the window position.
+   */
+  _updatePosition(position) {
+    console.log('_updatePosition', position);
+    const newPosition = super._updatePosition(position);
+
+    if (typeof newPosition.top === 'number' && typeof newPosition.left === 'number') {
+      clearTimeout(this.positionUpdateTimeout);
+      this.positionUpdateTimeout = setTimeout(() => {
+        console.log(Date.now(), 'POSITION_UPDATE_DEBOUNCE_TIME');
+        $M().settings.set(SETTING_IDS.PREV_WINDOW_POSITION, {
+          top: newPosition.top,
+          left: newPosition.left,
+        });
+      }, POSITION_UPDATE_DEBOUNCE_TIME);
+    }
+
+    return newPosition;
+  }
+
+  /**
    * Creates context data for the UI.
    */
   async _prepareContext(options) {
@@ -270,11 +299,17 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
 
     return context;
   }
-
+  
   /**
-   * Creates listeners.
+   * Creates event listeners.
    */
   _onRender(context, options) {
+    // Restore last window position
+    const prevPosition = $M().settings.get(SETTING_IDS.PREV_WINDOW_POSITION);
+    if (prevPosition && prevPosition?.left && prevPosition?.top) {
+      super.setPosition({ left: prevPosition.left, top: prevPosition.top });
+    }
+
     // Toggle error message display
     if (context.totalSceneTokens === 0) {
       this.element.classList.add('error-mode');

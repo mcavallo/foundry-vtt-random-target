@@ -16,6 +16,7 @@ export const SETTING_IDS = {
   PREFERRED_IMAGE: 'imagePriority',
   PREV_SELECTION: 'previousSelection',
   PREV_TARGET_ID: 'previousTargetId',
+  PREV_WINDOW_POSITION: 'previousWindowPosition',
 };
 
 export const FOUNDRY_SETTING_IDS = [
@@ -27,6 +28,7 @@ export const FOUNDRY_SETTING_IDS = [
   SETTING_IDS.PREFERRED_IMAGE,
   SETTING_IDS.PREV_SELECTION,
   SETTING_IDS.PREV_TARGET_ID,
+  SETTING_IDS.PREV_WINDOW_POSITION,
 ];
 
 export const SYSTEM_IDS = {
@@ -62,3 +64,4 @@ export const PREFERRED_IMAGE_OPTIONS = {
 
 export const RERENDER_DEBOUNCE_TIME = 100;
 export const CHANGE_DEBOUNCE_TIME = 100;
+export const POSITION_UPDATE_DEBOUNCE_TIME = 1000;
