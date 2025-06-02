@@ -198,13 +198,11 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
    * Registers the window position.
    */
   _updatePosition(position) {
-    console.log('_updatePosition', position);
     const newPosition = super._updatePosition(position);
 
     if (typeof newPosition.top === 'number' && typeof newPosition.left === 'number') {
       clearTimeout(this.positionUpdateTimeout);
       this.positionUpdateTimeout = setTimeout(() => {
-        console.log(Date.now(), 'POSITION_UPDATE_DEBOUNCE_TIME');
         $M().settings.set(SETTING_IDS.PREV_WINDOW_POSITION, {
           top: newPosition.top,
           left: newPosition.left,
