@@ -1,9 +1,17 @@
-import { CATEGORY_IDS, CHANGE_DEBOUNCE_TIME, MODULE, RERENDER_DEBOUNCE_TIME, SETTING_IDS } from '../constants.js';
+import {
+  CATEGORY_IDS,
+  CHANGE_DEBOUNCE_TIME,
+  MODULE,
+  POSITION_UPDATE_DEBOUNCE_TIME,
+  RERENDER_DEBOUNCE_TIME,
+  SETTING_IDS,
+} from '../constants.js';
 import { CategoryList } from '../lib/CategoryList.js';
 import { $M, isTokenDefeated } from '../utils.js';
 
 const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
 const { SettingsConfig } = foundry.applications.settings;
+const { expandObject, mergeObject } = foundry.utils;
 
 export default class RandomTargetV2 extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
@@ -62,6 +70,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     this.lastKnownScrollTop = 0;
     this.reRenderTimeout = undefined;
     this.changeTimeout = undefined;
+    this.positionUpdateTimeout = undefined;
     this.lastSceneId = undefined;
 
     // Register the initial scene
@@ -154,7 +163,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
       return;
     }
 
-    const settings = foundry.utils.expandObject(formData.object);
+    const settings = expandObject(formData.object);
     const selectedTokens = Array.from(new Set(settings.selectedTokens.filter(Boolean)));
 
     // Check for enough selections
@@ -163,15 +172,12 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
       return;
     }
 
-    // Pick random target
-    const previousTarget = $M().settings.get(SETTING_IDS.PREV_TARGET_ID);
-    const avoidSelectingSameTarget = $M().settings.get(SETTING_IDS.AVOID_SELECTING_SAME_TARGET);
-    let randomPick;
-
-    while (!randomPick || (avoidSelectingSameTarget && randomPick === previousTarget)) {
-      const idx = $M().random.getOne(selectedTokens.length);
-      randomPick = selectedTokens[idx];
-    }
+    // Select a random target from the pool of candidates
+    const randomPick = $M().random.pickFromPool({
+      pool: selectedTokens,
+      previousTarget: $M().settings.get(SETTING_IDS.PREV_TARGET_ID),
+      avoidSelectingSameTarget: $M().settings.get(SETTING_IDS.AVOID_SELECTING_SAME_TARGET),
+    });
 
     // Target token
     const target = $M().game.targetToken(randomPick);
@@ -186,6 +192,27 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     if ($M().settings.get(SETTING_IDS.CLOSE_AFTER)) {
       this.close();
     }
+  }
+
+  /**
+   * Registers the window position.
+   */
+  _updatePosition(position) {
+    console.log('_updatePosition', position);
+    const newPosition = super._updatePosition(position);
+
+    if (typeof newPosition.top === 'number' && typeof newPosition.left === 'number') {
+      clearTimeout(this.positionUpdateTimeout);
+      this.positionUpdateTimeout = setTimeout(() => {
+        console.log(Date.now(), 'POSITION_UPDATE_DEBOUNCE_TIME');
+        $M().settings.set(SETTING_IDS.PREV_WINDOW_POSITION, {
+          top: newPosition.top,
+          left: newPosition.left,
+        });
+      }, POSITION_UPDATE_DEBOUNCE_TIME);
+    }
+
+    return newPosition;
   }
 
   /**
@@ -259,7 +286,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     const computedTabs = this._computeAvailableTabs(sortedCategories);
     const computedButtons = this._computeButtons(totalPreselected);
 
-    context = foundry.utils.mergeObject(context, {
+    context = mergeObject(context, {
       totalSceneTokens: sceneTokens.length,
       tabGroupName: RandomTargetV2.TAB_GROUP,
       activeTabId: this.tabGroups[RandomTargetV2.TAB_GROUP],
@@ -272,11 +299,17 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
 
     return context;
   }
-
+  
   /**
-   * Creates listeners.
+   * Creates event listeners.
    */
   _onRender(context, options) {
+    // Restore last window position
+    const prevPosition = $M().settings.get(SETTING_IDS.PREV_WINDOW_POSITION);
+    if (prevPosition && prevPosition?.left && prevPosition?.top) {
+      super.setPosition({ left: prevPosition.left, top: prevPosition.top });
+    }
+
     // Toggle error message display
     if (context.totalSceneTokens === 0) {
       this.element.classList.add('error-mode');
@@ -337,7 +370,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
 
     return categories.reduce((acc, category) => {
       acc[category.tabId] = {
-        cssClass: this.tabGroups[RandomTargetV2.TAB_GROUP] === category.tabId ? 'active' : '',
+        cssClass: this.tabGroups?.[RandomTargetV2.TAB_GROUP] === category.tabId ? 'active' : '',
         group: RandomTargetV2.TAB_GROUP,
         id: category.tabId,
         label: `${category.label} (${category.totalItems})`,
@@ -377,28 +410,36 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     });
   }
 
+  /**
+   * Computes the state of the submit button based on the amount of selections.
+   */
   _computeSubmitButtonState() {
-    const checkedIds = new Set(
-      Array.from(this.element.querySelectorAll('input[type="checkbox"]:not(.toggleSelection):checked'))
-        .map(el => el.value),
-    );
-
     const submit = this.element.querySelector('button[type="submit"][name="submit"]');
 
     if (submit) {
+      const checkedIds = this._getSelectedTokenIds();
       const submitContent = submit.querySelector('span');
       submit.disabled = checkedIds.size < 2;
       submitContent.innerText = submitContent.innerText.replace(/\(\d+\)/, `(${checkedIds.size})`);
     }
   }
 
+  /**
+   * Persists the temporary selection.
+   */
   _saveTemporarySelection(e) {
-    const checkedIds = new Set(
+    const checkedIds = this._getSelectedTokenIds();
+    $M().settings.set(SETTING_IDS.PREV_SELECTION, Array.from(checkedIds));
+  }
+
+  /**
+   * Returns a set of all selected token ids.
+   */
+  _getSelectedTokenIds() {
+    return new Set(
       Array.from(this.element.querySelectorAll('input[type="checkbox"]:not(.toggleSelection):checked'))
         .map(el => el.value),
     );
-
-    $M().settings.set(SETTING_IDS.PREV_SELECTION, Array.from(checkedIds));
   }
 }
 

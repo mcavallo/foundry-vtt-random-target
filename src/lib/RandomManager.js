@@ -6,4 +6,18 @@ export class RandomManager {
   getOne(totalOptions) {
     return Math.floor(this.mt.random() * totalOptions);
   }
+
+  pickFromPool({ pool, previousTarget, avoidSelectingSameTarget }) {
+    let randomPick;
+
+    while (
+      !randomPick ||
+      (avoidSelectingSameTarget && randomPick === previousTarget)
+    ) {
+      const idx = this.getOne(pool.length);
+      randomPick = pool[idx];
+    }
+
+    return randomPick;
+  }
 }

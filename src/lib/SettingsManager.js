@@ -122,6 +122,14 @@ export class SettingsManager {
       default: [],
       onChange: this._updateSettings.bind(this),
     });
+
+    game.settings.register(MODULE.ID, SETTING_IDS.PREV_WINDOW_POSITION, {
+      scope: 'world',
+      config: false,
+      type: Object,
+      default: {},
+      onChange: this._updateSettings.bind(this),
+    });
   }
 
   _getDefaultCategories() {
