@@ -26,5 +26,5 @@
   "media": [],
   "url": "__REPO_URL__",
   "manifest": "__REPO_URL__/releases/latest/download/module.json",
-  "download": "__REPO_URL__/releases/download/__RELEASE__/foundry-vtt-random-target___RELEASE__.zip"
+  "download": "__REPO_URL__/releases/download/__RELEASE__/__MODULE_ID_____RELEASE__.zip"
 }
