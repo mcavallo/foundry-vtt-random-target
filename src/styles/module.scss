@@ -50,6 +50,18 @@ body {
     }
   }
 
+  nav.tabs {
+    gap: 6px;
+    line-height: 1;
+    flex-flow: row wrap;
+    justify-content: center;
+  }
+
+  nav.tabs [data-tab] {
+    padding: 8px 6px 7px;
+    font-size: 13px;
+  }
+
   .window-content {
     padding: 0;
   }
@@ -319,8 +331,12 @@ body {
       padding: 14px 12px;
     }
 
-    .tabs {
+    nav.tabs {
       margin-bottom: 4px;
+
+      [data-tab] {
+        padding: 4px 6px 3px;
+      }
     }
 
     .form-footer {
