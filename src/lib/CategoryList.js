@@ -38,14 +38,14 @@ export class CategoryList {
       this.newCategoryEntry({
         id: CATEGORY_IDS.TARGETED,
         type: 'core',
-        label: 'Targeted',
+        label: 'Targets',
         description: 'Lists the targeted tokens in the scene',
         info: 'Only appears if there is at least 2 tokens targeted.',
       }),
       this.newCategoryEntry({
         id: CATEGORY_IDS.SELECTED,
         type: 'core',
-        label: 'Selected',
+        label: 'Selection',
         description: 'Lists the selected tokens in the scene',
         info: 'Only appears if there is at least 2 tokens selected.',
       }),
