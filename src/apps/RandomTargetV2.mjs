@@ -121,6 +121,14 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     Hooks.on('createToken', this._triggerDebouncedReRender.bind(this));
     Hooks.on('deleteToken', this._triggerDebouncedReRender.bind(this));
     Hooks.on('updateToken', this._triggerDebouncedReRender.bind(this));
+    Hooks.on('controlToken', this._triggerDebouncedReRender.bind(this));
+
+    // Trigger a re-render whenever the current targeted token changes
+    Hooks.on('refreshToken', (_token, updates) => {
+      if (updates && Object.keys(updates).length === 1 && typeof updates.refreshTarget === 'boolean') {
+        this._triggerDebouncedReRender()
+      }
+    });
   }
 
   /**
