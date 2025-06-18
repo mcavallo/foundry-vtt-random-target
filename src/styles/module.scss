@@ -325,6 +325,11 @@ body {
 
     .form-footer {
       border-color: transparent;
+
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
     }
   }
 
