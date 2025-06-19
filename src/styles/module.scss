@@ -19,6 +19,12 @@ body {
     --#{$namespace}-color-defeated: var(--color-warm-3);
     --#{$namespace}-color-selected: var(--color-text-accent);
     --#{$namespace}-color-icon: var(--color-dark-6);
+    --#{$namespace}-color-tabs-text-hover: var(--color-dark-1);
+    --#{$namespace}-color-tabs-text-active: white;
+    --#{$namespace}-color-tabs-bg: rgba(0 0 0 / 10%);
+    --#{$namespace}-color-tabs-bg-hover: rgba(0 0 0 / 15%);
+    --#{$namespace}-color-tabs-bg-active: var(--color-warm-2);
+    --#{$namespace}-color-tabs-border: var(--color-dark-5);
   }
 
   &.theme-dark .application.#{$module} {
@@ -28,12 +34,57 @@ body {
     --#{$namespace}-color-defeated: var(--color-warm-3);
     --#{$namespace}-color-selected: var(--color-text-accent);
     --#{$namespace}-color-icon: var(--color-light-5);
+    --#{$namespace}-color-tabs-text-hover: white;
+    --#{$namespace}-color-tabs-text-active: white;
+    --#{$namespace}-color-tabs-bg: var(--color-cool-5-50);
+    --#{$namespace}-color-tabs-bg-hover: var(--color-cool-5-50);
+    --#{$namespace}-color-tabs-bg-active: var(--color-warm-2);
+    --#{$namespace}-color-tabs-border: var(--color-light-5);
   }
 }
 
 /**
  * Main app styles
  */
+body:not(.theme-dark.system-wfrp4e) {
+  .application.#{$module} {
+    nav.tabs {
+      gap: 6px;
+      line-height: 1;
+      flex-flow: row wrap;
+      justify-content: center;
+      border: 0;
+      padding: 8px 0;
+
+      [data-tab] {
+        padding: 6px 6px 5px;
+        border-radius: 4px;
+        background: var(--#{$namespace}-color-tabs-bg);
+        border: 1px solid var(--#{$namespace}-color-tabs-border);
+        font-size: 13px;
+        transition: all 100ms ease;
+
+        &:hover {
+          color: var(--#{$namespace}-color-tabs-text-hover);
+          background: var(--#{$namespace}-color-tabs-bg-hover);
+        }
+
+        &.active {
+          background: var(--#{$namespace}-color-tabs-bg-active);
+          border-color: var(--#{$namespace}-color-tabs-bg-active);
+        }
+
+        &.active, &:hover.active {
+          color: var(--#{$namespace}-color-tabs-text-active);
+        }
+
+        &:hover, &.active, &:hover.active {
+          text-shadow: none;
+        }
+      }
+    }
+  }
+}
 
 .application.#{$module} {
   [data-application-part="error"] {
@@ -50,18 +101,6 @@ body {
     }
   }
 
-  nav.tabs {
-    gap: 6px;
-    line-height: 1;
-    flex-flow: row wrap;
-    justify-content: center;
-  }
-
-  nav.tabs [data-tab] {
-    padding: 8px 6px 7px;
-    font-size: 13px;
-  }
-
   .window-content {
     padding: 0;
   }
@@ -76,6 +115,11 @@ body {
     button {
       --button-size: calc(#{$imageSize * 1px});
       flex: 1;
+      transition: all 100ms ease;
+
+      &[disabled] {
+        cursor: not-allowed;
+      }
     }
   }
 
@@ -325,17 +369,22 @@ body {
  * System overrides: WFRP
  */
 
-.system-wfrp4e {
+body.theme-dark.system-wfrp4e {
   .application.#{$module} {
     .window-content {
       padding: 14px 12px;
     }
 
     nav.tabs {
+      gap: 6px;
+      line-height: 1;
+      flex-flow: row wrap;
+      justify-content: center;
       margin-bottom: 4px;
 
       [data-tab] {
         padding: 4px 6px 3px;
+        font-size: 13px;
       }
     }
 

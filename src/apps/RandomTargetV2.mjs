@@ -1,10 +1,12 @@
 import {
   CATEGORY_IDS,
   CHANGE_DEBOUNCE_TIME,
+  MIN_SELECTION,
   MODULE,
   POSITION_UPDATE_DEBOUNCE_TIME,
   RERENDER_DEBOUNCE_TIME,
   SETTING_IDS,
+  SUBMIT_STATUS_DEBOUNCE_TIME,
 } from '../constants.js';
 import { CategoryList } from '../lib/CategoryList.js';
 import { $M, isTokenDefeated } from '../utils.js';
@@ -13,7 +15,9 @@ const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
 const { SettingsConfig } = foundry.applications.settings;
 const { expandObject, mergeObject } = foundry.utils;
 
-export default class RandomTargetV2 extends HandlebarsApplicationMixin(ApplicationV2) {
+export default class RandomTargetV2 extends HandlebarsApplicationMixin(
+  ApplicationV2
+) {
   static DEFAULT_OPTIONS = {
     classes: [MODULE.ID],
     uniqueId: MODULE.ID,
@@ -70,6 +74,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     this.lastKnownScrollTop = 0;
     this.reRenderTimeout = undefined;
     this.changeTimeout = undefined;
+    this.submitStatusTimeout = undefined;
     this.positionUpdateTimeout = undefined;
     this.lastSceneId = undefined;
 
@@ -97,7 +102,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     });
 
     // Trigger a re-render whenever a relevant setting is updated
-    Hooks.on('updateSetting', (setting) => {
+    Hooks.on('updateSetting', setting => {
       if ($M().settings.shouldTriggerReRender(setting?.key)) {
         this._triggerDebouncedReRender();
       }
@@ -124,9 +129,13 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     Hooks.on('controlToken', this._triggerDebouncedReRender.bind(this));
 
     // Trigger a re-render whenever the current targeted token changes
-    Hooks.on('refreshToken', (_token, updates) => {
-      if (updates && Object.keys(updates).length === 1 && typeof updates.refreshTarget === 'boolean') {
-        this._triggerDebouncedReRender()
+    Hooks.on('refreshToken', (_token, update) => {
+      if (
+        update &&
+        Object.keys(update).length === 1 &&
+        typeof update.refreshTarget === 'boolean'
+      ) {
+        this._triggerDebouncedReRender();
       }
     });
   }
@@ -153,7 +162,9 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
    * Handles the 'openHelp' action
    */
   static async #handleOpenHelpAction() {
-    window.open('https://github.com/mcavallo/foundry-vtt-random-target/wiki/Settings');
+    window.open(
+      'https://github.com/mcavallo/foundry-vtt-random-target/wiki/Settings'
+    );
   }
 
   /**
@@ -172,10 +183,12 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     }
 
     const settings = expandObject(formData.object);
-    const selectedTokens = Array.from(new Set(settings.selectedTokens.filter(Boolean)));
+    const selectedTokens = Array.from(
+      new Set(settings.selectedTokens.filter(Boolean))
+    );
 
     // Check for enough selections
-    if (selectedTokens.length < 2) {
+    if (selectedTokens.length < MIN_SELECTION) {
       $M().notifications.sendMinimumSelectionError();
       return;
     }
@@ -184,7 +197,9 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     const randomPick = $M().random.pickFromPool({
       pool: selectedTokens,
       previousTarget: $M().settings.get(SETTING_IDS.PREV_TARGET_ID),
-      avoidSelectingSameTarget: $M().settings.get(SETTING_IDS.AVOID_SELECTING_SAME_TARGET),
+      avoidSelectingSameTarget: $M().settings.get(
+        SETTING_IDS.AVOID_SELECTING_SAME_TARGET
+      ),
     });
 
     // Target token
@@ -208,7 +223,10 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
   _updatePosition(position) {
     const newPosition = super._updatePosition(position);
 
-    if (typeof newPosition.top === 'number' && typeof newPosition.left === 'number') {
+    if (
+      typeof newPosition.top === 'number' &&
+      typeof newPosition.left === 'number'
+    ) {
       clearTimeout(this.positionUpdateTimeout);
       this.positionUpdateTimeout = setTimeout(() => {
         $M().settings.set(SETTING_IDS.PREV_WINDOW_POSITION, {
@@ -240,12 +258,13 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     const previousSelection = $M().settings.get(SETTING_IDS.PREV_SELECTION) ?? [];
 
     let totalPreselected = 0;
-    const hasEnoughSelected = selectedTokens.size > 1;
-    const hasEnoughTargeted = targetedTokens.size > 1;
+    const hasEnoughSelected = selectedTokens.size >= MIN_SELECTION;
+    const hasEnoughTargeted = targetedTokens.size >= MIN_SELECTION;
     const categories = new CategoryList();
 
     sceneTokens.forEach(token => {
-      const { type, disposition, image } = $M().game.getTokenDocumentComputedProps(token);
+      const { type, disposition, image } =
+        $M().game.getTokenDocumentComputedProps(token);
       const wasPreviouslySelected = previousSelection.includes(token.id);
 
       const categoryListEntry = {
@@ -284,11 +303,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
 
     const sortedCategories = categories.getSortedAndFiltered();
 
-    // Set the first category as selected
-    if (sortedCategories.length > 0 && !this.tabGroups[RandomTargetV2.TAB_GROUP]) {
-      this.tabGroups[RandomTargetV2.TAB_GROUP] = sortedCategories[0].tabId;
-    }
-
+    this._computeActiveTabId(sortedCategories);
     const computedTabs = this._computeAvailableTabs(sortedCategories);
     const computedButtons = this._computeButtons(totalPreselected);
 
@@ -305,7 +320,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
 
     return context;
   }
-  
+
   /**
    * Creates event listeners.
    */
@@ -341,29 +356,62 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     });
 
     // Handle bulk selection toggle
-    this.element.querySelectorAll('.tab .toggleSelection').forEach((el) => {
+    this.element.querySelectorAll('.tab .toggleSelection').forEach(el => {
       el.addEventListener('change', this._toggleBulkSelection.bind(this));
     });
 
     // Handle selection change
-    this.element.querySelectorAll('input[type="checkbox"]:not(.toggleSelection)').forEach((el) => {
-      el.addEventListener('change', this._replicateSelectionAcrossTabs.bind(this));
-      el.addEventListener('change', () => {
-        clearTimeout(this.changeTimeout);
-        this.changeTimeout = setTimeout(() => {
-          this._computeSubmitButtonState();
-          this._saveTemporarySelection();
-        }, CHANGE_DEBOUNCE_TIME);
+    this.element
+      .querySelectorAll('input[type="checkbox"]:not(.toggleSelection)')
+      .forEach(el => {
+        el.addEventListener('change', this._replicateSelectionAcrossTabs.bind(this));
+        el.addEventListener('change', () => {
+          clearTimeout(this.changeTimeout);
+          this.changeTimeout = setTimeout(() => {
+            this._computeSubmitButtonState();
+            this._saveTemporarySelection();
+          }, CHANGE_DEBOUNCE_TIME);
+        });
       });
-    });
 
     // Force animated tokens to play
-    this.element.querySelectorAll('video[autoplay]').forEach((el) => {
+    this.element.querySelectorAll('video[autoplay]').forEach(el => {
       el.play();
     });
 
     // Compute initial button state
     this._computeSubmitButtonState();
+  }
+
+  /**
+   * Given a list of categories, it returns the list of available tabs.
+   */
+  _computeActiveTabId(sortedCategories) {
+    if (sortedCategories.length === 0) {
+      return;
+    }
+
+    // Set the first category as selected if it was not previously set or when
+    // the category that was previously selected is no longer present.
+    if (!this.tabGroups[RandomTargetV2.TAB_GROUP]) {
+      this.tabGroups[RandomTargetV2.TAB_GROUP] = sortedCategories[0].tabId;
+      return;
+    }
+
+    const availableCategoryIds = new Set(
+      sortedCategories.map(category => category.tabId)
+    );
+
+    // Reset the selected category to display all tokens when a previously selected
+    // category is no longer available.
+    if (
+      this.tabGroups[RandomTargetV2.TAB_GROUP] &&
+      !availableCategoryIds.has(this.tabGroups[RandomTargetV2.TAB_GROUP])
+    ) {
+      this.tabGroups[RandomTargetV2.TAB_GROUP] = CategoryList.formatTabId(
+        CATEGORY_IDS.ALL
+      );
+    }
   }
 
   /**
@@ -376,7 +424,10 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
 
     return categories.reduce((acc, category) => {
       acc[category.tabId] = {
-        cssClass: this.tabGroups?.[RandomTargetV2.TAB_GROUP] === category.tabId ? 'active' : '',
+        cssClass:
+          this.tabGroups?.[RandomTargetV2.TAB_GROUP] === category.tabId
+            ? 'active'
+            : '',
         group: RandomTargetV2.TAB_GROUP,
         id: category.tabId,
         label: `${category.label} (${category.totalItems})`,
@@ -392,7 +443,12 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
   _computeButtons(selectedTotal) {
     return [
       { type: 'button', label: 'Cancel', action: 'closeApp' },
-      { type: 'submit', label: `Choose Random Target (${selectedTotal})`, name: 'submit' },
+      {
+        type: 'submit',
+        label: this._getSubmitLabel(selectedTotal),
+        name: 'submit',
+        disabled: selectedTotal < MIN_SELECTION,
+      },
     ];
   }
 
@@ -401,33 +457,50 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
    */
   _toggleBulkSelection(e) {
     const newValue = e.target.checked;
-    e.target.closest('.tab').querySelectorAll('input[type="checkbox"]:not(.toggleSelection)').forEach((el) => {
-      el.checked = newValue;
-      el.dispatchEvent(new Event('change', { bubbles: true }));
-    });
+    e.target
+      .closest('.tab')
+      .querySelectorAll('input[type="checkbox"]:not(.toggleSelection)')
+      .forEach(el => {
+        el.checked = newValue;
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+      });
   }
 
   /**
    * Replicates a selection across multiple category tabs.
    */
   _replicateSelectionAcrossTabs(e) {
-    this.element.querySelectorAll(`input[type="checkbox"][value="${e.target.value}"]`).forEach((el) => {
-      el.checked = e.target.checked;
-    });
+    this.element
+      .querySelectorAll(`input[type="checkbox"][value="${e.target.value}"]`)
+      .forEach(el => {
+        el.checked = e.target.checked;
+      });
   }
 
   /**
    * Computes the state of the submit button based on the amount of selections.
    */
   _computeSubmitButtonState() {
-    const submit = this.element.querySelector('button[type="submit"][name="submit"]');
+    clearTimeout(this.submitStatusTimeout);
+    this.submitStatusTimeout = setTimeout(() => {
+      const submit = this.element.querySelector(
+        'button[type="submit"][name="submit"]'
+      );
 
-    if (submit) {
-      const checkedIds = this._getSelectedTokenIds();
-      const submitContent = submit.querySelector('span');
-      submit.disabled = checkedIds.size < 2;
-      submitContent.innerText = submitContent.innerText.replace(/\(\d+\)/, `(${checkedIds.size})`);
-    }
+      if (submit) {
+        const checkedIds = this._getSelectedTokenIds();
+        const submitContent = submit.querySelector('span');
+        submit.disabled = checkedIds.size < MIN_SELECTION;
+        submitContent.innerText = this._getSubmitLabel(checkedIds.size);
+      }
+    }, SUBMIT_STATUS_DEBOUNCE_TIME);
+  }
+
+  /**
+   * Gets the submit button's label.
+   */
+  _getSubmitLabel(selectedTotal) {
+    return `Choose Random Target (${selectedTotal})`;
   }
 
   /**
@@ -443,8 +516,11 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
    */
   _getSelectedTokenIds() {
     return new Set(
-      Array.from(this.element.querySelectorAll('input[type="checkbox"]:not(.toggleSelection):checked'))
-        .map(el => el.value),
+      Array.from(
+        this.element.querySelectorAll(
+          'input[type="checkbox"]:not(.toggleSelection):checked'
+        )
+      ).map(el => el.value)
     );
   }
 }
