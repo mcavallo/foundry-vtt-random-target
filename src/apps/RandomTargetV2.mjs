@@ -38,7 +38,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(
           label: 'Help',
         },
       ],
-      icon: 'fa-solid fa-crosshairs',
+      icon: 'fa-solid fa-bullseye',
       resizable: false,
     },
     actions: {
