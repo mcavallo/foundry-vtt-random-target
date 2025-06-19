@@ -1,10 +1,12 @@
 import {
   CATEGORY_IDS,
   CHANGE_DEBOUNCE_TIME,
+  MIN_SELECTION,
   MODULE,
   POSITION_UPDATE_DEBOUNCE_TIME,
   RERENDER_DEBOUNCE_TIME,
   SETTING_IDS,
+  SUBMIT_STATUS_DEBOUNCE_TIME,
 } from '../constants.js';
 import { CategoryList } from '../lib/CategoryList.js';
 import { $M, isTokenDefeated } from '../utils.js';
@@ -70,6 +72,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     this.lastKnownScrollTop = 0;
     this.reRenderTimeout = undefined;
     this.changeTimeout = undefined;
+    this.submitStatusTimeout = undefined;
     this.positionUpdateTimeout = undefined;
     this.lastSceneId = undefined;
 
@@ -175,7 +178,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     const selectedTokens = Array.from(new Set(settings.selectedTokens.filter(Boolean)));
 
     // Check for enough selections
-    if (selectedTokens.length < 2) {
+    if (selectedTokens.length < MIN_SELECTION) {
       $M().notifications.sendMinimumSelectionError();
       return;
     }
@@ -240,8 +243,8 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
     const previousSelection = $M().settings.get(SETTING_IDS.PREV_SELECTION) ?? [];
 
     let totalPreselected = 0;
-    const hasEnoughSelected = selectedTokens.size > 1;
-    const hasEnoughTargeted = targetedTokens.size > 1;
+    const hasEnoughSelected = selectedTokens.size >= MIN_SELECTION;
+    const hasEnoughTargeted = targetedTokens.size >= MIN_SELECTION;
     const categories = new CategoryList();
 
     sceneTokens.forEach(token => {
@@ -392,7 +395,12 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
   _computeButtons(selectedTotal) {
     return [
       { type: 'button', label: 'Cancel', action: 'closeApp' },
-      { type: 'submit', label: `Choose Random Target (${selectedTotal})`, name: 'submit' },
+      {
+        type: 'submit',
+        label: this._getSubmitLabel(selectedTotal),
+        name: 'submit',
+        disabled: selectedTotal < MIN_SELECTION,
+      },
     ];
   }
 
@@ -420,14 +428,26 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(Applicati
    * Computes the state of the submit button based on the amount of selections.
    */
   _computeSubmitButtonState() {
-    const submit = this.element.querySelector('button[type="submit"][name="submit"]');
+    clearTimeout(this.submitStatusTimeout);
+    this.submitStatusTimeout = setTimeout(() => {
+      const submit = this.element.querySelector(
+        'button[type="submit"][name="submit"]'
+      );
 
-    if (submit) {
-      const checkedIds = this._getSelectedTokenIds();
-      const submitContent = submit.querySelector('span');
-      submit.disabled = checkedIds.size < 2;
-      submitContent.innerText = submitContent.innerText.replace(/\(\d+\)/, `(${checkedIds.size})`);
-    }
+      if (submit) {
+        const checkedIds = this._getSelectedTokenIds();
+        const submitContent = submit.querySelector('span');
+        submit.disabled = checkedIds.size < MIN_SELECTION;
+        submitContent.innerText = this._getSubmitLabel(checkedIds.size);
+      }
+    }, SUBMIT_STATUS_DEBOUNCE_TIME);
+  }
+
+  /**
+   * Gets the submit button's label.
+   */
+  _getSubmitLabel(selectedTotal) {
+    return `Choose Random Target (${selectedTotal})`;
   }
 
   /**

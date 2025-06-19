@@ -62,6 +62,8 @@ export const PREFERRED_IMAGE_OPTIONS = {
   [PREFERRED_IMAGE.ACTOR]: 'Actor image',
 };
 
+export const MIN_SELECTION = 2;
 export const RERENDER_DEBOUNCE_TIME = 100;
 export const CHANGE_DEBOUNCE_TIME = 100;
+export const SUBMIT_STATUS_DEBOUNCE_TIME = 100;
 export const POSITION_UPDATE_DEBOUNCE_TIME = 1000;
