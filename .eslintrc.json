@@ -12,9 +12,7 @@
   },
   "extends": [
     "eslint:recommended",
-    "jquery",
-    "@typhonjs-fvtt/eslint-config-foundry.js/0.8.0",
-    "plugin:prettier/recommended"
+    "@typhonjs-fvtt/eslint-config-foundry.js/0.8.0"
   ],
   "plugins": [],
   "rules": {
