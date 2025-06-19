@@ -33,10 +33,12 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(
         {
           action: 'openSettings',
           label: 'Settings',
+          icon: 'fa-solid fa-gear',
         },
         {
           action: 'openHelp',
           label: 'Help',
+          icon: 'fa-solid fa-circle-info',
         },
       ],
       icon: 'fa-solid fa-bullseye',
