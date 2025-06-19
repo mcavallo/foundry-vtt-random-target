@@ -22,7 +22,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(
 ) {
   static DEFAULT_OPTIONS = {
     classes: [MODULE.ID],
-    uniqueId: MODULE.ID,
+    id: MODULE.ID,
     position: {
       width: 450,
       height: 'auto',
@@ -547,6 +547,6 @@ export function runV2() {
   }
 
   const app = new RandomTargetV2();
-  app.render(true);
+  app.render({ force: true });
   return app;
 }
