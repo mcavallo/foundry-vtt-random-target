@@ -11,6 +11,7 @@ import {
 } from '../constants.js';
 import { CategoryList } from '../lib/CategoryList.js';
 import { $M, isTokenDefeated } from '../utils.js';
+import SupportDialog from './SupportDialog.mjs';
 
 const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
 const { SettingsConfig } = foundry.applications.settings;
@@ -40,6 +41,11 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(
           label: 'Help',
           icon: 'fa-solid fa-circle-info',
         },
+        {
+          action: 'openSupport',
+          label: 'Support',
+          icon: 'fa-solid fa-heart',
+        },
       ],
       icon: 'fa-solid fa-bullseye',
       resizable: false,
@@ -47,6 +53,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(
     actions: {
       openSettings: RandomTargetV2.#handleOpenSettingsAction,
       openHelp: RandomTargetV2.#handleOpenHelpAction,
+      openSupport: RandomTargetV2.#handleOpenSupportAction,
       closeApp: RandomTargetV2.#handleCloseAppAction,
     },
     form: {
@@ -167,6 +174,12 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(
   static async #handleOpenHelpAction() {
     window.open(SETTINGS_URL, '_blank');
   }
+
+  /**
+   * Handles the 'openSupport' action
+   */
+  static async #handleOpenSupportAction() {
+    new SupportDialog().render({ force: true });
   }
 
   /**

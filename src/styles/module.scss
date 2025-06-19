@@ -366,6 +366,35 @@ body:not(.theme-dark.system-wfrp4e) {
 }
 
 /**
+ * Support dialog styles
+ */
+##{$module}-support-dialog {
+  .dialog-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .dialog-heading {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .dialog-text {
+      font-size: 15px;
+    }
+
+    .dialog-gif {
+      display: flex;
+      justify-content: center;
+
+      img {
+        height: 128px;
+      }
+    }
+  }
+}
+
+/**
  * System overrides: WFRP
  */
 
