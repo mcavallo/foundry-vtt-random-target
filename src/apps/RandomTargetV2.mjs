@@ -303,11 +303,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(
 
     const sortedCategories = categories.getSortedAndFiltered();
 
-    // Set the first category as selected
-    if (sortedCategories.length > 0 && !this.tabGroups[RandomTargetV2.TAB_GROUP]) {
-      this.tabGroups[RandomTargetV2.TAB_GROUP] = sortedCategories[0].tabId;
-    }
-
+    this._computeActiveTabId(sortedCategories);
     const computedTabs = this._computeAvailableTabs(sortedCategories);
     const computedButtons = this._computeButtons(totalPreselected);
 
@@ -385,6 +381,37 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(
 
     // Compute initial button state
     this._computeSubmitButtonState();
+  }
+
+  /**
+   * Given a list of categories, it returns the list of available tabs.
+   */
+  _computeActiveTabId(sortedCategories) {
+    if (sortedCategories.length === 0) {
+      return;
+    }
+
+    // Set the first category as selected if it was not previously set or when
+    // the category that was previously selected is no longer present.
+    if (!this.tabGroups[RandomTargetV2.TAB_GROUP]) {
+      this.tabGroups[RandomTargetV2.TAB_GROUP] = sortedCategories[0].tabId;
+      return;
+    }
+
+    const availableCategoryIds = new Set(
+      sortedCategories.map(category => category.tabId)
+    );
+
+    // Reset the selected category to display all tokens when a previously selected
+    // category is no longer available.
+    if (
+      this.tabGroups[RandomTargetV2.TAB_GROUP] &&
+      !availableCategoryIds.has(this.tabGroups[RandomTargetV2.TAB_GROUP])
+    ) {
+      this.tabGroups[RandomTargetV2.TAB_GROUP] = CategoryList.formatTabId(
+        CATEGORY_IDS.ALL
+      );
+    }
   }
 
   /**
