@@ -6,10 +6,12 @@ import {
   POSITION_UPDATE_DEBOUNCE_TIME,
   RERENDER_DEBOUNCE_TIME,
   SETTING_IDS,
+  SETTINGS_URL,
   SUBMIT_STATUS_DEBOUNCE_TIME,
 } from '../constants.js';
 import { CategoryList } from '../lib/CategoryList.js';
 import { $M, isTokenDefeated } from '../utils.js';
+import SupportDialog from './SupportDialog.mjs';
 
 const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
 const { SettingsConfig } = foundry.applications.settings;
@@ -20,7 +22,7 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(
 ) {
   static DEFAULT_OPTIONS = {
     classes: [MODULE.ID],
-    uniqueId: MODULE.ID,
+    id: MODULE.ID,
     position: {
       width: 450,
       height: 'auto',
@@ -32,18 +34,26 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(
         {
           action: 'openSettings',
           label: 'Settings',
+          icon: 'fa-solid fa-gear',
         },
         {
           action: 'openHelp',
           label: 'Help',
+          icon: 'fa-solid fa-circle-info',
+        },
+        {
+          action: 'openSupport',
+          label: 'Support',
+          icon: 'fa-solid fa-heart',
         },
       ],
-      icon: 'fa-solid fa-crosshairs',
+      icon: 'fa-solid fa-bullseye',
       resizable: false,
     },
     actions: {
       openSettings: RandomTargetV2.#handleOpenSettingsAction,
       openHelp: RandomTargetV2.#handleOpenHelpAction,
+      openSupport: RandomTargetV2.#handleOpenSupportAction,
       closeApp: RandomTargetV2.#handleCloseAppAction,
     },
     form: {
@@ -162,9 +172,14 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(
    * Handles the 'openHelp' action
    */
   static async #handleOpenHelpAction() {
-    window.open(
-      'https://github.com/mcavallo/foundry-vtt-random-target/wiki/Settings'
-    );
+    window.open(SETTINGS_URL, '_blank');
+  }
+
+  /**
+   * Handles the 'openSupport' action
+   */
+  static async #handleOpenSupportAction() {
+    new SupportDialog().render({ force: true });
   }
 
   /**
@@ -532,6 +547,6 @@ export function runV2() {
   }
 
   const app = new RandomTargetV2();
-  app.render(true);
+  app.render({ force: true });
   return app;
 }
