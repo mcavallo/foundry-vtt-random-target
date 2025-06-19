@@ -67,3 +67,5 @@ export const RERENDER_DEBOUNCE_TIME = 100;
 export const CHANGE_DEBOUNCE_TIME = 100;
 export const SUBMIT_STATUS_DEBOUNCE_TIME = 100;
 export const POSITION_UPDATE_DEBOUNCE_TIME = 1000;
+export const SETTINGS_URL =
+  'https://github.com/mcavallo/foundry-vtt-random-target/wiki/Settings';

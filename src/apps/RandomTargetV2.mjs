@@ -6,6 +6,7 @@ import {
   POSITION_UPDATE_DEBOUNCE_TIME,
   RERENDER_DEBOUNCE_TIME,
   SETTING_IDS,
+  SETTINGS_URL,
   SUBMIT_STATUS_DEBOUNCE_TIME,
 } from '../constants.js';
 import { CategoryList } from '../lib/CategoryList.js';
@@ -162,9 +163,8 @@ export default class RandomTargetV2 extends HandlebarsApplicationMixin(
    * Handles the 'openHelp' action
    */
   static async #handleOpenHelpAction() {
-    window.open(
-      'https://github.com/mcavallo/foundry-vtt-random-target/wiki/Settings'
-    );
+    window.open(SETTINGS_URL, '_blank');
+  }
   }
 
   /**
