@@ -6,6 +6,8 @@ When activated, the module opens a window displaying the tokens in your current 
 
 ![Random target dialog](.github/docs/cover.gif)
 
+See the module in action [here](https://youtu.be/YFAZ51cCMI4).
+
 # Settings
 
 The module features a settings page that lets you customize the experience to your liking, such as choosing which 
