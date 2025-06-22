@@ -18,12 +18,12 @@ jobs:
       release_type: ${{ steps.bump.outputs.release_type }}
       changelog: ${{ steps.bump.outputs.changelog }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # all commits
+          fetch-depth: 0
       - name: Bump and tag new version
         id: bump
-        uses: mathieudutour/github-tag-action@v6.0
+        uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GH_TOKEN }}
           default_bump: false
@@ -37,22 +37,24 @@ jobs:
     needs:
       - versioning
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: "22.x"
-      - uses: ./.github/local-actions/yarn-install-and-cache
-      - name: Create .env and credentials files
+          bun-version: "1.2.17"
+      - name: Install deps
+        shell: bash
+        run: bun i
+      - name: Create .env
         shell: bash
         run: |
           echo -n "" > .env
           echo FOUNDRY_RELEASE_TOKEN="\"${{ secrets.FOUNDRY_RELEASE_TOKEN }}\"" >> .env
           echo GH_API_TOKEN=${{ secrets.GH_API_TOKEN }} >> .env
-      - name: 'Build'
+      - name: Build
         shell: 'bash'
         run: |
-          RELEASE_VERSION=${{ needs.versioning.outputs.new_tag }} yarn build
-      - name: Read module id
+          RELEASE_VERSION=${{ needs.versioning.outputs.new_tag }} make build
+      - name: Read foundryModule.id
         id: module_id
         shell: bash
         run: |
@@ -62,7 +64,7 @@ jobs:
           cd dist/
           zip -r ../${{ steps.module_id.outputs.out }}_${{ needs.versioning.outputs.new_tag }}.zip *
       - name: Create Github release
-        uses: ncipollo/release-action@v1.9.0
+        uses: ncipollo/release-action@v1.16.0
         with:
           token: ${{ secrets.GH_TOKEN }}
           tag: ${{ needs.versioning.outputs.new_tag }}
@@ -71,4 +73,4 @@ jobs:
       - name: Push release to Foundry
         shell: bash
         run: |
-          yarn foundry:release
+          make foundry_release

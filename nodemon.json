@@ -1,0 +1,6 @@
+{
+  "verbose": true,
+  "watch": ["src", "scripts"],
+  "exec": "make rebuild",
+  "ext": "js,ts,mjs,json,hbs,scss"
+}
