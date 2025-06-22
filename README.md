@@ -1,8 +1,15 @@
 # Random Target
 
-This module adds a tool for quickly selecting a random target. Once activated it will list all tokens in the current scene grouped by type where you can pre-select which tokens are eligible for the random selection.
+**Random Target** is a Foundry VTT module that lets you quickly select a random target from the tokens in your current scene.
+
+When activated, the module opens a window displaying the tokens in your current scene, organized into categories such as disposition or actor type. This allows you to easily browse and pre-select eligible candidates. Once you're satisfied with your selection, simply roll to determine which one is randomly targeted.
 
 ![Random target dialog](.github/docs/cover.gif)
+
+# Settings
+
+The module features a settings page that lets you customize the experience to your liking, such as choosing which 
+categories are displayed, whether a notification should appear in the chat, and whether the selection window should remain open after use. Read more about it [here](https://github.com/mcavallo/foundry-vtt-random-target/wiki/Settings).
 
 # Installation / Usage
 
@@ -18,10 +25,6 @@ If you are having issues after upgrading the module please follow these instruct
 2. Install the **latest version** of the module
 3. Delete the **Random Target** macro from your toolbar
 4. Import the macro again from the **Random Target** macro compendium
-
-# Settings
-
-The module has a settings page that you can use to customize the experience to your liking. Read more about it [here](https://github.com/mcavallo/foundry-vtt-random-target/wiki/Settings).
 
 # Supported Systems
 
