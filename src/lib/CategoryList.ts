@@ -22,14 +22,14 @@ export class CategoryList {
       this.newCategoryEntry({
         id: CATEGORY_IDS.TARGETED,
         type: 'core',
-        label: 'Targeted',
+        label: 'Targets',
         description: 'Lists the targeted tokens in the scene',
         info: 'Only appears if there is at least 2 tokens targeted.',
       }),
       this.newCategoryEntry({
         id: CATEGORY_IDS.SELECTED,
         type: 'core',
-        label: 'Selected',
+        label: 'Selection',
         description: 'Lists the selected tokens in the scene',
         info: 'Only appears if there is at least 2 tokens selected.',
       }),
@@ -42,7 +42,7 @@ export class CategoryList {
     ];
 
     if (game.system?.documentTypes?.Actor) {
-      Object.keys(game.system.documentTypes.Actor).forEach(key => {
+      Object.keys(game.system.documentTypes.Actor).forEach((key) => {
         const id = formatActorTypeId(key);
 
         if (id) {
@@ -80,7 +80,7 @@ export class CategoryList {
     }
 
     this.categories = categories
-      .map(category => ({
+      .map((category) => ({
         ...category,
         enabled: savedValues.includes(category.id),
       }))
@@ -110,7 +110,7 @@ export class CategoryList {
 
   getSortedAndFiltered() {
     return this.categories.filter(
-      category => category.totalItems > 0 && category.enabled
+      (category) => category.totalItems > 0 && category.enabled
     );
   }
 
@@ -132,7 +132,7 @@ export class CategoryList {
 
   addItem(categoryId: string, token: any) {
     const targetIndex = this.categories.findIndex(
-      category => category.id === categoryId
+      (category) => category.id === categoryId
     );
 
     if (targetIndex === -1) {
