@@ -47,9 +47,9 @@ export class SettingsManager {
   _registerSettings() {
     // @ts-expect-error fix types
     game.settings.registerMenu(MODULE.ID, SETTING_IDS.CATEGORIES + 'Menu', {
-      name: 'Categories',
-      label: 'Configure Categories',
-      hint: 'Manage the available target categories.',
+      name: 'Category filters',
+      label: 'Configure',
+      hint: 'Manage which category filters are available and the order in which they appear.',
       icon: 'fa fa-list-check',
       // @ts-expect-error fix types
       type: CategoriesSettings,
@@ -68,7 +68,7 @@ export class SettingsManager {
     // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.CLOSE_AFTER, {
       name: 'Close after selection',
-      hint: 'Whether the target selection window should close after a target is selected.',
+      hint: 'Specifies whether the target selection window should close after a target is chosen.',
       scope: 'world',
       config: true,
       type: Boolean,
@@ -91,7 +91,7 @@ export class SettingsManager {
     // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.AVOID_SELECTING_SAME_TARGET, {
       name: 'Avoid selecting the same target',
-      hint: 'Whether to prevent the same target from being targeted twice in a row.',
+      hint: 'Specifies whether the same target should be prevented from being selected twice in a row.',
       scope: 'world',
       config: true,
       type: Boolean,
@@ -102,7 +102,7 @@ export class SettingsManager {
     // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.PREFERRED_IMAGE, {
       name: 'Preferred target image',
-      hint: 'Specify the preferred image to be displayed in the list of targets.',
+      hint: 'Specifies the preferred image to display in the list of targets.',
       scope: 'world',
       config: true,
       type: String,
