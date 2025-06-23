@@ -275,7 +275,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
   /**
    * Creates context data for the UI.
    */
-  async _prepareContext(options: any) {
+  async _prepareContext(options: ApplicationV2.RenderContext) {
     let context = await super._prepareContext(options);
     const sceneTokens = $M().game.getSceneTokens();
 
@@ -388,7 +388,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
       }
 
       // Record the scroll position
-      scrollableContent.addEventListener('scroll', e => {
+      scrollableContent.addEventListener('scroll', (e) => {
         if (e.target) {
           this.lastKnownScrollTop = (e.target as HTMLDivElement).scrollTop;
         }
@@ -405,14 +405,14 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
       .querySelectorAll<HTMLInputElement>(
         '.tab input[type="checkbox"].toggleSelection'
       )
-      .forEach(el => {
+      .forEach((el) => {
         el.addEventListener('change', this._toggleBulkSelection.bind(this));
       });
 
     // Handle selection change
     this.element
       .querySelectorAll('input[type="checkbox"]:not(.toggleSelection)')
-      .forEach(el => {
+      .forEach((el) => {
         el.addEventListener('change', this._replicateSelectionAcrossTabs.bind(this));
         el.addEventListener('change', () => {
           clearTimeout(this.changeTimeout);
@@ -426,7 +426,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
     // Force animated tokens to play
     this.element
       .querySelectorAll<HTMLMediaElement>('video[autoplay]')
-      .forEach(el => {
+      .forEach((el) => {
         void el.play();
       });
 
@@ -450,7 +450,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
     }
 
     const availableCategoryIds = new Set(
-      sortedCategories.map(category => category.tabId)
+      sortedCategories.map((category) => category.tabId)
     );
 
     // Reset the selected category to display all tokens when a previously selected
@@ -512,7 +512,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
         ?.querySelectorAll<HTMLInputElement>(
           'input[type="checkbox"]:not(.toggleSelection)'
         )
-        .forEach(el => {
+        .forEach((el) => {
           el.checked = e.target.checked;
           el.dispatchEvent(new Event('change', { bubbles: true }));
         });
@@ -528,7 +528,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
         .querySelectorAll<HTMLInputElement>(
           `input[type="checkbox"][value="${e.target.value}"]`
         )
-        .forEach(el => {
+        .forEach((el) => {
           el.checked = e.target.checked;
         });
     }

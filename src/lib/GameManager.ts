@@ -45,7 +45,7 @@ export class GameManager {
     }
 
     return (canvas.tokens.objects.children as Token[]).find(
-      token => token.id === tokenId
+      (token) => token.id === tokenId
     );
   }
 
@@ -54,7 +54,7 @@ export class GameManager {
       return [];
     }
 
-    return canvas.tokens.controlled.map(token => token.id);
+    return canvas.tokens.controlled.map((token) => token.id);
   }
 
   getTargetedTokens() {
@@ -62,7 +62,7 @@ export class GameManager {
       return [];
     }
 
-    return game.user.targets.map(token => token.id);
+    return game.user.targets.map((token) => token.id);
   }
 
   panToPosition(position: Canvas.ViewPosition) {

@@ -14,7 +14,7 @@ export class MacroMigration {
     const macros = Array.from(game.macros);
 
     return (macros as Macro[]).filter(
-      macro => macro._stats.compendiumSource === this.macroSourceId
+      (macro) => macro._stats.compendiumSource === this.macroSourceId
     );
   }
 
@@ -26,7 +26,7 @@ export class MacroMigration {
     const pack = game.packs.get(this.compendiumId);
     const compendiumMacros = (await pack?.getDocuments()) ?? [];
     const latestMacro = compendiumMacros.find(
-      macro => macro._id === MODULE.MACRO_ID
+      (macro) => macro._id === MODULE.MACRO_ID
     );
 
     // @ts-expect-error fix types here
@@ -46,7 +46,7 @@ export class MacroMigration {
       return;
     }
 
-    gameMacros.forEach(macro => {
+    gameMacros.forEach((macro) => {
       macro.command = latestCommand;
     });
   }
