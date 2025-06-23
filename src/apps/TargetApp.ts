@@ -118,7 +118,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
     });
 
     // Trigger a re-render whenever a relevant setting is updated
-    Hooks.on('updateSetting', setting => {
+    Hooks.on('updateSetting', (setting) => {
       if ($M().settings.shouldTriggerReRender(setting?.key)) {
         this._triggerDebouncedReRender();
       }

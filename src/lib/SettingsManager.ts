@@ -1,6 +1,8 @@
 import { CategoriesSettings } from '@/apps/CategoriesSettings.js';
 import {
   BASE_CATEGORIES,
+  CHAT_NOTIFICATIONS,
+  CHAT_NOTIFICATIONS_OPTIONS,
   FOUNDRY_SETTING_IDS,
   MODULE,
   PREFERRED_IMAGE,
@@ -35,8 +37,11 @@ export class SettingsManager {
       return false;
     }
 
-    const name = stripSettingNamespace(key);
-    return [SETTING_IDS.CATEGORIES, SETTING_IDS.PREFERRED_IMAGE].includes(name);
+    return [
+      SETTING_IDS.CATEGORIES,
+      SETTING_IDS.PREFERRED_IMAGE,
+      SETTING_IDS.CHAT_NOTIFICATIONS,
+    ].includes(stripSettingNamespace(key));
   }
 
   _registerSettings() {
@@ -72,24 +77,14 @@ export class SettingsManager {
     });
 
     // @ts-expect-error fix types
-    game.settings.register(MODULE.ID, SETTING_IDS.CHAT_NOTIFICATION, {
-      name: 'Post chat message',
-      hint: 'Whether a chat message should be sent when a random target is selected.',
+    game.settings.register(MODULE.ID, SETTING_IDS.CHAT_NOTIFICATIONS, {
+      name: 'Chat notifications',
+      hint: 'Specifies whether a chat message should be sent when a random target is selected, and what the privacy level should be.',
       scope: 'world',
       config: true,
-      type: Boolean,
-      default: false,
-      onChange: this._updateSettings.bind(this),
-    });
-
-    // @ts-expect-error fix types
-    game.settings.register(MODULE.ID, SETTING_IDS.CHAT_NOTIFICATION_PUBLIC, {
-      name: 'Show chat message to the players',
-      hint: 'Whether the chat message should be shown to the players.',
-      scope: 'world',
-      config: true,
-      type: Boolean,
-      default: false,
+      type: String,
+      choices: CHAT_NOTIFICATIONS_OPTIONS,
+      default: CHAT_NOTIFICATIONS.DISABLED,
       onChange: this._updateSettings.bind(this),
     });
 

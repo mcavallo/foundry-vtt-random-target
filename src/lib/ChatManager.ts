@@ -1,6 +1,6 @@
 import type { RandomTargetChatMessage } from '#/types/module.ts';
-import { MODULE, SETTING_IDS } from '@/constants';
-import { $M, isEventTarget } from '@/lib/utils.ts';
+import { CHAT_NOTIFICATIONS, MODULE, SETTING_IDS } from '@/constants';
+import { $M, isEventTarget, quotesToEntities } from '@/lib/utils.ts';
 
 export class ChatManager {
   constructor() {
@@ -42,8 +42,11 @@ export class ChatManager {
     }
   }
 
-  sendTargetNotificationMessage(tokenId: string, candidatesIds: string[]) {
-    if (!$M().settings.get(SETTING_IDS.CHAT_NOTIFICATION)) {
+  sendTargetNotificationMessage(tokenId: string, candidateIds: string[]) {
+    if (
+      $M().settings.get(SETTING_IDS.CHAT_NOTIFICATIONS) ===
+      CHAT_NOTIFICATIONS.DISABLED
+    ) {
       return;
     }
 
@@ -53,8 +56,8 @@ export class ChatManager {
       return;
     }
 
-    const candidatesPool = candidatesIds
-      .map(tokenId => {
+    const candidatesPool = candidateIds
+      .map((tokenId) => {
         const candidate = $M().game.getToken(tokenId);
         const isSelected = candidate && candidate.id === target.id;
         const name = candidate ? candidate.name : `Unknown token (${tokenId})`;
@@ -62,10 +65,14 @@ export class ChatManager {
       })
       .join('');
 
-    const targetTooltip = 'Target: ' + target.name.replace(/"/g, '&quot;');
-    const recipients = $M().settings.get(SETTING_IDS.CHAT_NOTIFICATION_PUBLIC)
-      ? null
-      : ChatMessage.getWhisperRecipients('GM').map(recipient => recipient.id);
+    const targetTooltip = 'Target: ' + quotesToEntities(target.name);
+
+    // No recipients mean the message will be public
+    const recipients =
+      $M().settings.get(SETTING_IDS.CHAT_NOTIFICATIONS) ===
+      CHAT_NOTIFICATIONS.GM_ONLY
+        ? ChatMessage.getWhisperRecipients('GM').map((recipient) => recipient.id)
+        : null;
 
     void ChatMessage.create({
       speaker: { alias: MODULE.NAME },

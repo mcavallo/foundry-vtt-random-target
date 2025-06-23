@@ -110,7 +110,7 @@ export function formatCategoryLabel(str: string): string {
 
   return ['npc', 'pc'].includes(lower)
     ? lower.toUpperCase()
-    : lower.replace(/\b\w/g, s => s.toUpperCase());
+    : lower.replace(/\b\w/g, (s) => s.toUpperCase());
 }
 
 export function formatDispositionId(
@@ -119,3 +119,5 @@ export function formatDispositionId(
   const disposition = getDispositionName(value);
   return disposition ? `disposition.${disposition}` : undefined;
 }
+
+export const quotesToEntities = (str: string) => str.replace(/"/g, '&quot;');
