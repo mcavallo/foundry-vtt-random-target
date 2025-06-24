@@ -466,6 +466,33 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
       return;
     }
 
+    const selectionCategory = sortedCategories.find(
+      (category) => category.id === CATEGORY_IDS.SELECTED
+    );
+    const targetedCategory = sortedCategories.find(
+      (category) => category.id === CATEGORY_IDS.TARGETED
+    );
+
+    // Prioritize the selection category first
+    if (
+      selectionCategory &&
+      selectionCategory.enabled &&
+      selectionCategory.totalItems > 0
+    ) {
+      this.tabGroups[TAB_GROUP] = selectionCategory.tabId;
+      return;
+    }
+
+    // Prioritize the targeted category next
+    if (
+      targetedCategory &&
+      targetedCategory.enabled &&
+      targetedCategory.totalItems > 0
+    ) {
+      this.tabGroups[TAB_GROUP] = targetedCategory.tabId;
+      return;
+    }
+
     // Set the first category as selected if it was not previously set or when
     // the category that was previously selected is no longer present.
     if (!this.tabGroups[TAB_GROUP]) {
