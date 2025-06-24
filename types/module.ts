@@ -3,6 +3,8 @@ import type { GameManager } from '@/lib/GameManager.ts';
 import type { NotificationsManager } from '@/lib/NotificationsManager.ts';
 import type { RandomManager } from '@/lib/RandomManager.ts';
 import type { SettingsManager } from '@/lib/SettingsManager.ts';
+// @ts-expect-error this import has issues but the types are working fine
+import type ApplicationV2 from 'fvtt-types/src/foundry/client/applications/api/application';
 
 export interface ModuleWindow {
   run: () => void;
@@ -13,6 +15,11 @@ export interface ModuleWindow {
   random: RandomManager;
 }
 
+export interface CategoryItemImage {
+  src: string;
+  animated: boolean;
+}
+
 export interface Category {
   id: string;
   type: string;
@@ -21,8 +28,19 @@ export interface Category {
   info?: string;
   tabId: string;
   enabled: boolean;
-  items: string[];
+  items: CategoryItem[];
   totalItems: number;
+}
+
+export interface CategoryItem {
+  id: string;
+  image: CategoryItemImage;
+  name: string;
+  actorId: string | null;
+  type?: string;
+  selected: boolean;
+  defeated: boolean;
+  hidden: boolean;
 }
 
 export interface RandomTargetChatMessage extends ChatMessage {
@@ -33,7 +51,13 @@ export interface RandomTargetChatMessage extends ChatMessage {
   };
 }
 
-// TODO: Add the remaining fields
 export interface TargetAppRenderingContext {
+  activeTabId: string | null;
+  buttons?: ApplicationV2.FormFooterButton[];
+  categories?: Category[];
+  chatVisibility?: string;
+  tabGroupName: string;
+  tabs?: Record<string, ApplicationV2.Tab>;
   totalSceneTokens: number;
+  totalTokens: number;
 }

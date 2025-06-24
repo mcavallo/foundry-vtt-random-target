@@ -29,7 +29,7 @@ export const isEventTarget = <T extends EventTarget>(
   return event.target instanceof type;
 };
 
-export function isTokenDefeated(token: TokenDocument): Boolean {
+export function isTokenDefeated(token: TokenDocument): boolean {
   return token?.actor?.statuses.has('dead') ?? false;
 }
 
@@ -79,7 +79,7 @@ export function getDispositionName(value: CONST.TOKEN_DISPOSITIONS) {
   return;
 }
 
-export function getIsAnimatedImage(src: string): Boolean {
+export function getIsAnimatedImage(src: string): boolean {
   return !!src && !!src.toLowerCase().match(/(?:mp4|ogv|webm)$/);
 }
 
@@ -119,5 +119,8 @@ export function formatDispositionId(
   const disposition = getDispositionName(value);
   return disposition ? `disposition.${disposition}` : undefined;
 }
+
+export const pluralize = (count: number, noun: string, suffix = 's') =>
+  `${noun}${count !== 1 ? suffix : ''}`;
 
 export const quotesToEntities = (str: string) => str.replace(/"/g, '&quot;');

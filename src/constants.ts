@@ -1,3 +1,8 @@
+import type {
+  CategoryItemImage,
+  TargetAppRenderingContext,
+} from '#/types/module.ts';
+
 export const MODULE = {
   NAME: 'Random Target',
   ID: 'random-target',
@@ -72,7 +77,10 @@ export const CHAT_NOTIFICATIONS_OPTIONS = {
   [CHAT_NOTIFICATIONS.PUBLIC]: 'Public',
 };
 
-export const MIN_SELECTION = 2;
+export const TAB_GROUP = 'categories';
+export const MIN_CATEGORY_TOKENS = 1;
+export const MIN_SELECTION_TOKENS = 2;
+export const MIN_SCENE_SELECTION_TOKENS = 2;
 export const RERENDER_DEBOUNCE_TIME = 100;
 export const CHANGE_DEBOUNCE_TIME = 100;
 export const SUBMIT_STATUS_DEBOUNCE_TIME = 100;
@@ -80,3 +88,15 @@ export const POSITION_UPDATE_DEBOUNCE_TIME = 1000;
 export const SETTINGS_URL =
   'https://github.com/mcavallo/foundry-vtt-random-target/wiki/Settings';
 export const SUPPORT_URL = 'https://buymeacoffee.com/ikindred';
+
+export const EMPTY_TARGET_CONTEXT: TargetAppRenderingContext = {
+  activeTabId: null,
+  totalSceneTokens: 0,
+  totalTokens: 0,
+  tabGroupName: TAB_GROUP,
+} as const;
+
+export const EMPTY_IMAGE: CategoryItemImage = {
+  src: 'icons/svg/mystery-man.svg',
+  animated: false,
+} as const;

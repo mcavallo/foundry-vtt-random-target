@@ -1,5 +1,11 @@
-import type { Category } from '#/types/module.ts';
-import { CATEGORY_IDS, MODULE, SETTING_IDS } from '@/constants';
+import type { Category, CategoryItem } from '#/types/module.ts';
+import {
+  CATEGORY_IDS,
+  MIN_CATEGORY_TOKENS,
+  MIN_SCENE_SELECTION_TOKENS,
+  MODULE,
+  SETTING_IDS,
+} from '@/constants';
 import {
   $M,
   formatActorTypeId,
@@ -24,14 +30,14 @@ export class CategoryList {
         type: 'core',
         label: 'Targets',
         description: 'Lists the targeted tokens in the scene',
-        info: 'Only appears if there is at least 2 tokens targeted.',
+        info: `Only appears if there is at least ${MIN_SCENE_SELECTION_TOKENS} tokens targeted.`,
       }),
       this.newCategoryEntry({
         id: CATEGORY_IDS.SELECTED,
         type: 'core',
         label: 'Selection',
         description: 'Lists the selected tokens in the scene',
-        info: 'Only appears if there is at least 2 tokens selected.',
+        info: `Only appears if there is at least ${MIN_SCENE_SELECTION_TOKENS} tokens selected.`,
       }),
       this.newCategoryEntry({
         id: CATEGORY_IDS.ALL,
@@ -52,7 +58,7 @@ export class CategoryList {
               type: 'type',
               label: formatCategoryLabel(key),
               description: `Lists tokens of type <code>${key}</code>`,
-              info: 'Only appears if there is at least 1 matching token.',
+              info: `Only appears if there is at least ${MIN_CATEGORY_TOKENS} matching token.`,
             })
           );
         }
@@ -74,7 +80,7 @@ export class CategoryList {
           type: 'disposition',
           label: formatCategoryLabel(dispositionName),
           description: `Lists tokens with disposition <code>${dispositionName}</code>`,
-          info: 'Only appears if there is at least 1 matching token.',
+          info: `Only appears if there is at least ${MIN_CATEGORY_TOKENS} matching token.`,
         })
       );
     }
@@ -130,7 +136,7 @@ export class CategoryList {
     };
   }
 
-  addItem(categoryId: string, token: any) {
+  addItem(categoryId: string, item: CategoryItem) {
     const targetIndex = this.categories.findIndex(
       (category) => category.id === categoryId
     );
@@ -140,7 +146,7 @@ export class CategoryList {
       return false;
     }
 
-    this.categories[targetIndex].items.push(token);
+    this.categories[targetIndex].items.push(item);
     this.categories[targetIndex].totalItems++;
     this.totalItems++;
   }
