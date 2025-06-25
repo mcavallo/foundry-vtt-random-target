@@ -10,14 +10,13 @@ $imageSize: $rowHeight;
 $rowLabelHeight: $rowHeight + (2 * $rowVerticalPadding);
 $scrollableMaxHeight: $rowLabelHeight + (($maxVisible - 1) * ($rowLabelHeight + 1)) * 1px;
 
-
 body {
   &.theme-light .application.#{$module} {
     --#{$namespace}-color-bg-selected: rgba(255, 255, 255, .3);
     --#{$namespace}-color-border: rgba(0, 0, 0, .2);
     --#{$namespace}-color-default: var(--color-dark-1);
     --#{$namespace}-color-defeated: var(--color-warm-3);
-    --#{$namespace}-color-selected: var(--color-text-accent);
+    --#{$namespace}-color-selected: var(--color-warm-2);
     --#{$namespace}-color-icon: var(--color-dark-6);
     --#{$namespace}-color-tabs-text-hover: var(--color-dark-1);
     --#{$namespace}-color-tabs-text-active: white;
@@ -25,6 +24,9 @@ body {
     --#{$namespace}-color-tabs-bg-hover: rgba(0 0 0 / 15%);
     --#{$namespace}-color-tabs-bg-active: var(--color-warm-2);
     --#{$namespace}-color-tabs-border: var(--color-dark-5);
+    --#{$namespace}-color-status: var(--color-dark-6);
+    --#{$namespace}-color-tabs-indicator-border: #d8d6ca;
+    --#{$namespace}-opacity-status-muted: 0.6;
   }
 
   &.theme-dark .application.#{$module} {
@@ -40,12 +42,16 @@ body {
     --#{$namespace}-color-tabs-bg-hover: var(--color-cool-5-50);
     --#{$namespace}-color-tabs-bg-active: var(--color-warm-2);
     --#{$namespace}-color-tabs-border: var(--color-light-5);
+    --#{$namespace}-color-status: var(--color-light-6);
+    --#{$namespace}-color-tabs-indicator-border: rgba(0, 0, 0, .75);
+    --#{$namespace}-opacity-status-muted: 0.75;
   }
 }
 
 /**
- * Main app styles
+ * System-friendly definitions
  */
+
 body:not(.theme-dark.system-wfrp4e) {
   .application.#{$module} {
     nav.tabs {
@@ -62,7 +68,6 @@ body:not(.theme-dark.system-wfrp4e) {
         background: var(--#{$namespace}-color-tabs-bg);
         border: 1px solid var(--#{$namespace}-color-tabs-border);
         font-size: 13px;
-        transition: all 100ms ease;
 
         &:hover {
           color: var(--#{$namespace}-color-tabs-text-hover);
@@ -84,7 +89,17 @@ body:not(.theme-dark.system-wfrp4e) {
       }
     }
   }
+
+  .form-status {
+    .status-value.status-value-muted {
+      opacity: var(--#{$namespace}-opacity-status-muted);
+    }
+  }
 }
+
+/**
+ * Main app styles
+ */
 
 .application.#{$module} {
   [data-application-part="error"] {
@@ -101,6 +116,33 @@ body:not(.theme-dark.system-wfrp4e) {
     }
   }
 
+
+  nav.tabs {
+    [data-tab] {
+      transition: all 100ms ease;
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        background: var(--color-warm-3);
+        border-radius: 50%;
+        width: 8px;
+        height: 8px;
+        top: -2px;
+        right: -2px;
+        box-shadow: 0 0 0 1px var(--#{$namespace}-color-tabs-indicator-border);
+        pointer-events: none;
+        opacity: 0;
+        transition: all 150ms ease;
+      }
+
+      &.has-selected-candidates::before {
+        opacity: 1;
+      }
+    }
+  }
+
   .window-content {
     padding: 0;
   }
@@ -109,7 +151,7 @@ body:not(.theme-dark.system-wfrp4e) {
     display: flex;
     flex-direction: row;
     gap: 8px;
-    padding: 8px;
+    padding: 8px 8px 0 8px;
     border-top: 1px solid var(--color-tabs-border);
 
     button {
@@ -119,6 +161,28 @@ body:not(.theme-dark.system-wfrp4e) {
 
       &[disabled] {
         cursor: not-allowed;
+      }
+    }
+  }
+
+  .form-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 8px 6px;
+
+    .status-value {
+      color: var(--#{$namespace}-color-status);
+      font-size: 13px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: opacity 150ms ease;
+
+      i {
+        margin-top: -1px;
       }
     }
   }
@@ -247,6 +311,10 @@ body:not(.theme-dark.system-wfrp4e) {
       height: 100%;
       width: 100%;
     }
+
+    img[src$="mystery-man.svg"] {
+      transform: scale(0.8);
+    }
   }
 }
 
@@ -303,6 +371,10 @@ body:not(.theme-dark.system-wfrp4e) {
     color: var(--color-border-dark-3);
   }
 }
+
+/**
+ * Category settings styles
+ */
 
 ##{$module}-categories-setting {
   .item-list {
@@ -368,6 +440,7 @@ body:not(.theme-dark.system-wfrp4e) {
 /**
  * Support dialog styles
  */
+
 ##{$module}-support-dialog {
   .dialog-content {
     display: flex;
@@ -414,6 +487,13 @@ body.theme-dark.system-wfrp4e {
       [data-tab] {
         padding: 4px 6px 3px;
         font-size: 13px;
+
+        &::before {
+          width: 8px;
+          height: 8px;
+          top: -2px;
+          right: -2px;
+        }
       }
     }
 
@@ -423,6 +503,17 @@ body.theme-dark.system-wfrp4e {
       button:disabled {
         opacity: 0.5;
         cursor: not-allowed;
+      }
+    }
+
+    .form-status {
+      .status-value {
+        color: var(--color-light-4);
+        font-size: 14px;
+
+        &.status-value-muted {
+          color: var(--color-light-6);
+        }
       }
     }
   }

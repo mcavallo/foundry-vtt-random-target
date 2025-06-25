@@ -1,5 +1,5 @@
 <div class='scrollable-content'>
-  {{#if areThereTokens}}
+  {{#if (gt totalTokens 0)}}
     <section class='content'>
       {{#each categories}}
         <div class='tab {{#if (eq @root.activeTabId tabId)}}active{{/if}}' data-tab='{{tabId}}'
@@ -28,10 +28,10 @@
               />
               <label class='target-label' for='{{concat "selectedTokens." id}}'>
                 <div class="target-image">
-                  {{#if img.animated}}
+                  {{#if image.animated}}
                     <video src='{{img.src}}' autoplay muted loop></video>
                   {{else}}
-                    <img src='{{img.src}}' />
+                    <img src='{{image.src}}' />
                   {{/if}}
                 </div>
                 <div class="target-name">

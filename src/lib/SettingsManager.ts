@@ -1,6 +1,8 @@
 import { CategoriesSettings } from '@/apps/CategoriesSettings.js';
 import {
   BASE_CATEGORIES,
+  CHAT_NOTIFICATIONS,
+  CHAT_NOTIFICATIONS_OPTIONS,
   FOUNDRY_SETTING_IDS,
   MODULE,
   PREFERRED_IMAGE,
@@ -35,16 +37,19 @@ export class SettingsManager {
       return false;
     }
 
-    const name = stripSettingNamespace(key);
-    return [SETTING_IDS.CATEGORIES, SETTING_IDS.PREFERRED_IMAGE].includes(name);
+    return [
+      SETTING_IDS.CATEGORIES,
+      SETTING_IDS.PREFERRED_IMAGE,
+      SETTING_IDS.CHAT_NOTIFICATIONS,
+    ].includes(stripSettingNamespace(key));
   }
 
   _registerSettings() {
     // @ts-expect-error fix types
     game.settings.registerMenu(MODULE.ID, SETTING_IDS.CATEGORIES + 'Menu', {
-      name: 'Categories',
-      label: 'Configure Categories',
-      hint: 'Manage the available target categories.',
+      name: 'Category filters',
+      label: 'Configure',
+      hint: 'Manage which category filters are available and the order in which they appear.',
       icon: 'fa fa-list-check',
       // @ts-expect-error fix types
       type: CategoriesSettings,
@@ -63,7 +68,7 @@ export class SettingsManager {
     // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.CLOSE_AFTER, {
       name: 'Close after selection',
-      hint: 'Whether the target selection window should close after a target is selected.',
+      hint: 'Specifies whether the target selection window should close after a target is chosen.',
       scope: 'world',
       config: true,
       type: Boolean,
@@ -72,31 +77,21 @@ export class SettingsManager {
     });
 
     // @ts-expect-error fix types
-    game.settings.register(MODULE.ID, SETTING_IDS.CHAT_NOTIFICATION, {
-      name: 'Post chat message',
-      hint: 'Whether a chat message should be sent when a random target is selected.',
+    game.settings.register(MODULE.ID, SETTING_IDS.CHAT_NOTIFICATIONS, {
+      name: 'Chat notifications',
+      hint: 'Specifies whether a chat message should be sent when a random target is selected, and what the privacy level should be.',
       scope: 'world',
       config: true,
-      type: Boolean,
-      default: false,
-      onChange: this._updateSettings.bind(this),
-    });
-
-    // @ts-expect-error fix types
-    game.settings.register(MODULE.ID, SETTING_IDS.CHAT_NOTIFICATION_PUBLIC, {
-      name: 'Show chat message to the players',
-      hint: 'Whether the chat message should be shown to the players.',
-      scope: 'world',
-      config: true,
-      type: Boolean,
-      default: false,
+      type: String,
+      choices: CHAT_NOTIFICATIONS_OPTIONS,
+      default: CHAT_NOTIFICATIONS.DISABLED,
       onChange: this._updateSettings.bind(this),
     });
 
     // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.AVOID_SELECTING_SAME_TARGET, {
       name: 'Avoid selecting the same target',
-      hint: 'Whether to prevent the same target from being targeted twice in a row.',
+      hint: 'Specifies whether the same target should be prevented from being selected twice in a row.',
       scope: 'world',
       config: true,
       type: Boolean,
@@ -107,7 +102,7 @@ export class SettingsManager {
     // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.PREFERRED_IMAGE, {
       name: 'Preferred target image',
-      hint: 'Specify the preferred image to be displayed in the list of targets.',
+      hint: 'Specifies the preferred image to display in the list of targets.',
       scope: 'world',
       config: true,
       type: String,

@@ -2,16 +2,25 @@ import type { Category, TargetAppRenderingContext } from '#/types/module.ts';
 import {
   CATEGORY_IDS,
   CHANGE_DEBOUNCE_TIME,
-  MIN_SELECTION,
+  EMPTY_TARGET_CONTEXT,
+  MIN_SCENE_SELECTION_TOKENS,
+  MIN_SELECTION_TOKENS,
   MODULE,
   POSITION_UPDATE_DEBOUNCE_TIME,
   RERENDER_DEBOUNCE_TIME,
   SETTING_IDS,
   SETTINGS_URL,
   SUBMIT_STATUS_DEBOUNCE_TIME,
+  TAB_GROUP,
 } from '@/constants';
 import { CategoryList } from '@/lib/CategoryList';
-import { $M, formatTabId, isInputEvent, isTokenDefeated, isValidFormSubmit } from '@/lib/utils.ts';
+import {
+  $M,
+  formatTabId,
+  isInputEvent,
+  isValidFormSubmit,
+  pluralize,
+} from '@/lib/utils.ts';
 // @ts-expect-error this import has issues but the types are working fine
 import type ApplicationV2 from 'fvtt-types/src/foundry/client/applications/api/application';
 import SupportDialog from './SupportDialog';
@@ -25,6 +34,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
   private submitStatusTimeout?: ReturnType<typeof setTimeout>;
   private positionUpdateTimeout?: ReturnType<typeof setTimeout>;
   private lastSceneId?: string;
+  private previouslySelectedIds: Set<string> = new Set();
 
   static DEFAULT_OPTIONS = {
     classes: [MODULE.ID],
@@ -81,9 +91,10 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
     footer: {
       template: 'templates/generic/form-footer.hbs',
     },
+    status: {
+      template: `modules/${MODULE.ID}/templates/v2/random-target/status.hbs`,
+    },
   };
-
-  static TAB_GROUP = 'categories';
 
   constructor(...args: ConstructorParameters<typeof ApplicationV2>) {
     super(...args);
@@ -94,13 +105,18 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
     this.positionUpdateTimeout = undefined;
     this.lastSceneId = undefined;
 
-    // Register the initial scene
+    this._registerInitialScene();
+    this._configureHooks();
+  }
+
+  /**
+   * Registers the initial scene where the app was initially started.
+   */
+  _registerInitialScene() {
     const scene = $M().game.getScene();
     if (scene) {
       this.lastSceneId = scene.id;
     }
-
-    this._configureHooks();
   }
 
   /**
@@ -108,7 +124,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
    */
   _configureHooks() {
     // Trigger a re-render whenever the scene changes
-    Hooks.on('canvasReady', (...args) => {
+    Hooks.on('canvasReady', () => {
       const scene = $M().game.getScene();
 
       if (scene && this.lastSceneId !== scene.id) {
@@ -118,7 +134,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
     });
 
     // Trigger a re-render whenever a relevant setting is updated
-    Hooks.on('updateSetting', setting => {
+    Hooks.on('updateSetting', (setting) => {
       if ($M().settings.shouldTriggerReRender(setting?.key)) {
         this._triggerDebouncedReRender();
       }
@@ -212,15 +228,15 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
       return;
     }
 
-    const settings = foundry.utils.expandObject(formData.object) as {
+    const values = foundry.utils.expandObject(formData.object) as {
       selectedTokens: string[];
     };
     const selectedTokens = Array.from(
-      new Set(settings.selectedTokens.filter(Boolean))
+      new Set(values.selectedTokens.filter(Boolean))
     );
 
     // Check for enough selections
-    if (selectedTokens.length < MIN_SELECTION) {
+    if (selectedTokens.length < MIN_SELECTION_TOKENS) {
       $M().notifications.sendMinimumSelectionError();
       return;
     }
@@ -275,60 +291,56 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
   /**
    * Creates context data for the UI.
    */
-  async _prepareContext(options: any) {
-    let context = await super._prepareContext(options);
+  async _prepareContext(
+    options: ApplicationV2.RenderContext
+  ): Promise<TargetAppRenderingContext> {
+    let prevContext = await super._prepareContext(options);
     const sceneTokens = $M().game.getSceneTokens();
 
     // If the scene has no tokens avoid preparing the data and return early
     if (sceneTokens.length === 0) {
-      return foundry.utils.mergeObject(context, { totalSceneTokens: 0 });
+      return foundry.utils.mergeObject(prevContext, EMPTY_TARGET_CONTEXT);
     }
 
-    const selectedTokens = new Set($M().game.getSelectedTokens());
-    const targetedTokens = new Set($M().game.getTargetedTokens());
-    const previousSelection = $M().settings.get(SETTING_IDS.PREV_SELECTION) ?? [];
+    const previouslySelectedIds = this.previouslySelectedIds.union(
+      new Set($M().settings.get(SETTING_IDS.PREV_SELECTION) ?? [])
+    );
 
-    let totalPreselected = 0;
-    const hasEnoughSelected = selectedTokens.size >= MIN_SELECTION;
-    const hasEnoughTargeted = targetedTokens.size >= MIN_SELECTION;
     const categories = new CategoryList();
+    const preselectedTokenIds = new Set<string>();
+    const sceneSelectedTokens = new Set($M().game.getSceneSelectedTokens());
+    const sceneTargetedTokens = new Set($M().game.getSceneTargetedTokens());
+    const hasEnoughSelected = sceneSelectedTokens.size >= MIN_SCENE_SELECTION_TOKENS;
+    const hasEnoughTargeted = sceneTargetedTokens.size >= MIN_SCENE_SELECTION_TOKENS;
 
-    sceneTokens.forEach(token => {
-      const { type, disposition, image } =
+    for (const token of sceneTokens) {
+      const tokenId = token.id!;
+      const wasPreviouslySelected = previouslySelectedIds.has(tokenId);
+      const { defeated, disposition, image, name, type } =
         $M().game.getTokenDocumentComputedProps(token);
-      const wasPreviouslySelected = previousSelection.includes(token.id);
-      const categoryListEntryId = token.id;
 
       const categoryListEntry = {
-        id: categoryListEntryId,
-        img: image,
-        name: token.name,
+        id: tokenId,
+        image,
+        name,
         actorId: token.actorId,
-        type: type, // Avoid using object property shorthand
+        type,
         selected: wasPreviouslySelected,
-        defeated: isTokenDefeated(token),
+        defeated,
         hidden: token.hidden,
       };
 
       if (wasPreviouslySelected) {
-        totalPreselected++;
+        preselectedTokenIds.add(tokenId);
       }
 
       categories.addItem(CATEGORY_IDS.ALL, categoryListEntry);
 
-      if (
-        hasEnoughSelected &&
-        categoryListEntryId &&
-        selectedTokens.has(categoryListEntryId)
-      ) {
+      if (hasEnoughSelected && sceneSelectedTokens.has(tokenId)) {
         categories.addItem(CATEGORY_IDS.SELECTED, categoryListEntry);
       }
 
-      if (
-        hasEnoughTargeted &&
-        categoryListEntryId &&
-        targetedTokens.has(categoryListEntryId)
-      ) {
+      if (hasEnoughTargeted && sceneTargetedTokens.has(tokenId)) {
         categories.addItem(CATEGORY_IDS.TARGETED, categoryListEntry);
       }
 
@@ -339,26 +351,32 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
       if (disposition) {
         categories.addItem(disposition, categoryListEntry);
       }
-    });
+    }
 
     const sortedCategories = categories.getSortedAndFiltered();
-
-    this._computeActiveTabId(sortedCategories);
+    this._setActiveTab(sortedCategories);
     const computedTabs = this._computeAvailableTabs(sortedCategories);
-    const computedButtons = this._computeButtons(totalPreselected);
 
-    context = foundry.utils.mergeObject(context, {
-      totalSceneTokens: sceneTokens.length,
-      tabGroupName: TargetApp.TAB_GROUP,
-      activeTabId: this.tabGroups[TargetApp.TAB_GROUP],
-      tabs: computedTabs,
-      categories: sortedCategories,
-      areThereTokens: !!categories.getTotalItems(),
-      initialSelectionCount: totalPreselected,
+    this.previouslySelectedIds = new Set(preselectedTokenIds);
+    const computedButtons = this._computeButtons(preselectedTokenIds.size);
+
+    const chatVisibility = $M().settings.get(
+      SETTING_IDS.CHAT_NOTIFICATIONS
+    ) as string;
+
+    const newContext: Required<TargetAppRenderingContext> = {
+      ...EMPTY_TARGET_CONTEXT,
+      activeTabId: this.tabGroups[TAB_GROUP],
       buttons: computedButtons,
-    });
+      categories: sortedCategories,
+      chatVisibility,
+      tabGroupName: TAB_GROUP,
+      tabs: computedTabs,
+      totalSceneTokens: sceneTokens.length,
+      totalTokens: categories.getTotalItems(),
+    };
 
-    return context;
+    return foundry.utils.mergeObject(prevContext, newContext);
   }
 
   /**
@@ -388,7 +406,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
       }
 
       // Record the scroll position
-      scrollableContent.addEventListener('scroll', e => {
+      scrollableContent.addEventListener('scroll', (e) => {
         if (e.target) {
           this.lastKnownScrollTop = (e.target as HTMLDivElement).scrollTop;
         }
@@ -405,20 +423,21 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
       .querySelectorAll<HTMLInputElement>(
         '.tab input[type="checkbox"].toggleSelection'
       )
-      .forEach(el => {
+      .forEach((el) => {
         el.addEventListener('change', this._toggleBulkSelection.bind(this));
       });
 
     // Handle selection change
     this.element
       .querySelectorAll('input[type="checkbox"]:not(.toggleSelection)')
-      .forEach(el => {
+      .forEach((el) => {
         el.addEventListener('change', this._replicateSelectionAcrossTabs.bind(this));
         el.addEventListener('change', () => {
           clearTimeout(this.changeTimeout);
           this.changeTimeout = setTimeout(() => {
-            this._computeSubmitButtonState();
-            this._saveTemporarySelection();
+            this.previouslySelectedIds = new Set(this._getSelectedTokenIds());
+            this._computeUIState(this.previouslySelectedIds, context.categories);
+            this._saveTemporarySelection(this.previouslySelectedIds);
           }, CHANGE_DEBOUNCE_TIME);
         });
       });
@@ -426,47 +445,83 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
     // Force animated tokens to play
     this.element
       .querySelectorAll<HTMLMediaElement>('video[autoplay]')
-      .forEach(el => {
+      .forEach((el) => {
         void el.play();
       });
 
-    // Compute initial button state
-    this._computeSubmitButtonState();
+    // Compute UI state during a render
+    this._computeUIState(this.previouslySelectedIds, context.categories);
   }
 
   /**
-   * Given a list of categories, it returns the list of available tabs.
+   * Computes the state for the dynamic UI elements.
    */
-  _computeActiveTabId(sortedCategories: Category[]) {
+  _computeUIState(selectedIds: Set<string>, categories?: Category[]) {
+    this._computeSubmitButtonState(selectedIds);
+    this._computeFeedbackState(selectedIds);
+    this._computeCategoriesCandidatesIndicator(selectedIds, categories);
+  }
+
+  /**
+   * Given a list of categories, it sets the current active tab.
+   */
+  _setActiveTab(sortedCategories: Category[]) {
     if (sortedCategories.length === 0) {
+      return;
+    }
+
+    const selectionCategory = sortedCategories.find(
+      (category) => category.id === CATEGORY_IDS.SELECTED
+    );
+    const targetedCategory = sortedCategories.find(
+      (category) => category.id === CATEGORY_IDS.TARGETED
+    );
+
+    // Prioritize the selection category first
+    if (
+      selectionCategory &&
+      selectionCategory.enabled &&
+      selectionCategory.totalItems > 0
+    ) {
+      this.tabGroups[TAB_GROUP] = selectionCategory.tabId;
+      return;
+    }
+
+    // Prioritize the targeted category next
+    if (
+      targetedCategory &&
+      targetedCategory.enabled &&
+      targetedCategory.totalItems > 0
+    ) {
+      this.tabGroups[TAB_GROUP] = targetedCategory.tabId;
       return;
     }
 
     // Set the first category as selected if it was not previously set or when
     // the category that was previously selected is no longer present.
-    if (!this.tabGroups[TargetApp.TAB_GROUP]) {
-      this.tabGroups[TargetApp.TAB_GROUP] = sortedCategories[0].tabId;
+    if (!this.tabGroups[TAB_GROUP]) {
+      this.tabGroups[TAB_GROUP] = sortedCategories[0].tabId;
       return;
     }
 
     const availableCategoryIds = new Set(
-      sortedCategories.map(category => category.tabId)
+      sortedCategories.map((category) => category.tabId)
     );
 
     // Reset the selected category to display all tokens when a previously selected
     // category is no longer available.
     if (
-      this.tabGroups[TargetApp.TAB_GROUP] &&
-      !availableCategoryIds.has(this.tabGroups[TargetApp.TAB_GROUP] ?? '')
+      this.tabGroups[TAB_GROUP] &&
+      !availableCategoryIds.has(this.tabGroups[TAB_GROUP] ?? '')
     ) {
-      this.tabGroups[TargetApp.TAB_GROUP] = formatTabId(CATEGORY_IDS.ALL);
+      this.tabGroups[TAB_GROUP] = formatTabId(CATEGORY_IDS.ALL);
     }
   }
 
   /**
    * Given a list of categories, it returns the list of available tabs.
    */
-  _computeAvailableTabs(categories: Category[]) {
+  _computeAvailableTabs(categories: Category[]): Record<string, ApplicationV2.Tab> {
     if (categories.length === 0) {
       return {};
     }
@@ -474,9 +529,8 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
     return categories.reduce(
       (acc, category) => {
         acc[category.tabId] = {
-          cssClass:
-            this.tabGroups?.[TargetApp.TAB_GROUP] === category.tabId ? 'active' : '',
-          group: TargetApp.TAB_GROUP,
+          cssClass: this.tabGroups?.[TAB_GROUP] === category.tabId ? 'active' : '',
+          group: TAB_GROUP,
           id: category.tabId,
           label: `${category.label} (${category.totalItems})`,
         };
@@ -490,14 +544,14 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
   /**
    * Returns the list of buttons.
    */
-  _computeButtons(selectedTotal: number) {
+  _computeButtons(selectedTotal: number): ApplicationV2.FormFooterButton[] {
     return [
       { type: 'button', label: 'Cancel', action: 'closeApp' },
       {
         type: 'submit',
-        label: this._getSubmitLabel(selectedTotal),
+        label: 'Choose Random Target',
         name: 'submit',
-        disabled: selectedTotal < MIN_SELECTION,
+        disabled: selectedTotal < MIN_SELECTION_TOKENS,
       },
     ];
   }
@@ -512,7 +566,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
         ?.querySelectorAll<HTMLInputElement>(
           'input[type="checkbox"]:not(.toggleSelection)'
         )
-        .forEach(el => {
+        .forEach((el) => {
           el.checked = e.target.checked;
           el.dispatchEvent(new Event('change', { bubbles: true }));
         });
@@ -528,16 +582,16 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
         .querySelectorAll<HTMLInputElement>(
           `input[type="checkbox"][value="${e.target.value}"]`
         )
-        .forEach(el => {
+        .forEach((el) => {
           el.checked = e.target.checked;
         });
     }
   }
 
   /**
-   * Computes the state of the submit button based on the amount of selections.
+   * Computes the state of the submit button.
    */
-  _computeSubmitButtonState() {
+  _computeSubmitButtonState(selectedIds: Set<string>) {
     clearTimeout(this.submitStatusTimeout);
     this.submitStatusTimeout = setTimeout(() => {
       const submit = this.element.querySelector<HTMLInputElement>(
@@ -545,30 +599,60 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
       );
 
       if (submit) {
-        const checkedIds = this._getSelectedTokenIds();
-        const submitContent = submit.querySelector<HTMLElement>('span');
-        submit.disabled = checkedIds.size < MIN_SELECTION;
-
-        if (submitContent?.innerText) {
-          submitContent.innerText = this._getSubmitLabel(checkedIds.size);
-        }
+        submit.disabled = selectedIds.size < MIN_SELECTION_TOKENS;
       }
     }, SUBMIT_STATUS_DEBOUNCE_TIME);
   }
 
   /**
-   * Gets the submit button's label.
+   * Computes the state of the status bar elements.
    */
-  _getSubmitLabel(selectedTotal: number) {
-    return `Choose Random Target (${selectedTotal})`;
+  _computeFeedbackState(selectedIds: Set<string>) {
+    const candidatesValue = this.element.querySelector<HTMLDivElement>(
+      '.form-status [data-id="candidates-status-value"]'
+    );
+
+    if (candidatesValue) {
+      candidatesValue.classList.toggle('status-value-muted', selectedIds.size === 0);
+      candidatesValue.innerText = this._getCandidatesStatusValue(selectedIds.size);
+    }
+  }
+
+  /**
+   * Computes the state for categories candidates indicator.
+   */
+  _computeCategoriesCandidatesIndicator(
+    selectedIds: Set<string>,
+    categories?: Category[]
+  ) {
+    if (!categories || selectedIds.size === 0) {
+      this.element.querySelectorAll(`[data-action="tab"]`).forEach((el) => {
+        el.classList.toggle('has-selected-candidates', false);
+      });
+      return;
+    }
+
+    for (const category of categories) {
+      const indicatorStatus =
+        ![CATEGORY_IDS.ALL].includes(category.id) &&
+        category.totalItems > 0 &&
+        category.items.filter((item) => selectedIds.has(item.id)).length > 0;
+
+      const tab = this.element.querySelector(
+        `[data-action="tab"][data-tab="${category.tabId}"]`
+      );
+
+      if (tab) {
+        tab.classList.toggle('has-selected-candidates', indicatorStatus);
+      }
+    }
   }
 
   /**
    * Persists the temporary selection.
    */
-  _saveTemporarySelection() {
-    const checkedIds = this._getSelectedTokenIds();
-    $M().settings.set(SETTING_IDS.PREV_SELECTION, Array.from(checkedIds));
+  _saveTemporarySelection(selectedIds: Set<string>) {
+    $M().settings.set(SETTING_IDS.PREV_SELECTION, Array.from(selectedIds));
   }
 
   /**
@@ -580,8 +664,19 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
         this.element.querySelectorAll<HTMLInputElement>(
           'input[type="checkbox"]:not(.toggleSelection):checked'
         )
-      ).map(el => el.value)
+      ).map((el) => el.value)
     );
+  }
+
+  /**
+   * Returns the generated label for the candidates status value.
+   */
+  _getCandidatesStatusValue(total: number) {
+    if (total === 0) {
+      return 'No candidates selected';
+    } else {
+      return `${total} ${pluralize(total, 'candidate')} selected`;
+    }
   }
 }
 
