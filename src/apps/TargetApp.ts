@@ -435,11 +435,9 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
         el.addEventListener('change', () => {
           clearTimeout(this.changeTimeout);
           this.changeTimeout = setTimeout(() => {
-            const selectedIds = this._getSelectedTokenIds();
-            this.previouslySelectedIds = new Set(selectedIds);
-            this._computeSubmitButtonState(selectedIds);
-            this._computeFeedbackState(selectedIds);
-            this._saveTemporarySelection(selectedIds);
+            this.previouslySelectedIds = new Set(this._getSelectedTokenIds());
+            this._computeUIState(this.previouslySelectedIds, context.categories);
+            this._saveTemporarySelection(this.previouslySelectedIds);
           }, CHANGE_DEBOUNCE_TIME);
         });
       });
@@ -451,11 +449,17 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
         void el.play();
       });
 
-    // Compute initial button state
-    this._computeSubmitButtonState(this.previouslySelectedIds);
+    // Compute UI state during a render
+    this._computeUIState(this.previouslySelectedIds, context.categories);
+  }
 
-    // Compute initial feedback state
-    this._computeFeedbackState(this.previouslySelectedIds);
+  /**
+   * Computes the state for the dynamic UI elements.
+   */
+  _computeUIState(selectedIds: Set<string>, categories?: Category[]) {
+    this._computeSubmitButtonState(selectedIds);
+    this._computeFeedbackState(selectedIds);
+    this._computeCategoriesCandidatesIndicator(selectedIds, categories);
   }
 
   /**
@@ -601,7 +605,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
   }
 
   /**
-   * Computes the state of status bar elements.
+   * Computes the state of the status bar elements.
    */
   _computeFeedbackState(selectedIds: Set<string>) {
     const candidatesValue = this.element.querySelector<HTMLDivElement>(
@@ -611,6 +615,36 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
     if (candidatesValue) {
       candidatesValue.classList.toggle('status-value-muted', selectedIds.size === 0);
       candidatesValue.innerText = this._getCandidatesStatusValue(selectedIds.size);
+    }
+  }
+
+  /**
+   * Computes the state for categories candidates indicator.
+   */
+  _computeCategoriesCandidatesIndicator(
+    selectedIds: Set<string>,
+    categories?: Category[]
+  ) {
+    if (!categories || selectedIds.size === 0) {
+      this.element.querySelectorAll(`[data-action="tab"]`).forEach((el) => {
+        el.classList.toggle('has-selected-candidates', false);
+      });
+      return;
+    }
+
+    for (const category of categories) {
+      const indicatorStatus =
+        ![CATEGORY_IDS.ALL].includes(category.id) &&
+        category.totalItems > 0 &&
+        category.items.filter((item) => selectedIds.has(item.id)).length > 0;
+
+      const tab = this.element.querySelector(
+        `[data-action="tab"][data-tab="${category.tabId}"]`
+      );
+
+      if (tab) {
+        tab.classList.toggle('has-selected-candidates', indicatorStatus);
+      }
     }
   }
 
