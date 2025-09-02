@@ -11,6 +11,18 @@
     "verified": "__MODULE_COMPATIBILITY_VERIFIED__"
   },
   "license": "__LICENSE__",
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    },
+    {
+      "lang": "ja",
+      "name": "日本語",
+      "path": "lang/ja.json"
+    }
+  ],
   "esmodules": [],
   "scripts": [],
   "styles": [],
