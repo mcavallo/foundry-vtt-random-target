@@ -11,6 +11,26 @@
     "Targeted": "{targetName} targeted",
     "MissingSceneError": "You need to have an active scene to select random targets",
     "MinimumSelectionError": "You need to select at least 2 tokens",
-    "MinimumCategoriesError": "You need to select at least 1 category"
+    "MinimumCategoriesError": "You need to select at least 1 category",
+    "Categories": {
+      "Targets": {
+        "Label": "Targets",
+        "Description": "Lists the targeted tokens in the scene"
+      },
+      "Selection": {
+        "Label": "Selection",
+        "Description": "Lists the selected tokens in the scene"
+      },
+      "All": {
+        "Label": "All",
+        "Description": "Lists all tokens in the scene"
+      },
+      "Type": {
+        "Description": "Lists tokens of type <code>{type}</code>"
+      },
+      "Disposition": {
+        "Description": "Lists tokens with disposition <code>{disposition}</code>"
+      }
+    }
   }
 }
