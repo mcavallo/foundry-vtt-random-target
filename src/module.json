@@ -26,5 +26,17 @@
   "media": [],
   "url": "__REPO_URL__",
   "manifest": "__REPO_URL__/releases/latest/download/module.json",
-  "download": "__REPO_URL__/releases/download/__RELEASE__/__MODULE_ID_____RELEASE__.zip"
+  "download": "__REPO_URL__/releases/download/__RELEASE__/__MODULE_ID_____RELEASE__.zip",
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    },
+    {
+      "lang": "ja",
+      "name": "日本語",
+      "path": "lang/ja.json"
+    }
+  ]
 }
