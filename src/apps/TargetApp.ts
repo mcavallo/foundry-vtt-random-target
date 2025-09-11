@@ -14,13 +14,7 @@ import {
   TAB_GROUP,
 } from '@/constants';
 import { CategoryList } from '@/lib/CategoryList';
-import {
-  $M,
-  formatTabId,
-  isInputEvent,
-  isValidFormSubmit,
-  pluralize,
-} from '@/lib/utils.ts';
+import { $M, formatTabId, isInputEvent, isValidFormSubmit } from '@/lib/utils.ts';
 // @ts-expect-error this import has issues but the types are working fine
 import type ApplicationV2 from 'fvtt-types/src/foundry/client/applications/api/application';
 import SupportDialog from './SupportDialog';
@@ -45,21 +39,21 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
     },
     tag: 'form',
     window: {
-      title: 'Random Target',
+      title: game?.i18n?.localize('RANDOMTARGET.Name') ?? MODULE.NAME,
       controls: [
         {
           action: 'openSettings',
-          label: 'Settings',
+          label: game?.i18n?.localize('RANDOMTARGET.Settings') ?? 'Settings',
           icon: 'fa-solid fa-gear',
         },
         {
           action: 'openHelp',
-          label: 'Help',
+          label: game?.i18n?.localize('RANDOMTARGET.Help') ?? 'Help',
           icon: 'fa-solid fa-circle-info',
         },
         {
           action: 'openSupport',
-          label: 'Support',
+          label: game?.i18n?.localize('RANDOMTARGET.Support') ?? 'Support',
           icon: 'fa-solid fa-heart',
         },
       ],
@@ -673,9 +667,13 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
    */
   _getCandidatesStatusValue(total: number) {
     if (total === 0) {
-      return 'No candidates selected';
+      return game?.i18n?.localize('RANDOMTARGET.NoCandidatesSelected') ?? '';
     } else {
-      return `${total} ${pluralize(total, 'candidate')} selected`;
+      return (
+        game?.i18n?.format('RANDOMTARGET.CandidatesSelected', {
+          total: total.toString(),
+        }) ?? ''
+      );
     }
   }
 }
