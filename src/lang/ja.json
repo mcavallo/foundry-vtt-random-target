@@ -2,6 +2,15 @@
   "RANDOMTARGET": {
     "Name": "ランダムターゲット",
     "ChooseRandomTarget": "ランダムなターゲットを選択",
-    "SupportDialogHeading": "<strong>Random Target</strong>をご利用いただきありがとうございます！"
+    "SupportDialogHeading": "<strong>Random Target</strong>をご利用いただきありがとうございます！",
+    "Settings": "設定",
+    "Help": "ヘルプ",
+    "Support": "サポート",
+    "NoCandidatesSelected": "候補が選択されていません",
+    "CandidatesSelected": "{total} 件の候補が選択されました",
+    "Targeted": "{targetName} がターゲットされました",
+    "MissingSceneError": "ランダムターゲットを選択するにはアクティブなシーンが必要です",
+    "MinimumSelectionError": "少なくとも2体のトークンを選択する必要があります",
+    "MinimumCategoriesError": "少なくとも1つのカテゴリを選択する必要があります"
   }
 }

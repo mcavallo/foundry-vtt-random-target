@@ -2,6 +2,15 @@
   "RANDOMTARGET": {
     "Name": "Random Target",
     "ChooseRandomTarget": "Choose Random Target",
-    "SupportDialogHeading": "Thank you for using <strong>Random Target</strong>!"
+    "SupportDialogHeading": "Thank you for using <strong>Random Target</strong>!",
+    "Settings": "Settings",
+    "Help": "Help",
+    "Support": "Support",
+    "NoCandidatesSelected": "No candidates selected",
+    "CandidatesSelected": "{total} candidate(s) selected",
+    "Targeted": "{targetName} targeted",
+    "MissingSceneError": "You need to have an active scene to select random targets",
+    "MinimumSelectionError": "You need to select at least 2 tokens",
+    "MinimumCategoriesError": "You need to select at least 1 category"
   }
 }
