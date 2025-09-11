@@ -11,6 +11,26 @@
     "Targeted": "{targetName} がターゲットされました",
     "MissingSceneError": "ランダムターゲットを選択するにはアクティブなシーンが必要です",
     "MinimumSelectionError": "少なくとも2体のトークンを選択する必要があります",
-    "MinimumCategoriesError": "少なくとも1つのカテゴリを選択する必要があります"
+    "MinimumCategoriesError": "少なくとも1つのカテゴリを選択する必要があります",
+    "Categories": {
+      "Targets": {
+        "Label": "ターゲット",
+        "Description": "シーン内でターゲットされたトークンを一覧表示"
+      },
+      "Selection": {
+        "Label": "選択",
+        "Description": "シーン内で選択されたトークンを一覧表示"
+      },
+      "All": {
+        "Label": "全て",
+        "Description": "シーン内のすべてのトークンを一覧表示"
+      },
+      "Type": {
+        "Description": "<code>{type}</code> タイプのトークンを一覧表示"
+      },
+      "Disposition": {
+        "Description": "態度が <code>{disposition}</code> のトークンを一覧表示"
+      }
+    }
   }
 }
