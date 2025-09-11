@@ -90,7 +90,7 @@ export class CategoryList {
         this.newCategoryEntry({
           id,
           type: 'disposition',
-          label: formatCategoryLabel(dispositionName),
+          label: formatCategoryLabel(dispositionName
           description:
             game?.i18n?.format('RANDOMTARGET.Categories.Disposition.Description', {
               disposition: dispositionName,

@@ -65,18 +65,24 @@ export function sortByName(a: { name: string }, b: { name: string }) {
   return sortNaturally(a.name, b.name);
 }
 
-export function getDispositionName(value: CONST.TOKEN_DISPOSITIONS) {
+function getDispositionKey(value: CONST.TOKEN_DISPOSITIONS) {
   const keys = Object.keys(
     CONST.TOKEN_DISPOSITIONS
   ) as (keyof typeof CONST.TOKEN_DISPOSITIONS)[];
 
   for (const k of keys) {
     if (value === CONST.TOKEN_DISPOSITIONS[k]) {
-      return k.toLowerCase();
+      return k;
     }
   }
 
   return;
+}
+
+export function getDispositionName(value: CONST.TOKEN_DISPOSITIONS) {
+  const key = getDispositionKey(value);
+
+  return key ? game?.i18n?.localize(`TOKEN.DISPOSITION.${key}`) : undefined;
 }
 
 export function getIsAnimatedImage(src: string): boolean {
@@ -116,8 +122,8 @@ export function formatCategoryLabel(str: string): string {
 export function formatDispositionId(
   value: CONST.TOKEN_DISPOSITIONS
 ): string | undefined {
-  const disposition = getDispositionName(value);
-  return disposition ? `disposition.${disposition}` : undefined;
+  const disposition = getDispositionKey(value);
+  return disposition ? `disposition.${disposition.toLowerCase()}` : undefined;
 }
 
 export const pluralize = (count: number, noun: string, suffix = 's') =>
