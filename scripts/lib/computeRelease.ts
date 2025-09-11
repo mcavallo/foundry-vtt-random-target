@@ -5,14 +5,19 @@ export const getLatestGithubRelease = async (repoUrl: string) => {
     repoUrl.match(/^https?:\/\/(?:www.)?github.com\/([^/]+)\/(.+)$/) || [];
 
   try {
+    const headers: Record<string, string> = {
+      Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+    };
+
+    if (process.env.GH_API_TOKEN) {
+      headers.Authorization = `Bearer ${process.env.GH_API_TOKEN}`;
+    }
+
     const response = await fetch(
       `https://api.github.com/repos/${repoOwner}/${repoName}/releases?per_page=1`,
       {
-        headers: {
-          Accept: 'application/vnd.github+json',
-          Authorization: `Bearer ${process.env.GH_API_TOKEN}`,
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
+        headers,
       }
     );
 
@@ -64,12 +69,20 @@ export const getReleaseVersion = async ({ ctx }: { ctx: ScriptContext }) => {
     };
   }
 
+  if (ctx.env.DEV) {
+    const devReleaseVersion = 'v1.0.0-dev';
+
+    return {
+      version: devReleaseVersion.replace(/^(v)/, ''),
+      release: devReleaseVersion,
+    };
+  }
+
   const githubReleaseVersion = await getLatestGithubRelease(repoUrl);
-  const releaseVersion = [githubReleaseVersion, ctx.env.DEV ? '-dev' : ''].join('');
 
   return {
-    version: releaseVersion.replace(/^(v)/, ''),
-    release: releaseVersion,
+    version: githubReleaseVersion.replace(/^(v)/, ''),
+    release: githubReleaseVersion,
   };
 };
 

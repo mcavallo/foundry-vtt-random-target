@@ -7,7 +7,7 @@ declare module 'bun' {
 
     FOUNDRY_DATA_PATH: string;
     FOUNDRY_RELEASE_TOKEN: string;
-    GH_API_TOKEN: string;
+    GH_API_TOKEN?: string;
   }
 }
 
