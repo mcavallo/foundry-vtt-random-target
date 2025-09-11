@@ -5,8 +5,11 @@ export const envSchema = z.object({
     val => typeof val === 'string' && val.toLowerCase() === '1',
     z.boolean()
   ),
-  GH_API_TOKEN: z.string(),
+  GH_API_TOKEN: z.string().optional(),
   RELEASE_VERSION: z.string().optional(),
+}).refine(data => data.DEV || !!data.GH_API_TOKEN, {
+  message: 'GH_API_TOKEN is required when DEV is false',
+  path: ['GH_API_TOKEN'],
 });
 
 export const packageSchema = z.object({
