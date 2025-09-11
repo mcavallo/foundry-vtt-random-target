@@ -28,22 +28,31 @@ export class CategoryList {
       this.newCategoryEntry({
         id: CATEGORY_IDS.TARGETED,
         type: 'core',
-        label: 'Targets',
-        description: 'Lists the targeted tokens in the scene',
+        label:
+          game?.i18n?.localize('RANDOMTARGET.Categories.Targets.Label') ?? 'Targets',
+        description:
+          game?.i18n?.localize('RANDOMTARGET.Categories.Targets.Description') ??
+          'Lists the targeted tokens in the scene',
         info: `Only appears if there is at least ${MIN_SCENE_SELECTION_TOKENS} tokens targeted.`,
       }),
       this.newCategoryEntry({
         id: CATEGORY_IDS.SELECTED,
         type: 'core',
-        label: 'Selection',
-        description: 'Lists the selected tokens in the scene',
+        label:
+          game?.i18n?.localize('RANDOMTARGET.Categories.Selection.Label') ??
+          'Selection',
+        description:
+          game?.i18n?.localize('RANDOMTARGET.Categories.Selection.Description') ??
+          'Lists the selected tokens in the scene',
         info: `Only appears if there is at least ${MIN_SCENE_SELECTION_TOKENS} tokens selected.`,
       }),
       this.newCategoryEntry({
         id: CATEGORY_IDS.ALL,
         type: 'core',
-        label: 'All',
-        description: 'Lists all tokens in the scene',
+        label: game?.i18n?.localize('RANDOMTARGET.Categories.All.Label') ?? 'All',
+        description:
+          game?.i18n?.localize('RANDOMTARGET.Categories.All.Description') ??
+          'Lists all tokens in the scene',
       }),
     ];
 
@@ -57,7 +66,10 @@ export class CategoryList {
               id,
               type: 'type',
               label: formatCategoryLabel(key),
-              description: `Lists tokens of type <code>${key}</code>`,
+              description:
+                game?.i18n?.format('RANDOMTARGET.Categories.Type.Description', {
+                  type: key,
+                }) ?? `Lists tokens of type <code>${key}</code>`,
               info: `Only appears if there is at least ${MIN_CATEGORY_TOKENS} matching token.`,
             })
           );
@@ -78,8 +90,11 @@ export class CategoryList {
         this.newCategoryEntry({
           id,
           type: 'disposition',
-          label: formatCategoryLabel(dispositionName),
-          description: `Lists tokens with disposition <code>${dispositionName}</code>`,
+          label: dispositionName,
+          description:
+            game?.i18n?.format('RANDOMTARGET.Categories.Disposition.Description', {
+              disposition: dispositionName,
+            }) ?? `Lists tokens with disposition <code>${dispositionName}</code>`,
           info: `Only appears if there is at least ${MIN_CATEGORY_TOKENS} matching token.`,
         })
       );
