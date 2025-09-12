@@ -12,6 +12,27 @@
     "MissingSceneError": "You need to have an active scene to select random targets",
     "MinimumSelectionError": "You need to select at least 2 tokens",
     "MinimumCategoriesError": "You need to select at least 1 category",
+    "Setting": {
+      "Categories": {
+        "Name": "Category filters"
+      },
+      "CloseAfterSelection": {
+        "Name": "Close after selection",
+        "Hint": "Specifies whether the target selection window should close after a target is chosen."
+      },
+      "ChatNotifications": {
+        "Name": "Chat notifications",
+        "Hint": "Specifies whether a chat message should be sent when a random target is selected, and what the privacy level should be."
+      },
+      "AvoidSelectingSameTarget": {
+        "Name": "Avoid selecting the same target",
+        "Hint": "Specifies whether the same target should be prevented from being selected twice in a row."
+      },
+      "PreferredTargetImage": {
+        "Name": "Preferred target image",
+        "Hint": "Specifies the preferred image to display in the list of targets."
+      }
+    },
     "Categories": {
       "SettingHint": "Choose which category filters to make available. At least one category must be selected. You can drag to rearrange their order.",
       "SaveSelection": "Save selection",
