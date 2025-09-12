@@ -543,7 +543,9 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
       { type: 'button', label: 'Cancel', action: 'closeApp' },
       {
         type: 'submit',
-        label: 'Choose Random Target',
+        label:
+          game?.i18n?.localize('RANDOMTARGET.ChooseRandomTarget') ??
+          'Choose Random Target',
         name: 'submit',
         disabled: selectedTotal < MIN_SELECTION_TOKENS,
       },
