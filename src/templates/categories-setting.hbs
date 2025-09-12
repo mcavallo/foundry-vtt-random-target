@@ -1,17 +1,26 @@
 <form class='flexcol'>
   <div>
-    <p>Choose which category filters to make available. At least one category must be selected. You can drag to rearrange their order.</p>
+    <p>{{localize 'RANDOMTARGET.Categories.SettingHint'}}</p>
     <div class='item-list'>
       {{#each categories}}
         <div class='item'>
-          <input type='checkbox' value='{{id}}' data-dtype='String' name='categories' {{checked enabled}} />
+          <input
+            type='checkbox'
+            value='{{id}}'
+            data-dtype='String'
+            name='categories'
+            {{checked enabled}}
+          />
           <div class='category-details'>
             <div class='label'>
               {{{label}}}
             </div>
             <div class='description'>
               {{{description}}}
-              {{#if info}}<i class='fa fa-circle-info' data-tooltip='{{info}}'></i>{{/if}}
+              {{#if info}}<i
+                  class='fa fa-circle-info'
+                  data-tooltip='{{info}}'
+                ></i>{{/if}}
             </div>
           </div>
           <i class='fa fa-grip-dots-vertical'></i>
@@ -22,7 +31,7 @@
   <footer class='sheet-footer flexrow'>
     <button type='submit' name='submit'>
       <i class='fa fa-save'></i>
-      Save selection
+      {{localize 'RANDOMTARGET.Categories.SaveSelection'}}
     </button>
   </footer>
 </form>
