@@ -13,6 +13,8 @@
     "MinimumSelectionError": "You need to select at least 2 tokens",
     "MinimumCategoriesError": "You need to select at least 1 category",
     "Categories": {
+      "SettingHint": "Choose which category filters to make available. At least one category must be selected. You can drag to rearrange their order.",
+      "SaveSelection": "Save selection",
       "Targets": {
         "Label": "Targets",
         "Description": "Lists the targeted tokens in the scene"

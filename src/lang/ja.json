@@ -13,6 +13,8 @@
     "MinimumSelectionError": "少なくとも2体のトークンを選択する必要があります",
     "MinimumCategoriesError": "少なくとも1つのカテゴリを選択する必要があります",
     "Categories": {
+      "SettingHint": "利用可能にするカテゴリフィルターを選択してください。少なくとも1つのカテゴリを選択する必要があります。ドラッグして順序を並べ替えることができます。",
+      "SaveSelection": "選択を保存",
       "Targets": {
         "Label": "ターゲット",
         "Description": "シーン内でターゲットされたトークンを一覧表示"
