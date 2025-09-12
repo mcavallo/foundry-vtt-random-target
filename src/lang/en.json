@@ -22,7 +22,12 @@
       },
       "ChatNotifications": {
         "Name": "Chat notifications",
-        "Hint": "Specifies whether a chat message should be sent when a random target is selected, and what the privacy level should be."
+        "Hint": "Specifies whether a chat message should be sent when a random target is selected, and what the privacy level should be.",
+        "Options": {
+          "Disabled": "Disabled",
+          "GMOnly": "GM only",
+          "Public": "Public"
+        }
       },
       "AvoidSelectingSameTarget": {
         "Name": "Avoid selecting the same target",
@@ -30,7 +35,11 @@
       },
       "PreferredTargetImage": {
         "Name": "Preferred target image",
-        "Hint": "Specifies the preferred image to display in the list of targets."
+        "Hint": "Specifies the preferred image to display in the list of targets.",
+        "Options": {
+          "Token": "Token image",
+          "Actor": "Actor image"
+        }
       }
     },
     "Categories": {
