@@ -61,14 +61,8 @@ export const PREFERRED_IMAGE = {
 };
 
 export const PREFERRED_IMAGE_OPTIONS = {
-  [PREFERRED_IMAGE.TOKEN]:
-    game?.i18n?.localize(
-      'RANDOMTARGET.Setting.PreferredTargetImage.Options.Token'
-    ) ?? 'Token image',
-  [PREFERRED_IMAGE.ACTOR]:
-    game?.i18n?.localize(
-      'RANDOMTARGET.Setting.PreferredTargetImage.Options.Actor'
-    ) ?? 'Actor image',
+  [PREFERRED_IMAGE.TOKEN]: 'Token image',
+  [PREFERRED_IMAGE.ACTOR]: 'Actor image',
 };
 
 export const CHAT_NOTIFICATIONS = {
@@ -78,18 +72,9 @@ export const CHAT_NOTIFICATIONS = {
 };
 
 export const CHAT_NOTIFICATIONS_OPTIONS = {
-  [CHAT_NOTIFICATIONS.DISABLED]:
-    game?.i18n?.localize(
-      'RANDOMTARGET.Setting.ChatNotifications.Options.Disabled'
-    ) ?? 'Disabled',
-  [CHAT_NOTIFICATIONS.GM_ONLY]:
-    game?.i18n?.localize(
-      'RANDOMTARGET.Setting.ChatNotifications.Options.GMOnly'
-    ) ?? 'GM only',
-  [CHAT_NOTIFICATIONS.PUBLIC]:
-    game?.i18n?.localize(
-      'RANDOMTARGET.Setting.ChatNotifications.Options.Public'
-    ) ?? 'Public',
+  [CHAT_NOTIFICATIONS.DISABLED]: 'Disabled',
+  [CHAT_NOTIFICATIONS.GM_ONLY]: 'GM only',
+  [CHAT_NOTIFICATIONS.PUBLIC]: 'Public',
 };
 
 export const TAB_GROUP = 'categories';
