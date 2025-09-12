@@ -12,6 +12,7 @@
     "MissingSceneError": "ランダムターゲットを選択するにはアクティブなシーンが必要です",
     "MinimumSelectionError": "少なくとも2体のトークンを選択する必要があります",
     "MinimumCategoriesError": "少なくとも1つのカテゴリを選択する必要があります",
+    "ToggleSelectionAllNone": "選択を切り替え（全て/なし）",
     "Setting": {
       "Categories": {
         "Name": "カテゴリフィルター"

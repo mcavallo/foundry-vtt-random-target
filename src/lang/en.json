@@ -12,6 +12,7 @@
     "MissingSceneError": "You need to have an active scene to select random targets",
     "MinimumSelectionError": "You need to select at least 2 tokens",
     "MinimumCategoriesError": "You need to select at least 1 category",
+    "ToggleSelectionAllNone": "Toggle Selection (All/None)",
     "Setting": {
       "Categories": {
         "Name": "Category filters"
