@@ -12,6 +12,27 @@
     "MissingSceneError": "ランダムターゲットを選択するにはアクティブなシーンが必要です",
     "MinimumSelectionError": "少なくとも2体のトークンを選択する必要があります",
     "MinimumCategoriesError": "少なくとも1つのカテゴリを選択する必要があります",
+    "Setting": {
+      "Categories": {
+        "Name": "カテゴリフィルター"
+      },
+      "CloseAfterSelection": {
+        "Name": "選択後に閉じる",
+        "Hint": "ターゲット選択ウィンドウをターゲット選択後に閉じるかどうかを指定します。"
+      },
+      "ChatNotifications": {
+        "Name": "チャット通知",
+        "Hint": "ランダムなターゲットが選択されたときにチャットメッセージを送信するかどうか、およびその公開範囲を指定します。"
+      },
+      "AvoidSelectingSameTarget": {
+        "Name": "同じターゲットの選択を避ける",
+        "Hint": "同じターゲットが連続して選択されないようにするかどうかを指定します。"
+      },
+      "PreferredTargetImage": {
+        "Name": "優先ターゲット画像",
+        "Hint": "ターゲットの一覧に表示する優先画像を指定します。"
+      }
+    },
     "Categories": {
       "SettingHint": "利用可能にするカテゴリフィルターを選択してください。少なくとも1つのカテゴリを選択する必要があります。ドラッグして順序を並べ替えることができます。",
       "SaveSelection": "選択を保存",

@@ -47,11 +47,14 @@ export class SettingsManager {
   _registerSettings() {
     // @ts-expect-error fix types
     game.settings.registerMenu(MODULE.ID, SETTING_IDS.CATEGORIES + 'Menu', {
-      name: 'Category filters',
+      name:
+        game?.i18n?.localize('RANDOMTARGET.Setting.Categories.Name') ??
+        'Category filters',
       label: 'Configure',
-      hint: 'Manage which category filters are available and the order in which they appear.',
+      hint:
+        game?.i18n?.localize('RANDOMTARGET.Categories.SettingHint') ??
+        'Manage which category filters are available and the order in which they appear.',
       icon: 'fa fa-list-check',
-      // @ts-expect-error fix types
       type: CategoriesSettings,
       restricted: true,
     });
@@ -67,8 +70,12 @@ export class SettingsManager {
 
     // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.CLOSE_AFTER, {
-      name: 'Close after selection',
-      hint: 'Specifies whether the target selection window should close after a target is chosen.',
+      name:
+        game?.i18n?.localize('RANDOMTARGET.Setting.CloseAfterSelection.Name') ??
+        'Close after selection',
+      hint:
+        game?.i18n?.localize('RANDOMTARGET.Setting.CloseAfterSelection.Hint') ??
+        'Specifies whether the target selection window should close after a target is chosen.',
       scope: 'world',
       config: true,
       type: Boolean,
@@ -78,8 +85,12 @@ export class SettingsManager {
 
     // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.CHAT_NOTIFICATIONS, {
-      name: 'Chat notifications',
-      hint: 'Specifies whether a chat message should be sent when a random target is selected, and what the privacy level should be.',
+      name:
+        game?.i18n?.localize('RANDOMTARGET.Setting.ChatNotifications.Name') ??
+        'Chat notifications',
+      hint:
+        game?.i18n?.localize('RANDOMTARGET.Setting.ChatNotifications.Hint') ??
+        'Specifies whether a chat message should be sent when a random target is selected, and what the privacy level should be.',
       scope: 'world',
       config: true,
       type: String,
@@ -90,8 +101,12 @@ export class SettingsManager {
 
     // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.AVOID_SELECTING_SAME_TARGET, {
-      name: 'Avoid selecting the same target',
-      hint: 'Specifies whether the same target should be prevented from being selected twice in a row.',
+      name:
+        game?.i18n?.localize('RANDOMTARGET.Setting.AvoidSelectingSameTarget.Name') ??
+        'Avoid selecting the same target',
+      hint:
+        game?.i18n?.localize('RANDOMTARGET.Setting.AvoidSelectingSameTarget.Hint') ??
+        'Specifies whether the same target should be prevented from being selected twice in a row.',
       scope: 'world',
       config: true,
       type: Boolean,
@@ -101,8 +116,12 @@ export class SettingsManager {
 
     // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.PREFERRED_IMAGE, {
-      name: 'Preferred target image',
-      hint: 'Specifies the preferred image to display in the list of targets.',
+      name:
+        game?.i18n?.localize('RANDOMTARGET.Setting.PreferredTargetImage.Name') ??
+        'Preferred target image',
+      hint:
+        game?.i18n?.localize('RANDOMTARGET.Setting.PreferredTargetImage.Hint') ??
+        'Specifies the preferred image to display in the list of targets.',
       scope: 'world',
       config: true,
       type: String,
