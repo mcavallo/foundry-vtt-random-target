@@ -17,7 +17,7 @@
     "title": "Random Target",
     "description": "Adds a dialog to choose a random target between the tokens present in the scene.",
     "compatibilityMinimum": "13",
-    "compatibilityVerified": "13.345"
+    "compatibilityVerified": "13.348"
   },
   "private": true,
   "type": "module",
@@ -27,15 +27,15 @@
     "@types/bun": "^1.2.17",
     "@types/fs-extra": "^11.0.4",
     "@types/js-yaml": "^4.0.9",
-    "fs-extra": "^11.3.0",
+    "fs-extra": "^11.3.1",
     "fvtt-types": "github:League-of-Foundry-Developers/foundry-vtt-types#main",
     "js-yaml": "^4.1.0",
     "neverthrow": "^8.2.0",
     "nodemon": "^3.1.10",
-    "prettier": "^3.5.3",
+    "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
-    "sass": "^1.89.2",
-    "zod": "^3.25.67"
+    "sass": "^1.92.1",
+    "zod": "^3.25.76"
   },
   "peerDependencies": {
     "typescript": "^5.8.3"
