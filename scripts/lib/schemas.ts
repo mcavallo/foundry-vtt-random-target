@@ -2,10 +2,10 @@ import { z } from 'zod/v4';
 
 export const envSchema = z.object({
   DEV: z.preprocess(
-    val => typeof val === 'string' && val.toLowerCase() === '1',
+    (val) => typeof val === 'string' && val.toLowerCase() === '1',
     z.boolean()
   ),
-  GH_API_TOKEN: z.string(),
+  GH_API_TOKEN: z.string().optional(),
   RELEASE_VERSION: z.string().optional(),
 });
 
