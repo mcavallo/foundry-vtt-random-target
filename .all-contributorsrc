@@ -1,0 +1,91 @@
+{
+  "projectName": "foundry-vtt-random-target",
+  "projectOwner": "mcavallo",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": ["CREDITS.md"],
+  "imageSize": 100,
+  "commit": false,
+  "commitConvention": "none",
+  "types": {
+    "testing": {
+      "symbol": "🧪",
+      "description": "QA/Testing"
+    }
+  },
+  "contributorTemplate": "<a href=\"<%= contributor.profile %>\"><img src=\"<%= contributor.avatar_url %>\" width=\"<%= options.imageSize %>px;\" alt=\"\"/><br /><sub><b><%= contributor.login %></b></sub></a><br /><%= contributions %>",
+  "contributors": [
+    {
+      "login": "nyoung",
+      "name": "Neil Young",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4152009?v=4",
+      "profile": "https://github.com/nyoung",
+      "contributions": ["ideas", "data", "testing"]
+    },
+    {
+      "login": "Fridan99",
+      "name": "Fridan99",
+      "avatar_url": "https://avatars.githubusercontent.com/u/86131373?v=4",
+      "profile": "https://github.com/Fridan99",
+      "contributions": ["bug"]
+    },
+    {
+      "login": "p4535992",
+      "name": "4535992",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5201916?v=4",
+      "profile": "https://github.com/p4535992",
+      "contributions": ["ideas"]
+    },
+    {
+      "login": "dmpunks",
+      "name": "dmpunks",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1963509?v=4",
+      "profile": "https://github.com/dmpunks",
+      "contributions": ["bug"]
+    },
+    {
+      "login": "bookwyrm-val",
+      "name": "Val",
+      "avatar_url": "https://avatars.githubusercontent.com/u/66767292?v=4",
+      "profile": "https://github.com/bookwyrm-val",
+      "contributions": ["bug"]
+    },
+    {
+      "login": "fishrobe",
+      "name": "fishrobe",
+      "avatar_url": "https://avatars.githubusercontent.com/u/50474856?v=4",
+      "profile": "https://github.com/fishrobe",
+      "contributions": ["bug"]
+    },
+    {
+      "login": "4m2c4bl3",
+      "name": "4m2c4bl3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/9441719?v=4",
+      "profile": "https://github.com/4m2c4bl3",
+      "contributions": ["ideas"]
+    },
+    {
+      "login": "camrun91",
+      "name": "Cameron Llewellyn",
+      "avatar_url": "https://avatars.githubusercontent.com/u/16566029?v=4",
+      "profile": "https://cameronandmadalyn.com/",
+      "contributions": ["bug"]
+    },
+    {
+      "login": "Lioheart",
+      "name": "Jakub",
+      "avatar_url": "https://avatars.githubusercontent.com/u/39154364?v=4",
+      "profile": "https://github.com/Lioheart",
+      "contributions": ["translation"]
+    },
+    {
+      "login": "Yasnen",
+      "name": "Yasnen",
+      "avatar_url": "https://avatars.githubusercontent.com/u/46295990?v=4",
+      "profile": "https://github.com/Yasnen",
+      "contributions": ["translation", "ideas"]
+    }
+  ],
+  "contributorsPerLine": 5,
+  "linkToUsage": false
+}

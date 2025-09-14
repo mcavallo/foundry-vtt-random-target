@@ -41,6 +41,10 @@ While this module should work without problems with most systems, it has been te
 
 Please [reach out](https://github.com/mcavallo/foundry-vtt-random-target/issues) if you'd like to optimize it for any other system.
 
+# Localization
+
+The module is fully localized in the following languages: English and Polish.
+
 # Support the Project
 
 Please consider [supporting me](https://www.buymeacoffee.com/ikindred) if you find this module useful.

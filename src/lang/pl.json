@@ -1,0 +1,163 @@
+{
+  "random-target": {
+    "macro": {
+      "unexpectedError": "[RandomTarget] Wystąpił problem. Spróbuj zaktualizować makro z kompendium. Jeśli problem nadal występuje, skontaktuj się z autorem."
+    },
+    "targetApp": {
+      "window": {
+        "title":"Random Target",
+        "controls": {
+          "openSettings": "Ustawienia",
+          "openHelp": "Pomoc",
+          "openSupport": "Wsparcie"
+        }
+      },
+      "ui": {
+        "toggleSelection": {
+          "label": "Przełącz wybór (wszystkie / żadne)"
+        },
+        "emptySceneError": {
+          "label": "W bieżącej scenie nie ma żadnych tokenów do wyboru."
+        },
+        "buttons": {
+          "cancel": {
+            "label": "Anuluj"
+          },
+          "submit": {
+            "label": "Wybierz losowy cel"
+          }
+        },
+        "status": {
+          "selection": {
+            "none": "Nie wybrano żadnych kandydatów",
+            "one": "Wybrano 1 kandydata",
+            "many": "{total} wybranych kandydatów"
+          },
+          "chatVisibility": {
+            "silent": {
+              "label": "Ukryty",
+              "tooltip": "Nie publikować na czacie"
+            },
+            "gmOnly":{
+              "label": "Prywatny",
+              "tooltip": "Będzie publikować wiadomości przeznaczone wyłącznie dla MG na czacie"
+            },
+            "public":{
+              "label": "Publiczny",
+              "tooltip": "Będzie publikować publiczne wiadomości na czacie"
+            }
+          }
+        }
+      }
+    },
+    "supportDialog": {
+      "window": {
+        "title":"Wesprzyj ten moduł"
+      },
+      "ui": {
+        "buttons": {
+          "later": {
+            "label": "Może później"
+          },
+          "support": {
+            "label": "Wspieraj teraz"
+          }
+        }
+      },
+      "content": {
+        "heading": "Dziękujemy za korzystanie z <strong>Random Target</strong>!",
+        "backgroundText": "Projekt ten jest aktywnie rozwijany od 2022 roku. To, co zaczęło się jako niewielki projekt poboczny, stało się narzędziem używanym obecnie przez setki użytkowników Foundry VTT, takich jak Ty.",
+        "supportText": "Jeśli uważasz, że ten moduł jest pomocny, rozważ wsparcie jego rozwoju!"
+      }
+    },
+    "categories": {
+      "targeted": {
+        "label": "Cele",
+        "description": "Wyświetla listę namierzonych tokenów w scenie",
+        "info": "Pojawia się tylko wtedy, gdy istnieje co najmniej {count} namierzonych tokenów."
+      },
+      "selected": {
+        "label": "Wybór",
+        "description": "Wyświetla listę wybranych tokenów w scenie.",
+        "info": "Pojawia się tylko wtedy, gdy wybrano co najmniej {count} tokenów."
+      },
+      "all": {
+        "label": "Wszystkie",
+        "description": "Wyświetla listę wszystkich tokenów w scenie."
+      },
+      "category": {
+        "description": "Wyświetla tokeny typu <code>{name}</code>",
+        "info": "Pojawia się tylko wtedy, gdy istnieje co najmniej {count} pasujących tokenów."
+      },
+      "disposition": {
+        "description": "Wyświetla listę tokenów wraz z ich usposobieniem <code>{name}</code>",
+        "info": "Pojawia się tylko wtedy, gdy istnieje co najmniej {count} pasujących tokenów."
+      }
+    },
+    "categoriesSettings": {
+      "window": {
+        "title":"Random Target: Kategorie"
+      },
+      "ui": {
+        "buttons": {
+          "save": {
+            "label": "Zapisz wybór"
+          }
+        }
+      },
+      "content": {
+        "instructions": "Wybierz filtry kategorii, które chcesz udostępnić. Należy wybrać co najmniej jedną kategorię. Możesz przeciągać, aby zmienić ich kolejność."
+      }
+    },
+    "notifications": {
+      "targeted": "Wycelowano w <b>{targetName}</b>",
+      "missingSceneError": "Aby wybrać losowe cele, musisz mieć aktywną scenę",
+      "minimumSelectionError": "Musisz wybrać co najmniej 2 tokeny",
+      "minimumCategoriesError": "Należy wybrać co najmniej 1 kategorię"
+    },
+    "chat": {
+      "unknownTarget": {
+        "label": "Nieznany token ({tokenId})"
+      },
+      "target": {
+        "label": "{targetLink} został wybrany losowo.",
+        "tooltip": "Cel: {name}"
+      },
+      "candidatesPool": {
+        "label": "Grupa kandydatów do tej selekcji:"
+      }
+    },
+    "settings": {
+      "categoryFilters": {
+        "name": "Filtry kategorii",
+        "label": "Konfiguracja",
+        "hint": "Zarządzaj dostępnymi filtrami kategorii i kolejnością ich wyświetlania."
+      },
+      "closeAfterSelection": {
+        "name": "Zamknij po zaznaczeniu",
+        "hint": "Określa, czy okno wyboru celu powinno zostać zamknięte po wybraniu celu."
+      },
+      "chatNotifications": {
+        "name": "Powiadomienia na czacie",
+        "hint": "Określa, czy wiadomość czatu powinna zostać wysłana po wybraniu losowego celu oraz jaki powinien być poziom prywatności.",
+        "options": {
+          "disabled": "Wyłączony",
+          "gm": "Tylko MG",
+          "public": "Publiczny"
+        }
+      },
+      "avoidSameTarget": {
+        "name": "Unikaj wybierania tego samego celu",
+        "hint": "Określa, czy ten sam cel powinien być chroniony przed dwukrotnym wybraniem z rzędu."
+      },
+      "preferredTargetImage": {
+        "name": "Preferowany obraz celu",
+        "hint": "Określa preferowany obraz do wyświetlenia na liście celów.",
+        "options": {
+          "token": "Obraz tokenu",
+          "actor": "Obraz aktora"
+        }
+      }
+    }
+  }
+}
