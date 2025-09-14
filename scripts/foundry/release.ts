@@ -1,6 +1,11 @@
-import { makeReleasePayload, maskToken, printRequestErrors, safeSendRequest } from '#/scripts/foundry/utils.ts';
-import fs from 'fs-extra';
 import path from 'node:path';
+import fs from 'fs-extra';
+import {
+  makeReleasePayload,
+  maskToken,
+  printRequestErrors,
+  safeSendRequest,
+} from '#/scripts/foundry/utils.ts';
 
 const run = async () => {
   if (!Bun.env.FOUNDRY_RELEASE_TOKEN) {
@@ -26,7 +31,7 @@ const run = async () => {
   });
 
   if (dryRun.isErr()) {
-    printRequestErrors(dryRun.error.response);
+    printRequestErrors(dryRun.error);
     throw new Error(`Failed to send dry run request to Foundry API.`);
   }
 
@@ -38,7 +43,7 @@ const run = async () => {
   });
 
   if (release.isErr()) {
-    printRequestErrors(release.error.response);
+    printRequestErrors(release.error);
     throw new Error(`Failed to send request to Foundry API.`);
   }
 
