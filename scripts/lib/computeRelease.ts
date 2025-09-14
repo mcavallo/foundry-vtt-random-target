@@ -5,15 +5,20 @@ export const getLatestGithubRelease = async (repoUrl: string) => {
     repoUrl.match(/^https?:\/\/(?:www.)?github.com\/([^/]+)\/(.+)$/) || [];
 
   try {
+    const headers: Record<string, string> = {
+      Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+    };
+
+    if (Bun.env.GH_API_TOKEN) {
+      headers.Authorization = `Bearer ${Bun.env.GH_API_TOKEN}`;
+    } else {
+      console.warn(`Warning: Fetching Github releases without a GH_API_TOKEN`);
+    }
+
     const response = await fetch(
       `https://api.github.com/repos/${repoOwner}/${repoName}/releases?per_page=1`,
-      {
-        headers: {
-          Accept: 'application/vnd.github+json',
-          Authorization: `Bearer ${process.env.GH_API_TOKEN}`,
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-      }
+      { headers }
     );
 
     if (response.ok) {

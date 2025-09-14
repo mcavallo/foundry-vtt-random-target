@@ -1,6 +1,6 @@
 import { MODULE, SETTING_IDS } from '@/constants';
 import { CategoryList } from '@/lib/CategoryList';
-import { $M, isElementEvent } from '@/lib/utils.ts';
+import { $M, isElementEvent, t } from '@/lib/utils.ts';
 
 const { FormApplication } = foundry.appv1.api;
 
@@ -19,7 +19,7 @@ export class CategoriesSettings extends FormApplication {
       classes: ['form', MODULE.ID],
       popOut: true,
       id: `${MODULE.ID}-categories-setting`,
-      title: `${MODULE.NAME}: Categories`,
+      title: t('categoriesSettings.window.title'),
       template: `modules/${MODULE.ID}/templates/categories-setting.hbs`,
       dragDrop: [
         { dragSelector: '.item-list .item', dropSelector: '.item-list .item' },
@@ -39,11 +39,24 @@ export class CategoriesSettings extends FormApplication {
     return super.close(options);
   }
 
+  /**
+   * Returns the translations to be used in the rendering context.
+   */
+  _prepareContextTranslations() {
+    return {
+      instructions: t('categoriesSettings.content.instructions'),
+      buttons: {
+        save: t('categoriesSettings.ui.buttons.save.label'),
+      },
+    };
+  }
+
   getData() {
     const categories = new CategoryList();
 
     return {
       categories: categories.getRawValue(),
+      translations: this._prepareContextTranslations(),
     };
   }
 

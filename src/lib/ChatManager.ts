@@ -1,6 +1,6 @@
 import type { RandomTargetChatMessage } from '#/types/module.ts';
 import { CHAT_NOTIFICATIONS, MODULE, SETTING_IDS } from '@/constants';
-import { $M, isEventTarget, quotesToEntities } from '@/lib/utils.ts';
+import { $M, isEventTarget, quotesToEntities, t } from '@/lib/utils.ts';
 
 export class ChatManager {
   constructor() {
@@ -60,12 +60,25 @@ export class ChatManager {
       .map((tokenId) => {
         const candidate = $M().game.getToken(tokenId);
         const isSelected = candidate && candidate.id === target.id;
-        const name = candidate ? candidate.name : `Unknown token (${tokenId})`;
+        const name = candidate
+          ? candidate.name
+          : t('chat.unknownTarget.label', { tokenId });
         return `<li><span${isSelected ? ' class="target"' : ''}>${name}</span></li>`;
       })
       .join('');
 
-    const targetTooltip = 'Target: ' + quotesToEntities(target.name);
+    const targetTooltip = t('chat.target.tooltip', {
+      name: quotesToEntities(target.name),
+    });
+
+    const targetLink = `
+      <a
+        class="content-link ${MODULE.ID}-message-target"
+        data-action="target-actor"
+        data-target-id="${target.id}"
+        data-tooltip="${targetTooltip}"
+      ><i class="fas fa-bullseye"></i>${target.name}</a>
+    `;
 
     // No recipients mean the message will be public
     const recipients =
@@ -87,17 +100,12 @@ export class ChatManager {
         <div class="${MODULE.ID}-message">
           <div class="target-result" data-action="toggle-message">          
             <p>
-              <a
-                class="content-link ${MODULE.ID}-message-target"
-                data-action="target-actor"
-                data-target-id="${target.id}"
-                data-tooltip="${targetTooltip}"
-              ><i class="fas fa-bullseye"></i>${target.name}</a> was randomly selected.
+              ${t('chat.target.label', { targetLink })}
             </p>
             <div class="target-details">
               <div>
                 <section>
-                  The pool of candidates for this selection:
+                  ${t('chat.candidatesPool.label')}
                   <ul>${candidatesPool}</ul>
                 </section>
               </div>

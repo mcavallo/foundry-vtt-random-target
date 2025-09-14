@@ -8,5 +8,7 @@
   "tabWidth": 2,
   "trailingComma": "es5",
   "useTabs": false,
-  "importOrder": ["<THIRD_PARTY_MODULES>", "^#/(.*)$", "^@/(.*)$", "^[./]"]
+  "importOrder": ["^(bun|node):.*$", "<THIRD_PARTY_MODULES>", "^#/(.*)$", "^@/(.*)$", "^[./]"],
+  "importOrderSortSpecifiers": true,
+  "plugins": ["@trivago/prettier-plugin-sort-imports"]
 }

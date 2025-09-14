@@ -8,7 +8,7 @@ import { SettingsManager } from '@/lib/SettingsManager';
 
 import './module.scss';
 
-Hooks.once('init', () => {
+Hooks.once('ready', () => {
   const seed = Math.floor(Math.random() * 100000);
 
   const settings = new SettingsManager();
@@ -25,9 +25,7 @@ Hooks.once('init', () => {
     notifications,
     random,
   };
-});
 
-Hooks.once('ready', () => {
   const migration = new MacroMigration();
   void migration.run();
 });

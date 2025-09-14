@@ -1,6 +1,6 @@
 <form class='flexcol'>
   <div>
-    <p>Choose which category filters to make available. At least one category must be selected. You can drag to rearrange their order.</p>
+    <p>{{@root.translations.instructions}}</p>
     <div class='item-list'>
       {{#each categories}}
         <div class='item'>
@@ -22,7 +22,7 @@
   <footer class='sheet-footer flexrow'>
     <button type='submit' name='submit'>
       <i class='fa fa-save'></i>
-      Save selection
+      {{@root.translations.buttons.save}}
     </button>
   </footer>
 </form>

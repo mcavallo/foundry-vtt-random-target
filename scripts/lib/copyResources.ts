@@ -15,6 +15,10 @@ const copyResources = async ({ ctx }: { ctx: ScriptContext }) => {
       to: path.join(ctx.distDir, 'assets'),
     },
     {
+      from: path.join(ctx.sourceDir, 'lang'),
+      to: path.join(ctx.distDir, 'lang'),
+    },
+    {
       from: path.join(ctx.rootDir, 'LICENSE'),
       to: path.join(ctx.distDir, 'LICENSE'),
     },

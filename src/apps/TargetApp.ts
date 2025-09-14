@@ -14,13 +14,7 @@ import {
   TAB_GROUP,
 } from '@/constants';
 import { CategoryList } from '@/lib/CategoryList';
-import {
-  $M,
-  formatTabId,
-  isInputEvent,
-  isValidFormSubmit,
-  pluralize,
-} from '@/lib/utils.ts';
+import { $M, formatTabId, isInputEvent, isValidFormSubmit, t } from '@/lib/utils.ts';
 // @ts-expect-error this import has issues but the types are working fine
 import type ApplicationV2 from 'fvtt-types/src/foundry/client/applications/api/application';
 import SupportDialog from './SupportDialog';
@@ -45,25 +39,6 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
     },
     tag: 'form',
     window: {
-      title: 'Random Target',
-      controls: [
-        {
-          action: 'openSettings',
-          label: 'Settings',
-          icon: 'fa-solid fa-gear',
-        },
-        {
-          action: 'openHelp',
-          label: 'Help',
-          icon: 'fa-solid fa-circle-info',
-        },
-        {
-          action: 'openSupport',
-          label: 'Support',
-          icon: 'fa-solid fa-heart',
-        },
-      ],
-      icon: 'fa-solid fa-bullseye',
       resizable: false,
     },
     actions: {
@@ -107,6 +82,39 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
 
     this._registerInitialScene();
     this._configureHooks();
+  }
+
+  /**
+   * Initializes the application during instantiation.
+   */
+  _initializeApplicationOptions(options: ApplicationV2.Configuration) {
+    const newOptions = foundry.utils.mergeObject(options, {
+      ...options,
+      window: {
+        ...options.window,
+        title: t('targetApp.window.title'),
+        icon: 'fa-solid fa-bullseye',
+        controls: [
+          {
+            action: 'openSettings',
+            label: t('targetApp.window.controls.openSettings'),
+            icon: 'fa-solid fa-gear',
+          },
+          {
+            action: 'openHelp',
+            label: t('targetApp.window.controls.openHelp'),
+            icon: 'fa-solid fa-circle-info',
+          },
+          {
+            action: 'openSupport',
+            label: t('targetApp.window.controls.openSupport'),
+            icon: 'fa-solid fa-heart',
+          },
+        ],
+      },
+    });
+
+    return super._initializeApplicationOptions(newOptions);
   }
 
   /**
@@ -289,6 +297,30 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
   }
 
   /**
+   * Returns the translations to be used in the rendering context.
+   */
+  _prepareContextTranslations() {
+    return {
+      toggleSelection: t('targetApp.ui.toggleSelection.label'),
+      emptySceneError: t('targetApp.ui.emptySceneError.label'),
+      chatVisibility: {
+        silent: {
+          label: t('targetApp.ui.status.chatVisibility.silent.label'),
+          tooltip: t('targetApp.ui.status.chatVisibility.silent.tooltip'),
+        },
+        gmOnly: {
+          label: t('targetApp.ui.status.chatVisibility.gmOnly.label'),
+          tooltip: t('targetApp.ui.status.chatVisibility.gmOnly.tooltip'),
+        },
+        public: {
+          label: t('targetApp.ui.status.chatVisibility.public.label'),
+          tooltip: t('targetApp.ui.status.chatVisibility.public.tooltip'),
+        },
+      },
+    };
+  }
+
+  /**
    * Creates context data for the UI.
    */
   async _prepareContext(
@@ -296,10 +328,14 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
   ): Promise<TargetAppRenderingContext> {
     let prevContext = await super._prepareContext(options);
     const sceneTokens = $M().game.getSceneTokens();
+    const translations = this._prepareContextTranslations();
 
     // If the scene has no tokens avoid preparing the data and return early
     if (sceneTokens.length === 0) {
-      return foundry.utils.mergeObject(prevContext, EMPTY_TARGET_CONTEXT);
+      return foundry.utils.mergeObject(prevContext, {
+        ...EMPTY_TARGET_CONTEXT,
+        translations,
+      });
     }
 
     const previouslySelectedIds = this.previouslySelectedIds.union(
@@ -374,6 +410,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
       tabs: computedTabs,
       totalSceneTokens: sceneTokens.length,
       totalTokens: categories.getTotalItems(),
+      translations,
     };
 
     return foundry.utils.mergeObject(prevContext, newContext);
@@ -546,10 +583,14 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
    */
   _computeButtons(selectedTotal: number): ApplicationV2.FormFooterButton[] {
     return [
-      { type: 'button', label: 'Cancel', action: 'closeApp' },
+      {
+        type: 'button',
+        label: t('targetApp.ui.buttons.cancel.label'),
+        action: 'closeApp',
+      },
       {
         type: 'submit',
-        label: 'Choose Random Target',
+        label: t('targetApp.ui.buttons.submit.label'),
         name: 'submit',
         disabled: selectedTotal < MIN_SELECTION_TOKENS,
       },
@@ -672,10 +713,13 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
    * Returns the generated label for the candidates status value.
    */
   _getCandidatesStatusValue(total: number) {
-    if (total === 0) {
-      return 'No candidates selected';
-    } else {
-      return `${total} ${pluralize(total, 'candidate')} selected`;
+    switch (total) {
+      case 0:
+        return t('targetApp.ui.status.selection.none');
+      case 1:
+        return t('targetApp.ui.status.selection.one');
+      default:
+        return t('targetApp.ui.status.selection.many', { total });
     }
   }
 }
