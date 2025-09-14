@@ -1,18 +1,18 @@
 <div class="form-status">
   {{! This doesn't have to be interactive. Changing a setting will trigger a re-render }}
   {{#if (eq @root.chatVisibility "DISABLED")}}
-    <div class="status-value status-value-muted" data-tooltip="Will not post to chat">
-      <i class="fa-solid fa-bell-slash"></i> Silent
+    <div class="status-value status-value-muted" data-tooltip="{{@root.translations.chatVisibility.silent.tooltip}}">
+      <i class="fa-solid fa-bell-slash"></i> {{@root.translations.chatVisibility.silent.label}}
     </div>
   {{/if}}
   {{#if (eq @root.chatVisibility "GM_ONLY")}}
-    <div class="status-value" data-tooltip="Will post GM-only messages to chat">
-      <i class="fa-solid fa-user-secret"></i> Private
+    <div class="status-value" data-tooltip="{{@root.translations.chatVisibility.gmOnly.tooltip}}">
+      <i class="fa-solid fa-user-secret"></i> {{@root.translations.chatVisibility.gmOnly.label}}
     </div>
   {{/if}}
   {{#if (eq @root.chatVisibility "PUBLIC")}}
-    <div class="status-value" data-tooltip="Will post public messages to chat">
-      <i class="fa-solid fa-globe"></i> Public
+    <div class="status-value" data-tooltip="{{@root.translations.chatVisibility.public.tooltip}}">
+      <i class="fa-solid fa-globe"></i> {{@root.translations.chatVisibility.public.label}}
     </div>
   {{/if}}
   <div class="status-value" data-id="candidates-status-value"></div>

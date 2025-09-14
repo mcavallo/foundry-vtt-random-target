@@ -14,6 +14,7 @@ import {
   formatTabId,
   getDispositionName,
   sortNaturally,
+  t,
 } from './utils.ts';
 
 export class CategoryList {
@@ -28,22 +29,22 @@ export class CategoryList {
       this.newCategoryEntry({
         id: CATEGORY_IDS.TARGETED,
         type: 'core',
-        label: 'Targets',
-        description: 'Lists the targeted tokens in the scene',
-        info: `Only appears if there is at least ${MIN_SCENE_SELECTION_TOKENS} tokens targeted.`,
+        label: t('categories.targeted.label'),
+        description: t('categories.targeted.description'),
+        info: t('categories.targeted.info', { count: MIN_SCENE_SELECTION_TOKENS }),
       }),
       this.newCategoryEntry({
         id: CATEGORY_IDS.SELECTED,
         type: 'core',
-        label: 'Selection',
-        description: 'Lists the selected tokens in the scene',
-        info: `Only appears if there is at least ${MIN_SCENE_SELECTION_TOKENS} tokens selected.`,
+        label: t('categories.selected.label'),
+        description: t('categories.selected.description'),
+        info: t('categories.selected.info', { count: MIN_SCENE_SELECTION_TOKENS }),
       }),
       this.newCategoryEntry({
         id: CATEGORY_IDS.ALL,
         type: 'core',
-        label: 'All',
-        description: 'Lists all tokens in the scene',
+        label: t('categories.all.label'),
+        description: t('categories.all.description'),
       }),
     ];
 
@@ -57,8 +58,8 @@ export class CategoryList {
               id,
               type: 'type',
               label: formatCategoryLabel(key),
-              description: `Lists tokens of type <code>${key}</code>`,
-              info: `Only appears if there is at least ${MIN_CATEGORY_TOKENS} matching token.`,
+              description: t('categories.category.description', { name: key }),
+              info: t('categories.category.info', { count: MIN_CATEGORY_TOKENS }),
             })
           );
         }
@@ -79,8 +80,10 @@ export class CategoryList {
           id,
           type: 'disposition',
           label: formatCategoryLabel(dispositionName),
-          description: `Lists tokens with disposition <code>${dispositionName}</code>`,
-          info: `Only appears if there is at least ${MIN_CATEGORY_TOKENS} matching token.`,
+          description: t('categories.disposition.description', {
+            name: dispositionName,
+          }),
+          info: t('categories.disposition.info', { count: MIN_CATEGORY_TOKENS }),
         })
       );
     }

@@ -60,21 +60,10 @@ export const PREFERRED_IMAGE = {
   ACTOR: 'ACTOR',
 };
 
-export const PREFERRED_IMAGE_OPTIONS = {
-  [PREFERRED_IMAGE.TOKEN]: 'Token image',
-  [PREFERRED_IMAGE.ACTOR]: 'Actor image',
-};
-
 export const CHAT_NOTIFICATIONS = {
   DISABLED: 'DISABLED',
   GM_ONLY: 'GM_ONLY',
   PUBLIC: 'PUBLIC',
-};
-
-export const CHAT_NOTIFICATIONS_OPTIONS = {
-  [CHAT_NOTIFICATIONS.DISABLED]: 'Disabled',
-  [CHAT_NOTIFICATIONS.GM_ONLY]: 'GM only',
-  [CHAT_NOTIFICATIONS.PUBLIC]: 'Public',
 };
 
 export const TAB_GROUP = 'categories';

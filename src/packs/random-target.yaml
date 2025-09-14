@@ -1,5 +1,5 @@
 - _id: oIVhNA8Po9HpYdJc
-  name: Choose Random Target
+  name: Random Target
   type: script
   author: 7tqz3PRTfwzOb562
   img: modules/random-target/assets/icons/random-target.svg
@@ -8,7 +8,7 @@
     try {
       window.randomTarget.run();
     } catch (err) {
-      ui.notifications.error("[RandomTarget] There was a problem. Try updating the macro from the compendium. If the problem persists contact the author.");
+      ui.notifications.error(game.i18n.localize('random-target.macro.unexpectedError'));
       console.error(err);
     }
   folder:
@@ -17,4 +17,4 @@
     default: 0
   flags:
     random-target:
-      version: 2.3.0
+      version: 4.6.0
