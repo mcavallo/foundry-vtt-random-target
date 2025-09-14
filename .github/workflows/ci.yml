@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - master
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  run-check:
+    name: Run Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.2.17"
+      - name: Install deps
+        run: bun i
+      - name: TS Lint
+        run: make run_ts_lint
+      - name: Test
+        run: make run_tests
