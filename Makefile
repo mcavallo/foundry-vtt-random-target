@@ -16,6 +16,9 @@ dev:
 	make build && \
 	bunx nodemon --on-change-only
 
+check_translations:
+	bun --bun run scripts/checkTranslations
+
 run_tests:
 	bun test
 
