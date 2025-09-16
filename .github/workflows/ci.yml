@@ -24,3 +24,5 @@ jobs:
         run: make run_ts_lint
       - name: Test
         run: make run_tests
+      - name: Check Translations
+        run: make check_translations
