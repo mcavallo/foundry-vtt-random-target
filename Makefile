@@ -19,6 +19,9 @@ dev:
 check_translations:
 	bun --bun run scripts/checkTranslations
 
+release:
+	bun --bun run scripts/foundryRelease
+
 run_tests:
 	bun test
 
@@ -30,6 +33,3 @@ foundry_link:
 
 foundry_unlink:
 	bun --bun run scripts/foundry/unlink.ts
-
-foundry_release:
-	bun --bun run scripts/foundry/release.ts

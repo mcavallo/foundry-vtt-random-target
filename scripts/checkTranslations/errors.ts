@@ -1,28 +1,18 @@
 import path from 'node:path';
-
-export class FileSystemError extends Error {
-  public filePath: string;
-  public fileName: string;
-
-  constructor(message: string, filePath: string) {
-    super(message);
-    this.name = new.target.name;
-    this.filePath = filePath;
-    this.fileName = path.basename(filePath);
-  }
-}
+import { FileSystemError, JsonFileIsInvalidError } from '#/scripts/lib/errors';
 
 export class TranslationFileError extends Error {
-  public filePath: string;
-  public fileName: string;
-  public translationPaths: string[];
-
-  constructor(message: string, filePath: string, translationPaths: string[]) {
+  constructor(
+    message: string,
+    public readonly filePath: string,
+    public readonly translationPaths: string[]
+  ) {
     super(message);
     this.name = new.target.name;
-    this.filePath = filePath;
-    this.fileName = path.basename(filePath);
-    this.translationPaths = translationPaths;
+  }
+
+  get fileName() {
+    return path.basename(this.filePath);
   }
 }
 
@@ -44,18 +34,6 @@ export class DirectoryReadFailedError extends FileSystemError {
   }
 }
 
-export class FileDoesntExistError extends FileSystemError {
-  constructor(path: string) {
-    super(`The file doesn't exist`, path);
-  }
-}
-
-export class JsonFileIsInvalidError extends FileSystemError {
-  constructor(path: string) {
-    super(`The file contains invalid JSON`, path);
-  }
-}
-
 export class HasMissingPathsError extends TranslationFileError {
   constructor(filePath: string, translationPaths: string[]) {
     super('Translation file has missing paths', filePath, translationPaths);
@@ -69,11 +47,11 @@ export class HasUnknownPathsError extends TranslationFileError {
 }
 
 export class HasTranslationErrors extends Error {
-  public errorsList: (JsonFileIsInvalidError | TranslationFileError)[];
-  constructor(errorsList: (JsonFileIsInvalidError | TranslationFileError)[]) {
+  constructor(
+    public readonly errorsList: (JsonFileIsInvalidError | TranslationFileError)[]
+  ) {
     super('Has translation errors');
     this.name = new.target.name;
-    this.errorsList = errorsList;
   }
 }
 

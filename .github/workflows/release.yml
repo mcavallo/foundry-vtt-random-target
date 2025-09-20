@@ -73,4 +73,4 @@ jobs:
       - name: Push release to Foundry
         shell: bash
         run: |
-          make foundry_release
+          make release
