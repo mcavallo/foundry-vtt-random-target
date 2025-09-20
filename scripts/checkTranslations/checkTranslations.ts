@@ -1,43 +1,37 @@
-import path from 'node:path';
-import { okAsync } from 'neverthrow';
+import { logOk, logger } from '#/scripts/lib/logger';
 import { HasTranslationErrors, NoLanguageFilesSkip } from './errors';
 import {
+  startPipeline,
   tryCheckAllLanguageFiles,
   tryReadEnglishPaths,
   tryReadLanguageFilenames,
 } from './safeUtils';
-import type { PipelineContext } from './types';
-import { printErrorReport } from './utils';
+import { getErrorReportMessage } from './utils';
 
 export const run = async (rootDir: string) => {
-  const ctx: PipelineContext = {
-    langDir: path.join(rootDir, 'src', 'lang'),
-  };
-
-  await okAsync()
-    .andTee(() => {
-      console.log('Checking translation files...');
-    })
-    .andThen(tryReadLanguageFilenames(ctx))
-    .andThen(tryReadEnglishPaths(ctx))
-    .andThen(tryCheckAllLanguageFiles(ctx))
+  await startPipeline(rootDir, logger)
+    .andTee(logOk('Checking translation files...'))
+    .andThen(tryReadLanguageFilenames)
+    .andThen(tryReadEnglishPaths)
+    .andThen(tryCheckAllLanguageFiles)
     .match(
       () => {
-        console.log(`All good.`);
+        logger.info(`All good.`);
         process.exit(0);
       },
       (error) => {
         switch (true) {
           case error instanceof NoLanguageFilesSkip:
-            console.log(`No language files found. Skipping.`);
+            logger.info(`No language files found. Skipping.`);
             process.exit(0);
           case error instanceof HasTranslationErrors:
-            printErrorReport(error);
-            process.exit(1);
+            logger.error(getErrorReportMessage(error));
+            break;
           default:
-            console.log(error.message);
-            process.exit(1);
+            logger.error(error.message);
+            break;
         }
+        process.exit(1);
       }
     );
 };

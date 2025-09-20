@@ -1,8 +1,8 @@
+import { JsonFileIsInvalidError } from '#/scripts/lib/errors';
 import {
   HasMissingPathsError,
   type HasTranslationErrors,
   HasUnknownPathsError,
-  JsonFileIsInvalidError,
 } from './errors';
 
 /**
@@ -63,7 +63,7 @@ export const dropValues =
 /**
  * Prints the error report for the aggregated error list.
  */
-export const printErrorReport = (container: HasTranslationErrors) => {
+export const getErrorReportMessage = (container: HasTranslationErrors) => {
   const errorOutput = [`\nFound ${container.errorsList.length} errors:`];
 
   for (const error of container.errorsList) {
@@ -82,5 +82,5 @@ export const printErrorReport = (container: HasTranslationErrors) => {
     }
   }
 
-  console.error(errorOutput.join('\n'));
+  return errorOutput.join('\n');
 };

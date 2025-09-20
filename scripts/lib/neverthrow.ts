@@ -1,6 +1,16 @@
-import { Result, ResultAsync, err, ok } from 'neverthrow';
+import { Result, ResultAsync, err, ok, okAsync } from 'neverthrow';
 
+/**
+ * Thunk that returns a ResultAsync.
+ */
 export type Task<T, E> = () => ResultAsync<T, E>;
+
+/**
+ * Object containing the context and optionally a value
+ */
+export type CtxAndValue<C, V = never> = [V] extends [never]
+  ? { ctx: C }
+  : { ctx: C; value: V };
 
 /**
  * Run tasks sequentially and collect all results (Ok or Err).
@@ -22,3 +32,25 @@ export const sequenceAll = <T, E>(
       ),
     ResultAsync.fromSafePromise<Result<T, E>[], never>(Promise.resolve([]))
   );
+
+/**
+ * Creates a CtxAndValue object.
+ */
+export function ctxAndValue<C, V = never>(
+  ctx: C,
+  ...rest: [V] extends [never] ? [] : [V]
+): CtxAndValue<C, V> {
+  return rest.length === 0
+    ? ({ ctx } as CtxAndValue<C, V>)
+    : ({ ctx, value: rest[0] } as CtxAndValue<C, V>);
+}
+
+/**
+ * Creates a ResultAsync wrapping a CtxAndValue object.
+ */
+export function okWithCtxAsync<C, V = never>(
+  ctx: C,
+  ...rest: [V] extends [never] ? [] : [V]
+): ResultAsync<CtxAndValue<C, V>, never> {
+  return okAsync(ctxAndValue(ctx, ...rest));
+}

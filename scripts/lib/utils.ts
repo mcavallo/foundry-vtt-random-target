@@ -1,10 +1,10 @@
 import { stat } from 'fs-extra';
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import {
-  envSchema,
   type EnvSchema,
-  packageSchema,
   type PackageSchema,
+  envSchema,
+  packageSchema,
 } from './schemas.ts';
 
 export async function parseEnv(): Promise<EnvSchema> {
@@ -32,3 +32,6 @@ export async function readPackageJson(): Promise<PackageSchema> {
 
 export const fileExists = async (path: string) =>
   !!(await stat(path).catch(() => false));
+
+export const getErrorMessage = (err: unknown) =>
+  err instanceof Error ? err.message : String(err);

@@ -2,20 +2,25 @@ import path from 'node:path';
 import { readdir, stat } from 'fs/promises';
 import { errAsync, fromPromise, okAsync } from 'neverthrow';
 import { difference, piped } from 'remeda';
-import { sequenceAll } from '../lib/neverthrow';
+import { type Logger, logOk } from '#/scripts/lib/logger';
+import {
+  type CtxAndValue,
+  ctxAndValue,
+  okWithCtxAsync,
+  sequenceAll,
+} from '#/scripts/lib/neverthrow';
+import { tryReadJsonFile } from '#/scripts/lib/safeUtils';
 import {
   DirectoryDoesntExistError,
   DirectoryIsInvalidError,
   DirectoryReadFailedError,
-  FileDoesntExistError,
   HasMissingPathsError,
   HasTranslationErrors,
   HasUnknownPathsError,
-  JsonFileIsInvalidError,
   NoLanguageFilesSkip,
   TranslationFileError,
 } from './errors';
-import type { PipelineContext } from './types';
+import type { CheckTranslationsContext } from './types';
 import { dropValues, extractLeafPaths, keepOnlyJsonFileNames } from './utils';
 
 /**
@@ -31,19 +36,6 @@ export const tryReadFilesInDir = (dirPath: string) => {
     .andThen(() =>
       fromPromise(readdir(dirPath), () => new DirectoryReadFailedError(dirPath))
     );
-};
-
-/**
- * Attempts to read and parse a JSON file.
- */
-export const tryReadJsonFile = (filePath: string) => {
-  const file = Bun.file(filePath);
-  return fromPromise(
-    file.exists(),
-    () => new FileDoesntExistError(filePath)
-  ).andThen(() =>
-    fromPromise(file.json(), () => new JsonFileIsInvalidError(filePath))
-  );
 };
 
 /**
@@ -79,60 +71,81 @@ export const tryCheckLanguageFile = (
 };
 
 /**
+ * Starts the pipeline and creates the context.
+ */
+export const startPipeline = (rootDir: string, logger: Logger) =>
+  okWithCtxAsync({
+    langDir: path.join(rootDir, 'src', 'lang'),
+    logger,
+  });
+
+/**
  * Attempts to read the list of language filenames excluding en.json.
  */
-export const tryReadLanguageFilenames = (ctx: PipelineContext) => () =>
+export const tryReadLanguageFilenames = ({
+  ctx,
+}: CtxAndValue<CheckTranslationsContext>) =>
   tryReadFilesInDir(ctx.langDir)
     .map(piped(dropValues(['en.json']), keepOnlyJsonFileNames))
-    .andThen((fileNames) =>
-      fileNames.length > 0 ? okAsync(fileNames) : errAsync(new NoLanguageFilesSkip())
+    .andThen((languageFileNames) =>
+      languageFileNames.length > 0
+        ? okWithCtxAsync(ctx, languageFileNames)
+        : errAsync(new NoLanguageFilesSkip())
     );
 
 /**
  * Attempts to read the English language paths. Chains the languageFileNames as part
  * of the output.
  */
-export const tryReadEnglishPaths =
-  (ctx: PipelineContext) => (languageFileNames: string[]) =>
-    tryReadLanguageFilePaths(path.join(ctx.langDir, 'en.json')).map(
-      (englishTranslationPaths): [string[], string[]] => [
+export const tryReadEnglishPaths = ({
+  ctx,
+  value: languageFileNames,
+}: CtxAndValue<CheckTranslationsContext, string[]>) =>
+  tryReadLanguageFilePaths(path.join(ctx.langDir, 'en.json')).map(
+    (englishTranslationPaths) =>
+      ctxAndValue(ctx, {
         englishTranslationPaths,
         languageFileNames,
-      ]
-    );
+      })
+  );
 
 /**
  * Attempts to check each of the language files and collects all errors.
  */
-export const tryCheckAllLanguageFiles =
-  (ctx: PipelineContext) =>
-  ([englishTranslationPaths, languageFileNames]: [string[], string[]]) => {
-    const tasks = languageFileNames.map(
-      (fileName) => () =>
-        okAsync()
-          .andTee(() => {
-            console.log(`Checking '${fileName}'...`);
-          })
-          .andThen(() =>
-            tryCheckLanguageFile(
-              englishTranslationPaths,
-              path.join(ctx.langDir, fileName)
-            )
+export const tryCheckAllLanguageFiles = ({
+  ctx,
+  value: { englishTranslationPaths, languageFileNames },
+}: CtxAndValue<
+  CheckTranslationsContext,
+  {
+    englishTranslationPaths: string[];
+    languageFileNames: string[];
+  }
+>) => {
+  const tasks = languageFileNames.map(
+    (fileName) => () =>
+      okWithCtxAsync(ctx)
+        .andTee(logOk([`Checking '%s'...`, fileName]))
+        .andThen(() =>
+          tryCheckLanguageFile(
+            englishTranslationPaths,
+            path.join(ctx.langDir, fileName)
           )
-    );
-    return sequenceAll(tasks)
-      .map((results) =>
-        results.flatMap((result) => {
-          return result.isOk()
-            ? []
-            : Array.isArray(result.error)
-              ? result.error
-              : [result.error];
-        })
+        )
+  );
+  return sequenceAll(tasks)
+    .map((results) =>
+      results.flatMap((result) =>
+        result.isOk()
+          ? []
+          : Array.isArray(result.error)
+            ? result.error
+            : [result.error]
       )
-      .andThen((errors) => {
-        return errors.length === 0
-          ? okAsync()
-          : errAsync(new HasTranslationErrors(errors));
-      });
-  };
+    )
+    .andThen((errors) => {
+      return errors.length === 0
+        ? okWithCtxAsync(ctx)
+        : errAsync(new HasTranslationErrors(errors));
+    });
+};
