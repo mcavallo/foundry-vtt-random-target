@@ -1,6 +1,6 @@
 import { format } from 'node:util';
 import { piped } from 'remeda';
-import type { CtxAndValue } from '#/scripts/lib/neverthrow.ts';
+import type { CtxAndValue } from '#/scripts/lib/neverthrow';
 
 const makeMessage = (msg: MessageWithFormat) => {
   return typeof msg === 'string' ? msg : format(...msg);

@@ -1,6 +1,6 @@
-import { copy } from 'fs-extra';
 import path from 'node:path';
-import type { ScriptContext } from '../../types/scripts.ts';
+import { copy } from 'fs-extra';
+import type { ScriptContext } from '../../types/scripts';
 
 const copyResources = async ({ ctx }: { ctx: ScriptContext }) => {
   console.log(`Copying resources...`);

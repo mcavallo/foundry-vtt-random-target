@@ -6,9 +6,9 @@ import {
   InvalidResponseSchemaError,
   RequestError,
   ResponseError,
-} from '#/scripts/lib/errors.ts';
-import { tryParseValueWithSchema } from '#/scripts/lib/safeUtils.ts';
-import { getErrorMessage } from '#/scripts/lib/utils.ts';
+} from '#/scripts/lib/errors';
+import { tryParseValueWithSchema } from '#/scripts/lib/safeUtils';
+import { getErrorMessage } from '#/scripts/lib/utils';
 import { type ReleasePayload, ReleaseResponseSchema } from './schemas';
 
 export class FoundryApiService {

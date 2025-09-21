@@ -1,4 +1,4 @@
-import type { ReleaseData, ScriptContext } from '../../types/scripts.ts';
+import type { ReleaseData, ScriptContext } from '../../types/scripts';
 
 export const getLatestGithubRelease = async (repoUrl: string) => {
   const [, repoOwner, repoName] =

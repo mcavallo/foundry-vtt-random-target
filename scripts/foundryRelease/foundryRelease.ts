@@ -1,12 +1,18 @@
 import {
   FileDoesntExistError,
+  InvalidEnvSchemaError,
+  InvalidModuleJsonSchemaError,
   InvalidResponseSchemaError,
   JsonFileIsInvalidError,
   RequestError,
   ResponseError,
-} from '#/scripts/lib/errors.ts';
+} from '#/scripts/lib/errors';
 import { logOk, logger } from '#/scripts/lib/logger';
-import { InvalidEnvSchemaError, InvalidModuleJsonSchemaError } from './errors';
+import {
+  assertNever,
+  handlePipelineGenericError,
+  handlePipelineUnexpectedError,
+} from '#/scripts/lib/utils';
 import {
   startPipeline,
   tryParseEnv,
@@ -36,10 +42,12 @@ export const run = async (rootDir: string) => {
         process.exit(0);
       },
       (error) => {
+        let exitCode = 1;
         switch (true) {
           case error instanceof InvalidEnvSchemaError:
-            logger.error(`The env schema is invalid`);
-            logger.error(error.formattedError);
+          case error instanceof FileDoesntExistError:
+          case error instanceof JsonFileIsInvalidError:
+            handlePipelineGenericError(logger, error);
             break;
           case error instanceof InvalidModuleJsonSchemaError:
             logger.error(`The module.json schema is invalid`);
@@ -49,12 +57,6 @@ export const run = async (rootDir: string) => {
             logger.error(`The response schema is invalid`);
             logger.error(error.formattedError);
             break;
-          case error instanceof FileDoesntExistError:
-            logger.error([`The %s file is missing`, error.fileName]);
-            break;
-          case error instanceof JsonFileIsInvalidError:
-            logger.error([`Failed to parse the %s file`, error.fileName]);
-            break;
           case error instanceof RequestError:
             logger.error(`Failed to send the release request`);
             logger.error(error.message);
@@ -62,8 +64,12 @@ export const run = async (rootDir: string) => {
           case error instanceof ResponseError:
             logger.error([`Release failed with status %d`, error.response.status]);
             break;
+          default:
+            handlePipelineUnexpectedError(logger, error);
+            assertNever(error);
+            break;
         }
-        process.exit(1);
+        process.exit(exitCode);
       }
     );
 };

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const envSchema = z.object({
+export const FullEnvSchema = z.object({
   DEV: z.preprocess(
     (val) => typeof val === 'string' && val.toLowerCase() === '1',
     z.boolean()
@@ -9,7 +9,7 @@ export const envSchema = z.object({
   RELEASE_VERSION: z.string().optional(),
 });
 
-export const packageSchema = z.object({
+export const PackageJsonSchema = z.object({
   author: z.string(),
   authors: z.array(
     z.object({
@@ -32,5 +32,5 @@ export const packageSchema = z.object({
   license: z.string(),
 });
 
-export type EnvSchema = z.infer<typeof envSchema>;
-export type PackageSchema = z.infer<typeof packageSchema>;
+export type FullEnv = z.infer<typeof FullEnvSchema>;
+export type PackageJson = z.infer<typeof PackageJsonSchema>;

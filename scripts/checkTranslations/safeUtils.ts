@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { readdir, stat } from 'fs/promises';
+import { readdir } from 'fs/promises';
 import { errAsync, fromPromise, okAsync } from 'neverthrow';
 import { difference, piped } from 'remeda';
 import { type Logger, logOk } from '#/scripts/lib/logger';
@@ -9,10 +9,8 @@ import {
   okWithCtxAsync,
   sequenceAll,
 } from '#/scripts/lib/neverthrow';
-import { tryReadJsonFile } from '#/scripts/lib/safeUtils';
+import { tryCheckDirExists, tryReadJsonFile } from '#/scripts/lib/safeUtils';
 import {
-  DirectoryDoesntExistError,
-  DirectoryIsInvalidError,
   DirectoryReadFailedError,
   HasMissingPathsError,
   HasTranslationErrors,
@@ -24,29 +22,22 @@ import type { CheckTranslationsContext } from './types';
 import { dropValues, extractLeafPaths, keepOnlyJsonFileNames } from './utils';
 
 /**
- * Attempts to read the files in a directory.
+ * Reads the files in a directory.
  */
-export const tryReadFilesInDir = (dirPath: string) => {
-  return fromPromise(stat(dirPath), () => new DirectoryDoesntExistError(dirPath))
-    .andThen((dirStat) =>
-      dirStat.isDirectory()
-        ? okAsync()
-        : errAsync(new DirectoryIsInvalidError(dirPath))
-    )
-    .andThen(() =>
-      fromPromise(readdir(dirPath), () => new DirectoryReadFailedError(dirPath))
-    );
-};
+export const tryReadFilesInDir = (dirPath: string) =>
+  tryCheckDirExists(dirPath).andThen(() =>
+    fromPromise(readdir(dirPath), () => new DirectoryReadFailedError(dirPath))
+  );
 
 /**
- * Attempts to read the language paths from a JSON file.
+ * Reads the language paths from a JSON file.
  */
 export const tryReadLanguageFilePaths = (filePath: string) => {
   return tryReadJsonFile(filePath).map(extractLeafPaths);
 };
 
 /**
- * Attempts to validate a language file.
+ * Validates a language file.
  */
 export const tryCheckLanguageFile = (
   baseTranslationPaths: string[],
@@ -72,6 +63,7 @@ export const tryCheckLanguageFile = (
 
 /**
  * Starts the pipeline and creates the context.
+ * @pipeline
  */
 export const startPipeline = (rootDir: string, logger: Logger) =>
   okWithCtxAsync({
@@ -80,7 +72,8 @@ export const startPipeline = (rootDir: string, logger: Logger) =>
   });
 
 /**
- * Attempts to read the list of language filenames excluding en.json.
+ * Reads the list of language filenames excluding en.json.
+ * @pipeline
  */
 export const tryReadLanguageFilenames = ({
   ctx,
@@ -94,8 +87,8 @@ export const tryReadLanguageFilenames = ({
     );
 
 /**
- * Attempts to read the English language paths. Chains the languageFileNames as part
- * of the output.
+ * Reads the English language paths. Chains the languageFileNames as part of the output.
+ * @pipeline
  */
 export const tryReadEnglishPaths = ({
   ctx,
@@ -110,7 +103,8 @@ export const tryReadEnglishPaths = ({
   );
 
 /**
- * Attempts to check each of the language files and collects all errors.
+ * Checks each of the language files and collects all errors.
+ * @pipeline
  */
 export const tryCheckAllLanguageFiles = ({
   ctx,

@@ -1,11 +1,11 @@
-import type { BundleConfig, ScriptContext } from '#/types/scripts.ts';
 import path from 'node:path';
+import type { BundleConfig, ScriptContext } from '#/types/scripts';
 import bundle from './lib/bundle';
-import compileModuleManifest from './lib/compileModuleManifest.ts';
-import compilePacks from './lib/compilePacks.ts';
-import computeRelease from './lib/computeRelease.ts';
-import copyResources from './lib/copyResources.ts';
-import { parseEnv, readPackageJson } from './lib/utils.ts';
+import compileModuleManifest from './lib/compileModuleManifest';
+import compilePacks from './lib/compilePacks';
+import computeRelease from './lib/computeRelease';
+import copyResources from './lib/copyResources';
+import { parseEnv, readPackageJson } from './lib/utils';
 
 const main = async () => {
   const env = await parseEnv();

@@ -1,5 +1,21 @@
+import {
+  DirectoryIsInvalidError,
+  DirectoryStatFailedError,
+  FileDoesntExistError,
+  InvalidEnvSchemaError,
+  JsonFileIsInvalidError,
+} from '#/scripts/lib/errors';
 import { logOk, logger } from '#/scripts/lib/logger';
-import { HasTranslationErrors, NoLanguageFilesSkip } from './errors';
+import {
+  assertNever,
+  handlePipelineGenericError,
+  handlePipelineUnexpectedError,
+} from '#/scripts/lib/utils';
+import {
+  DirectoryReadFailedError,
+  HasTranslationErrors,
+  NoLanguageFilesSkip,
+} from './errors';
 import {
   startPipeline,
   tryCheckAllLanguageFiles,
@@ -20,18 +36,31 @@ export const run = async (rootDir: string) => {
         process.exit(0);
       },
       (error) => {
+        let exitCode = 1;
         switch (true) {
+          case error instanceof InvalidEnvSchemaError:
+          case error instanceof FileDoesntExistError:
+          case error instanceof DirectoryStatFailedError:
+          case error instanceof DirectoryIsInvalidError:
+          case error instanceof JsonFileIsInvalidError:
+            handlePipelineGenericError(logger, error);
+            break;
+          case error instanceof DirectoryReadFailedError:
+            logger.error([`Failed to read the %s directory`, error.fileName]);
+            break;
           case error instanceof NoLanguageFilesSkip:
             logger.info(`No language files found. Skipping.`);
-            process.exit(0);
+            exitCode = 0;
+            break;
           case error instanceof HasTranslationErrors:
             logger.error(getErrorReportMessage(error));
             break;
           default:
-            logger.error(error.message);
+            handlePipelineUnexpectedError(logger, error);
+            assertNever(error);
             break;
         }
-        process.exit(1);
+        process.exit(exitCode);
       }
     );
 };
