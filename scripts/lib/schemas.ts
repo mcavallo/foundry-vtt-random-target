@@ -32,5 +32,20 @@ export const PackageJsonSchema = z.object({
   license: z.string(),
 });
 
+export const ModuleCompatibilitySchema = z.object({
+  minimum: z.string(),
+  verified: z.string(),
+  maximum: z.string().optional(),
+});
+
+export const ModuleJsonSchema = z.object({
+  compatibility: ModuleCompatibilitySchema,
+  id: z.string(),
+  manifest: z.string(),
+  url: z.string(),
+  version: z.string(),
+});
+
 export type FullEnv = z.infer<typeof FullEnvSchema>;
 export type PackageJson = z.infer<typeof PackageJsonSchema>;
+export type ModuleJson = z.infer<typeof ModuleJsonSchema>;

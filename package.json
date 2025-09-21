@@ -27,6 +27,7 @@
     "@types/bun": "^1.2.17",
     "@types/fs-extra": "^11.0.4",
     "@types/js-yaml": "^4.0.9",
+    "@types/yargs-parser": "^21.0.3",
     "fs-extra": "^11.3.1",
     "fvtt-types": "github:League-of-Foundry-Developers/foundry-vtt-types#main",
     "js-yaml": "^4.1.0",
@@ -36,6 +37,7 @@
     "remeda": "^2.31.1",
     "rimraf": "^6.0.1",
     "sass": "^1.92.1",
+    "yargs-parser": "^22.0.0",
     "zod": "^4.1.9"
   },
   "peerDependencies": {
