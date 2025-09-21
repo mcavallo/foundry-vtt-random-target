@@ -16,18 +16,6 @@ export class TranslationFileError extends Error {
   }
 }
 
-export class DirectoryDoesntExistError extends FileSystemError {
-  constructor(path: string) {
-    super(`The directory doesn't exist`, path);
-  }
-}
-
-export class DirectoryIsInvalidError extends FileSystemError {
-  constructor(path: string) {
-    super(`The directory is invalid`, path);
-  }
-}
-
 export class DirectoryReadFailedError extends FileSystemError {
   constructor(path: string) {
     super(`Failed to read the directory`, path);

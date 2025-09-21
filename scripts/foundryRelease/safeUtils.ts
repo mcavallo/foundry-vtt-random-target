@@ -1,15 +1,19 @@
 import path from 'node:path';
 import { merge } from 'remeda';
+import {
+  InvalidEnvSchemaError,
+  InvalidModuleJsonSchemaError,
+} from '#/scripts/lib/errors';
 import { type Logger, logOk } from '#/scripts/lib/logger';
 import {
   type CtxAndValue,
   ctxAndValue,
   okWithCtxAsync,
-} from '#/scripts/lib/neverthrow.ts';
+} from '#/scripts/lib/neverthrow';
 import { tryParseValueWithSchema, tryReadJsonFile } from '#/scripts/lib/safeUtils';
-import { InvalidEnvSchemaError, InvalidModuleJsonSchemaError } from './errors';
+import { ModuleJsonSchema } from '#/scripts/lib/schemas';
 import { FoundryApiService } from './foundryApiService';
-import { EnvSchema, ModuleJsonSchema } from './schemas';
+import { EnvSchema } from './schemas';
 import type { FoundryReleaseContext } from './types';
 import { makeReleasePayload } from './utils';
 
@@ -20,6 +24,7 @@ type PartialCtx<K extends keyof FoundryReleaseContext> = Require<
 
 /**
  * Starts the pipeline and partially creates the context.
+ * @pipeline
  */
 export const startPipeline = (rootDir: string, logger: Logger) =>
   okWithCtxAsync({
@@ -29,6 +34,7 @@ export const startPipeline = (rootDir: string, logger: Logger) =>
 
 /**
  * Parses the environment variables. Adds the releaseToken and api to the context.
+ * @pipeline
  */
 export const tryParseEnv =
   (env: unknown) =>
@@ -46,6 +52,7 @@ export const tryParseEnv =
 
 /**
  * Parses the module.json. Adds the releasePayload to the context.
+ * @pipeline
  */
 export const tryReadModuleJsonAndMakePayload = ({
   ctx,
@@ -64,6 +71,7 @@ export const tryReadModuleJsonAndMakePayload = ({
 
 /**
  * Sends the dry run request.
+ * @pipeline
  */
 export const trySendDryRunRequest = ({ ctx }: CtxAndValue<FoundryReleaseContext>) =>
   okWithCtxAsync(ctx)
@@ -74,6 +82,7 @@ export const trySendDryRunRequest = ({ ctx }: CtxAndValue<FoundryReleaseContext>
 
 /**
  * Sends the release request.
+ * @pipeline
  */
 export const trySendReleaseRequest = ({ ctx }: CtxAndValue<FoundryReleaseContext>) =>
   okWithCtxAsync(ctx)

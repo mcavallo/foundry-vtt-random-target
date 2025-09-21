@@ -1,8 +1,8 @@
-import { readdir, access } from 'fs-extra';
-import yaml from 'js-yaml';
 import path from 'node:path';
-import type { ScriptContext } from '../../types/scripts.ts';
-import { fileExists } from './utils.ts';
+import { readdir } from 'fs-extra';
+import yaml from 'js-yaml';
+import type { ScriptContext } from '../../types/scripts';
+import { fileExists } from './utils';
 
 const compilePacks = async ({ ctx }: { ctx: ScriptContext }) => {
   console.log(`Compiling packs...`);

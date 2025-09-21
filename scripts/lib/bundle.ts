@@ -1,18 +1,18 @@
-import type { BunPlugin } from 'bun';
 import path from 'node:path';
+import type { BunPlugin } from 'bun';
 import * as sass from 'sass';
 import type {
   ArtifactType,
   BuildArtifactsDict,
   BundleConfig,
   ScriptContext,
-} from '../../types/scripts.ts';
+} from '../../types/scripts';
 
 const sassPlugin: BunPlugin = {
   name: 'Sass Loader',
   async setup(build) {
     console.log(`Compiling styles...`);
-    build.onLoad({ filter: /\.scss$/ }, async args => {
+    build.onLoad({ filter: /\.scss$/ }, async (args) => {
       const text = await Bun.file(args.path).text();
       const contents = await sass.compileStringAsync(text);
       const css = contents.css;

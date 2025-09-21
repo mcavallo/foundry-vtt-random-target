@@ -29,7 +29,7 @@ run_ts_lint:
 	bunx tsc --noEmit --incremental
 
 foundry_link:
-	bun --bun run scripts/foundry/link.ts
+	bun --bun run scripts/foundrySymlink link
 
 foundry_unlink:
-	bun --bun run scripts/foundry/unlink.ts
+	bun --bun run scripts/foundrySymlink unlink

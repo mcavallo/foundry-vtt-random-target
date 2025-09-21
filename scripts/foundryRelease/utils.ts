@@ -1,4 +1,5 @@
-import type { ModuleJson, ReleasePayload } from './schemas';
+import type { ModuleJson } from '#/scripts/lib/schemas';
+import type { ReleasePayload } from './schemas';
 
 /**
  * Masks a token.

@@ -3,7 +3,7 @@ import type {
   BuildArtifactsDict,
   ReleaseData,
   ScriptContext,
-} from '../../types/scripts.ts';
+} from '../../types/scripts';
 
 const compileModuleManifest = async ({
   ctx,

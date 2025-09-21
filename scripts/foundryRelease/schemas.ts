@@ -1,21 +1,8 @@
 import { z } from 'zod';
+import { ModuleCompatibilitySchema } from '#/scripts/lib/schemas';
 
 export const EnvSchema = z.object({
   FOUNDRY_RELEASE_TOKEN: z.string(),
-});
-
-export const ModuleCompatibilitySchema = z.object({
-  minimum: z.string(),
-  verified: z.string(),
-  maximum: z.string().optional(),
-});
-
-export const ModuleJsonSchema = z.object({
-  compatibility: ModuleCompatibilitySchema,
-  id: z.string(),
-  manifest: z.string(),
-  url: z.string(),
-  version: z.string(),
 });
 
 export const ReleasePayloadSchema = z.object({
@@ -58,6 +45,5 @@ export const ReleaseResponseSchema = z.union([
 ]);
 
 export type Env = z.infer<typeof EnvSchema>;
-export type ModuleJson = z.infer<typeof ModuleJsonSchema>;
 export type ReleasePayload = z.infer<typeof ReleasePayloadSchema>;
 export type ReleaseResponse = z.infer<typeof ReleaseResponseSchema>;

@@ -1,14 +1,16 @@
 import { stat } from 'fs-extra';
 import { z } from 'zod';
 import {
-  type EnvSchema,
-  type PackageSchema,
-  envSchema,
-  packageSchema,
-} from './schemas.ts';
+  type FullEnv,
+  FullEnvSchema,
+  type PackageJson,
+  PackageJsonSchema,
+} from '../schemas';
 
-export async function parseEnv(): Promise<EnvSchema> {
-  const result = envSchema.safeParse(Bun.env);
+export * from './errors';
+
+export async function parseEnv(): Promise<FullEnv> {
+  const result = FullEnvSchema.safeParse(Bun.env);
 
   if (result.error) {
     console.error(z.prettifyError(result.error));
@@ -18,9 +20,9 @@ export async function parseEnv(): Promise<EnvSchema> {
   return result.data;
 }
 
-export async function readPackageJson(): Promise<PackageSchema> {
+export async function readPackageJson(): Promise<PackageJson> {
   const packageJson = await Bun.file('package.json').json();
-  const result = packageSchema.safeParse(packageJson);
+  const result = PackageJsonSchema.safeParse(packageJson);
 
   if (result.error) {
     console.error(z.prettifyError(result.error));
@@ -33,5 +35,4 @@ export async function readPackageJson(): Promise<PackageSchema> {
 export const fileExists = async (path: string) =>
   !!(await stat(path).catch(() => false));
 
-export const getErrorMessage = (err: unknown) =>
-  err instanceof Error ? err.message : String(err);
+export const assertNever = (value: never) => {};

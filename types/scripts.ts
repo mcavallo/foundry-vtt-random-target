@@ -1,9 +1,9 @@
-import type { EnvSchema, PackageSchema } from '../scripts/lib/schemas.ts';
+import type { FullEnv, PackageJson } from '../scripts/lib/schemas.ts';
 
 export interface ScriptContext {
   distDir: string;
-  env: EnvSchema;
-  packageJson: PackageSchema;
+  env: FullEnv;
+  packageJson: PackageJson;
   rootDir: string;
   sourceDir: string;
 }
