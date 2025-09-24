@@ -1,16 +1,32 @@
+import { difference, prop } from 'remeda';
 import { JsonFileIsInvalidError } from '#/scripts/lib/errors';
 import {
   HasMissingPathsError,
+  HasMissingTokensError,
   type HasTranslationErrors,
   HasUnknownPathsError,
+  HasUnknownTokensError,
 } from './errors';
+import type { TranslationPathWithErrors } from './types';
 
 /**
- * Formats a list of paths providing indentation.
+ * Formats a list of paths with errors providing indentation.
  */
-export const formatPathsList = (paths: string[], indentation: number = 2) => {
+export const formatPathWithErrorsList = (
+  paths: TranslationPathWithErrors[],
+  indentation: number = 2
+) => {
   const indent = ' '.repeat(indentation);
-  return paths.map((path) => indent + path).join('\n');
+  return paths
+    .flatMap(([path, tokens]) =>
+      [
+        indent + path,
+        Array.isArray(tokens)
+          ? indent.repeat(2) + `Tokens: ${tokens.join(', ')}`
+          : null,
+      ].filter(Boolean)
+    )
+    .join('\n');
 };
 
 /**
@@ -73,14 +89,70 @@ export const getErrorReportMessage = (container: HasTranslationErrors) => {
         break;
       case error instanceof HasMissingPathsError:
         errorOutput.push(`The '${error.fileName}' language has unknown keys`);
-        errorOutput.push(formatPathsList(error.translationPaths));
+        errorOutput.push(formatPathWithErrorsList(error.affectedPaths));
         break;
       case error instanceof HasUnknownPathsError:
         errorOutput.push(`The '${error.fileName}' language has missing keys`);
-        errorOutput.push(formatPathsList(error.translationPaths));
+        errorOutput.push(formatPathWithErrorsList(error.affectedPaths));
+        break;
+      case error instanceof HasMissingTokensError:
+        errorOutput.push(`The '${error.fileName}' language has missing tokens`);
+        errorOutput.push(formatPathWithErrorsList(error.affectedPaths));
+        break;
+      case error instanceof HasUnknownTokensError:
+        errorOutput.push(`The '${error.fileName}' language has unknown tokens`);
+        errorOutput.push(formatPathWithErrorsList(error.affectedPaths));
         break;
     }
   }
 
   return errorOutput.join('\n');
+};
+
+/**
+ * Map string to TranslationPathWithErrors
+ */
+export const mapStringToPathWithErrors = (
+  path: string
+): TranslationPathWithErrors => [path, null];
+
+/**
+ * Gets the sorted list of tokens present in a string.
+ */
+export const extractTokens = (str: string): string[] => {
+  const regex = /\{([^\s{}]+)}/g;
+  const tokens: string[] = [];
+  let match: RegExpExecArray | null;
+
+  while ((match = regex.exec(str)) !== null) {
+    tokens.push(match[1]);
+  }
+
+  return tokens.sort();
+};
+
+/**
+ * Gets the sorted list of tokens present in a translation path.
+ */
+export const getTokensFromPath = (
+  data: object,
+  translationPath: (string | number)[]
+): string[] => {
+  // @ts-expect-error the compiler wants to enforce this but a simpler check is fine
+  const value: unknown = prop(data, ...translationPath);
+
+  if (typeof value === 'string') {
+    return extractTokens(value);
+  }
+
+  return [];
+};
+
+/**
+ * Calculates the differences between 2 lists.
+ */
+export const calculateListDifferences = (source: string[], target: string[]) => {
+  const missing = difference(source, target);
+  const unknown = difference(target, source);
+  return { missing, unknown };
 };
