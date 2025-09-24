@@ -1,0 +1,163 @@
+{
+  "random-target": {
+    "macro": {
+      "unexpectedError": "[RandomTarget] 問題が発生しました。コンペンディウムからマクロを更新してみてください。問題が解決しない場合は作者に連絡してください。"
+    },
+    "targetApp": {
+      "window": {
+        "title": "Random Target",
+        "controls": {
+          "openSettings": "設定",
+          "openHelp": "ヘルプ",
+          "openSupport": "サポート"
+        }
+      },
+      "ui": {
+        "toggleSelection": {
+          "label": "選択を切り替え（全て/なし）"
+        },
+        "emptySceneError": {
+          "label": "現在のシーンには選択できるトークンがありません。"
+        },
+        "buttons": {
+          "cancel": {
+            "label": "キャンセル"
+          },
+          "submit": {
+            "label": "ランダムな対象を選択"
+          }
+        },
+        "status": {
+          "selection": {
+            "none": "候補が選択されていません",
+            "one": "1人の候補者が選択されました",
+            "many": "{total} 件の候補が選択されました"
+          },
+          "chatVisibility": {
+            "silent": {
+              "label": "非表示",
+              "tooltip": "チャットには投稿されません"
+            },
+            "gmOnly": {
+              "label": "非公開",
+              "tooltip": "GM専用メッセージとしてチャットに投稿されます"
+            },
+            "public": {
+              "label": "公開",
+              "tooltip": "チャットに公開メッセージとして投稿されます"
+            }
+          }
+        }
+      }
+    },
+    "supportDialog": {
+      "window": {
+        "title": "このモジュールをサポートする"
+      },
+      "ui": {
+        "buttons": {
+          "later": {
+            "label": "後で"
+          },
+          "support": {
+            "label": "今すぐサポート"
+          }
+        }
+      },
+      "content": {
+        "heading": "<strong>Random Target</strong> をご利用いただき、ありがとうございます！",
+        "backgroundText": "このプロジェクトは2022年から継続的にメンテナンスされています。小さなサイドプロジェクトとして始まりましたが、今ではあなたのような数百人のFoundry VTTユーザーに利用されるツールに成長しました。",
+        "supportText": "このモジュールが役に立ったと感じたら、開発のサポートをご検討ください！"
+      }
+    },
+    "categories": {
+      "targeted": {
+        "label": "対象",
+        "description": "シーン内で対象になっているトークンを一覧表示します",
+        "info": "{count} 以上のトークンが対象になっている場合にのみ表示されます。"
+      },
+      "selected": {
+        "label": "選択",
+        "description": "シーン内で選択されているトークンを一覧表示します",
+        "info": "{count} 以上のトークンが選択されている場合にのみ表示されます。"
+      },
+      "all": {
+        "label": "すべて",
+        "description": "シーン内のすべてのトークンを一覧表示します"
+      },
+      "category": {
+        "description": "<code>{name}</code> タイプのトークンを一覧表示します",
+        "info": "{count} 以上の一致するトークンがある場合にのみ表示されます。"
+      },
+      "disposition": {
+        "description": "<code>{name}</code> の立場を持つトークンを一覧表示します",
+        "info": "{count} 以上の一致するトークンがある場合にのみ表示されます。"
+      }
+    },
+    "categoriesSettings": {
+      "window": {
+        "title": "Random Target: カテゴリ"
+      },
+      "ui": {
+        "buttons": {
+          "save": {
+            "label": "選択を保存"
+          }
+        }
+      },
+      "content": {
+        "instructions": "利用可能にするカテゴリフィルターを選択してください。少なくとも1つのカテゴリを選択する必要があります。ドラッグして順序を並べ替えることもできます。"
+      }
+    },
+    "notifications": {
+      "targeted": "<b>{targetName}</b> がターゲットされました",
+      "missingSceneError": "ランダムターゲットを選択するにはアクティブなシーンが必要です",
+      "minimumSelectionError": "少なくとも2体のトークンを選択する必要があります",
+      "minimumCategoriesError": "少なくとも1つのカテゴリを選択する必要があります"
+    },
+    "chat": {
+      "unknownTarget": {
+        "label": "不明なトークン ({tokenId})"
+      },
+      "target": {
+        "label": "{targetLink} がランダムに選ばれました。",
+        "tooltip": "対象: {name}"
+      },
+      "candidatesPool": {
+        "label": "この選択の候補トークン:"
+      }
+    },
+    "settings": {
+      "categoryFilters": {
+        "name": "カテゴリフィルター",
+        "label": "設定",
+        "hint": "利用可能なカテゴリフィルターと表示順を管理します。"
+      },
+      "closeAfterSelection": {
+        "name": "選択後にウィンドウを閉じる",
+        "hint": "対象が選ばれた後に選択ウィンドウを閉じるかどうかを指定します。"
+      },
+      "chatNotifications": {
+        "name": "チャット通知",
+        "hint": "ランダムターゲットが選ばれた際にチャットメッセージを送信するか、またプライバシーレベルを指定します。",
+        "options": {
+          "disabled": "無効",
+          "gm": "GMのみ",
+          "public": "公開"
+        }
+      },
+      "avoidSameTarget": {
+        "name": "同じ対象を避ける",
+        "hint": "同じ対象が連続して選ばれないようにするかどうかを指定します。"
+      },
+      "preferredTargetImage": {
+        "name": "優先表示対象画像",
+        "hint": "対象一覧に表示する優先画像を指定します。",
+        "options": {
+          "token": "トークン画像",
+          "actor": "アクター画像"
+        }
+      }
+    }
+  }
+}
