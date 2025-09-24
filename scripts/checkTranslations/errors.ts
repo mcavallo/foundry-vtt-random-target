@@ -1,11 +1,12 @@
 import path from 'node:path';
+import type { TranslationPathWithErrors } from '#/scripts/checkTranslations/types.ts';
 import { FileSystemError, JsonFileIsInvalidError } from '#/scripts/lib/errors';
 
 export class TranslationFileError extends Error {
   constructor(
     message: string,
     public readonly filePath: string,
-    public readonly translationPaths: string[]
+    public readonly affectedPaths: TranslationPathWithErrors[]
   ) {
     super(message);
     this.name = new.target.name;
@@ -23,14 +24,26 @@ export class DirectoryReadFailedError extends FileSystemError {
 }
 
 export class HasMissingPathsError extends TranslationFileError {
-  constructor(filePath: string, translationPaths: string[]) {
-    super('Translation file has missing paths', filePath, translationPaths);
+  constructor(filePath: string, affectedPaths: TranslationPathWithErrors[]) {
+    super('Translation file has missing paths', filePath, affectedPaths);
   }
 }
 
 export class HasUnknownPathsError extends TranslationFileError {
-  constructor(filePath: string, translationPaths: string[]) {
-    super('Translation file has unknown paths', filePath, translationPaths);
+  constructor(filePath: string, affectedPaths: TranslationPathWithErrors[]) {
+    super('Translation file has unknown paths', filePath, affectedPaths);
+  }
+}
+
+export class HasMissingTokensError extends TranslationFileError {
+  constructor(filePath: string, affectedPaths: TranslationPathWithErrors[]) {
+    super('Translation file has missing tokens', filePath, affectedPaths);
+  }
+}
+
+export class HasUnknownTokensError extends TranslationFileError {
+  constructor(filePath: string, affectedPaths: TranslationPathWithErrors[]) {
+    super('Translation file has unknown tokens', filePath, affectedPaths);
   }
 }
 

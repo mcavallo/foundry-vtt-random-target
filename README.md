@@ -43,7 +43,10 @@ Please [reach out](https://github.com/mcavallo/foundry-vtt-random-target/issues)
 
 # Localization
 
-The module is fully localized in the following languages: English and Polish.
+The module is fully localized in the following languages:
+- English (🇺🇸/🇬🇧)
+- Japanese (🇯🇵 日本語)
+- Polish (🇵🇱 Polski)
 
 # Support the Project
 

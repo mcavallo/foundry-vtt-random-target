@@ -19,7 +19,7 @@ import {
 import {
   startPipeline,
   tryCheckAllLanguageFiles,
-  tryReadEnglishPaths,
+  tryReadEnglishLanguageFile,
   tryReadLanguageFilenames,
 } from './safeUtils';
 import { getErrorReportMessage } from './utils';
@@ -28,7 +28,7 @@ export const run = async (rootDir: string) => {
   await startPipeline(rootDir, logger)
     .andTee(logOk('Checking translation files...'))
     .andThen(tryReadLanguageFilenames)
-    .andThen(tryReadEnglishPaths)
+    .andThen(tryReadEnglishLanguageFile)
     .andThen(tryCheckAllLanguageFiles)
     .match(
       () => {
