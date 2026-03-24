@@ -150,6 +150,10 @@
         "name": "Avoid selecting the same target",
         "hint": "Specifies whether the same target should be prevented from being selected twice in a row."
       },
+      "panToTarget": {
+        "name": "Pan to target",
+        "hint": "Specifies whether the canvas should pan to the selected target."
+      },
       "preferredTargetImage": {
         "name": "Preferred target image",
         "hint": "Specifies the preferred image to display in the list of targets.",

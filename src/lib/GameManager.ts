@@ -81,7 +81,11 @@ export class GameManager {
     }
 
     target.setTarget(true, { releaseOthers: true });
-    this.panToPosition(target.position);
+
+    if ($M().settings.get(SETTING_IDS.PAN_TO_TARGET)) {
+      this.panToPosition(target.position);
+    }
+
     return target;
   }
 

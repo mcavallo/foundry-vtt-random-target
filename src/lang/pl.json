@@ -150,6 +150,10 @@
         "name": "Unikaj wybierania tego samego celu",
         "hint": "Określa, czy ten sam cel powinien być chroniony przed dwukrotnym wybraniem z rzędu."
       },
+      "panToTarget": {
+        "name": "Przejdź do celu",
+        "hint": "Określa, czy widok powinien przesunąć się do wybranego celu."
+      },
       "preferredTargetImage": {
         "name": "Preferowany obraz celu",
         "hint": "Określa preferowany obraz do wyświetlenia na liście celów.",
