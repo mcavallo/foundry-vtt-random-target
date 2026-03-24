@@ -24,7 +24,6 @@ export const makeReleasePayload = (moduleJson: ModuleJson): ReleasePayload => ({
     compatibility: moduleJson.compatibility,
     manifest: moduleJson.manifest,
     notes: `${moduleJson.url}/releases/tag/v${moduleJson.version}`,
-    // version: moduleJson.version,
-    version: '4.6.3',
+    version: moduleJson.version,
   },
 });
