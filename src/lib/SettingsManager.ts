@@ -108,6 +108,17 @@ export class SettingsManager {
     });
 
     // @ts-expect-error fix types
+    game.settings.register(MODULE.ID, SETTING_IDS.PAN_TO_TARGET, {
+      name: t('settings.panToTarget.name'),
+      hint: t('settings.panToTarget.hint'),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: true,
+      onChange: this._updateSettings.bind(this),
+    });
+
+    // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.PREFERRED_IMAGE, {
       name: t('settings.preferredTargetImage.name'),
       hint: t('settings.preferredTargetImage.hint'),

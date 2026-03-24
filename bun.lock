@@ -1,5 +1,6 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "foundry-vtt-random-target",
@@ -135,19 +136,19 @@
 
     "@pixi/app": ["@pixi/app@7.4.3", "", { "peerDependencies": { "@pixi/core": "7.4.3", "@pixi/display": "7.4.3" } }, "sha512-opyWMuO0Ir8pf1DYUR++wAA6ZfNU+nIX2z95R2OD172HbcdhB4/HD7leLIIAny/LciEdMqlWEBhXK7N93YWbdg=="],
 
-    "@pixi/assets": ["@pixi/assets@github:foundry-vtt-types/pixi-assets#1a8b225", { "dependencies": { "@types/css-font-loading-module": "^0.0.12" }, "peerDependencies": { "@pixi/core": "github:foundry-vtt-types/pixi-core#main" } }, "foundry-vtt-types-pixi-assets-1a8b225"],
+    "@pixi/assets": ["@pixi/assets@github:foundry-vtt-types/pixi-assets#1a8b225", { "dependencies": { "@types/css-font-loading-module": "^0.0.12" }, "peerDependencies": { "@pixi/core": "github:foundry-vtt-types/pixi-core#main" } }, "foundry-vtt-types-pixi-assets-1a8b225", "sha512-9jIDWxTXwhV8GVHy725XtrYGsPkzprqfkr5cIqHYLDI/qFULQjfxJ0bBiJ9diVM1TPCue+gOFoiZd4CwPoi2Ww=="],
 
-    "@pixi/basis": ["@pixi/basis@github:foundry-vtt-types/pixi-basis#d095679", { "peerDependencies": { "@pixi/assets": "github:foundry-vtt-types/pixi-assets#main", "@pixi/compressed-textures": "github:foundry-vtt-types/pixi-compressed-textures#main", "@pixi/core": "github:foundry-vtt-types/pixi-core#main" } }, "foundry-vtt-types-pixi-basis-d095679"],
+    "@pixi/basis": ["@pixi/basis@github:foundry-vtt-types/pixi-basis#d095679", { "peerDependencies": { "@pixi/assets": "github:foundry-vtt-types/pixi-assets#main", "@pixi/compressed-textures": "github:foundry-vtt-types/pixi-compressed-textures#main", "@pixi/core": "github:foundry-vtt-types/pixi-core#main" } }, "foundry-vtt-types-pixi-basis-d095679", "sha512-9tpAHOjlQ9qnZxknVUKw5peAAQmQvdp1TJDKqICJ0l7o6/vSSbeCO2isYU8ceajR6lw4PV4Q5vP1O64/W1Pcgg=="],
 
     "@pixi/color": ["@pixi/color@7.4.3", "", { "dependencies": { "@pixi/colord": "^2.9.6" } }, "sha512-a6R+bXKeXMDcRmjYQoBIK+v2EYqxSX49wcjAY579EYM/WrFKS98nSees6lqVUcLKrcQh2DT9srJHX7XMny3voQ=="],
 
     "@pixi/colord": ["@pixi/colord@2.9.6", "", {}, "sha512-nezytU2pw587fQstUu1AsJZDVEynjskwOL+kibwcdxsMBFqPsFFNA7xl0ii/gXuDi6M0xj3mfRJj8pBSc2jCfA=="],
 
-    "@pixi/compressed-textures": ["@pixi/compressed-textures@github:foundry-vtt-types/pixi-compressed-textures#890bd5c", { "peerDependencies": { "@pixi/assets": "github:foundry-vtt-types/pixi-assets#main", "@pixi/core": "github:foundry-vtt-types/pixi-core#main" } }, "foundry-vtt-types-pixi-compressed-textures-890bd5c"],
+    "@pixi/compressed-textures": ["@pixi/compressed-textures@github:foundry-vtt-types/pixi-compressed-textures#890bd5c", { "peerDependencies": { "@pixi/assets": "github:foundry-vtt-types/pixi-assets#main", "@pixi/core": "github:foundry-vtt-types/pixi-core#main" } }, "foundry-vtt-types-pixi-compressed-textures-890bd5c", "sha512-XoFr7dvxlFmSdUaC50vmB2cMxNi/bPMYQR1UWq5elpghxhwO7lNDyuknAGcl7ejY/o32vYuk2M+GcrBq9L/Xkw=="],
 
     "@pixi/constants": ["@pixi/constants@7.4.3", "", {}, "sha512-QGmwJUNQy/vVEHzL6VGQvnwawLZ1wceZMI8HwJAT4/I2uAzbBeFDdmCS8WsTpSWLZjF/DszDc1D8BFp4pVJ5UQ=="],
 
-    "@pixi/core": ["@pixi/core@github:foundry-vtt-types/pixi-core#b2554df", { "dependencies": { "@pixi/color": "7.4.3", "@pixi/constants": "7.4.3", "@pixi/extensions": "7.4.3", "@pixi/math": "7.4.3", "@pixi/runner": "7.4.3", "@pixi/settings": "7.4.3", "@pixi/ticker": "github:foundry-vtt-types/pixi-ticker#main", "@pixi/utils": "github:foundry-vtt-types/pixi-utils#main" } }, "foundry-vtt-types-pixi-core-b2554df"],
+    "@pixi/core": ["@pixi/core@github:foundry-vtt-types/pixi-core#b2554df", { "dependencies": { "@pixi/color": "7.4.3", "@pixi/constants": "7.4.3", "@pixi/extensions": "7.4.3", "@pixi/math": "7.4.3", "@pixi/runner": "7.4.3", "@pixi/settings": "7.4.3", "@pixi/ticker": "github:foundry-vtt-types/pixi-ticker#main", "@pixi/utils": "github:foundry-vtt-types/pixi-utils#main" } }, "foundry-vtt-types-pixi-core-b2554df", "sha512-Uhee6wXb2cWrL5Koz/Xuldg6vEc9A3BDkpHs3FTnemQeYEjydD6nWTUHOrIhBwwyicZYQXz+sJ2p2h4+1D7gJQ=="],
 
     "@pixi/display": ["@pixi/display@7.4.3", "", { "peerDependencies": { "@pixi/core": "7.4.3" } }, "sha512-b5m2dAaoNAVdxz1oDaxl3XZ059NEOcNtGkxTOZ4EYCw/jcp9sZXkgSROHRzsGn4k+NugH7+9MP4Id2Z0kkdUhw=="],
 
@@ -187,7 +188,7 @@
 
     "@pixi/particle-container": ["@pixi/particle-container@7.4.3", "", { "peerDependencies": { "@pixi/core": "7.4.3", "@pixi/display": "7.4.3", "@pixi/sprite": "7.4.3" } }, "sha512-0DfJF5C0XTfuI2FsLYvMKCOtqWjXWGOWfA6m4l0W/Ke/qw5zKIOEhgjPLw4qNRtOhmEfkVKJUGp66Ap/ya2YzA=="],
 
-    "@pixi/particle-emitter": ["@pixi/particle-emitter@github:foundry-vtt-types/pixi-particle-emitter#9bd3cb5", { "peerDependencies": { "@pixi/constants": ">=6.0.4 <8.0.0", "@pixi/core": "github:foundry-vtt-types/pixi-core#main", "@pixi/display": ">=6.0.4 <8.0.0", "@pixi/math": ">=6.0.4 <8.0.0", "@pixi/sprite": ">=6.0.4 <8.0.0", "@pixi/ticker": ">=6.0.4 <8.0.0" } }, "foundry-vtt-types-pixi-particle-emitter-9bd3cb5"],
+    "@pixi/particle-emitter": ["@pixi/particle-emitter@github:foundry-vtt-types/pixi-particle-emitter#9bd3cb5", { "peerDependencies": { "@pixi/constants": ">=6.0.4 <8.0.0", "@pixi/core": "github:foundry-vtt-types/pixi-core#main", "@pixi/display": ">=6.0.4 <8.0.0", "@pixi/math": ">=6.0.4 <8.0.0", "@pixi/sprite": ">=6.0.4 <8.0.0", "@pixi/ticker": ">=6.0.4 <8.0.0" } }, "foundry-vtt-types-pixi-particle-emitter-9bd3cb5", "sha512-H6HD6Q2ZlAoE3BWA0naIBpu9bkdTNNbJkijT/weFMuWEx98IAZw2ZRAGD7akb3o5beyHr6N/ou55wyDKh2Ldng=="],
 
     "@pixi/prepare": ["@pixi/prepare@7.4.3", "", { "peerDependencies": { "@pixi/core": "7.4.3", "@pixi/display": "7.4.3", "@pixi/graphics": "7.4.3", "@pixi/text": "7.4.3" } }, "sha512-OjJHGKXPzwP5OLKxBnTBnKMOktHynLvO0TQPqTYgNtmGQzY109mypCqM4M+s/V+uYmBo/T+sXvBahj98q/f1tA=="],
 
@@ -211,7 +212,7 @@
 
     "@pixi/ticker": ["@pixi/ticker@7.4.3", "", { "dependencies": { "@pixi/extensions": "7.4.3", "@pixi/settings": "7.4.3", "@pixi/utils": "7.4.3" } }, "sha512-tHsAD0iOUb6QSGGw+c8cyRBvxsq/NlfzIFBZLEHhWZ+Bx4a0MmXup6I/yJDGmyPCYE+ctCcAfY13wKAzdiVFgQ=="],
 
-    "@pixi/utils": ["@pixi/utils@github:foundry-vtt-types/pixi-utils#8274a74", { "dependencies": { "@pixi/color": "7.4.3", "@pixi/constants": "7.4.3", "@pixi/settings": "7.4.3", "@types/earcut": "^3.0.0", "earcut": "^3.0.1", "eventemitter3": "^4.0.0", "url": "^0.11.0" } }, "foundry-vtt-types-pixi-utils-8274a74"],
+    "@pixi/utils": ["@pixi/utils@github:foundry-vtt-types/pixi-utils#8274a74", { "dependencies": { "@pixi/color": "7.4.3", "@pixi/constants": "7.4.3", "@pixi/settings": "7.4.3", "@types/earcut": "^3.0.0", "earcut": "^3.0.1", "eventemitter3": "^4.0.0", "url": "^0.11.0" } }, "foundry-vtt-types-pixi-utils-8274a74", "sha512-/He3GxILUap/lZ1ZFWDtLkyjkpnGJlIs0wJtaUU89nW9pOhLABLxdXVSkFMQGYbJxGafPJoLnqyxTbhMHBmviw=="],
 
     "@rollup/rollup-linux-x64-gnu": ["@rollup/rollup-linux-x64-gnu@4.44.0", "", { "os": "linux", "cpu": "x64" }, "sha512-iUVJc3c0o8l9Sa/qlDL2Z9UP92UZZW1+EmQ4xfjTc1akr0iUFZNfxrXJ/R1T90h/ILm9iXEY6+iPrmYB3pXKjw=="],
 
@@ -365,7 +366,7 @@
 
     "function-bind": ["function-bind@1.1.2", "", {}, "sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA=="],
 
-    "fvtt-types": ["@league-of-foundry-developers/foundry-vtt-types@github:League-of-Foundry-Developers/foundry-vtt-types#9fb8c6f", { "dependencies": { "@codemirror/lang-html": "^6.4.9", "@codemirror/lang-javascript": "^6.2.3", "@codemirror/lang-json": "^6.0.1", "@codemirror/lang-markdown": "^6.3.2", "@pixi/basis": "github:foundry-vtt-types/pixi-basis#main", "@pixi/graphics-smooth": "^1.1.1", "@pixi/particle-emitter": "github:foundry-vtt-types/pixi-particle-emitter#main", "@types/jquery": "^3.5.32", "@types/showdown": "~2.0.6", "@types/simple-peer": "~9.11.1", "@types/youtube": "~0.0.48", "codemirror": "^6.0.1", "handlebars": "^4.7.8", "handlebars-intl": "^1.1.2", "jquery": "^3.7.1", "mime-types": "^3.0.1", "peggy": "^4.2.0", "pixi-basis-ktx2": "^0.0.22", "prosemirror-collab": "^1.3.1", "prosemirror-commands": "^1.7.0", "prosemirror-dropcursor": "^1.8.1", "prosemirror-gapcursor": "^1.3.2", "prosemirror-history": "^1.4.1", "prosemirror-inputrules": "^1.5.0", "prosemirror-keymap": "^1.2.2", "prosemirror-model": "^1.25.0", "prosemirror-schema-list": "^1.5.1", "prosemirror-state": "^1.4.3", "prosemirror-tables": "^1.6.4", "prosemirror-transform": "^1.10.3", "prosemirror-view": "^1.38.1", "sanitize-html": "^2.15.0", "showdown": "^2.1.0", "simple-peer": "^9.11.1", "socket.io": "^4.8.1", "socket.io-client": "^4.8.1", "spark-md5": "^3.0.2", "tinymce": "^6.8.5" }, "peerDependencies": { "typescript": "^5.4" } }, "League-of-Foundry-Developers-foundry-vtt-types-9fb8c6f"],
+    "fvtt-types": ["@league-of-foundry-developers/foundry-vtt-types@github:League-of-Foundry-Developers/foundry-vtt-types#9fb8c6f", { "dependencies": { "@codemirror/lang-html": "^6.4.9", "@codemirror/lang-javascript": "^6.2.3", "@codemirror/lang-json": "^6.0.1", "@codemirror/lang-markdown": "^6.3.2", "@pixi/basis": "github:foundry-vtt-types/pixi-basis#main", "@pixi/graphics-smooth": "^1.1.1", "@pixi/particle-emitter": "github:foundry-vtt-types/pixi-particle-emitter#main", "@types/jquery": "^3.5.32", "@types/showdown": "~2.0.6", "@types/simple-peer": "~9.11.1", "@types/youtube": "~0.0.48", "codemirror": "^6.0.1", "handlebars": "^4.7.8", "handlebars-intl": "^1.1.2", "jquery": "^3.7.1", "mime-types": "^3.0.1", "peggy": "^4.2.0", "pixi-basis-ktx2": "^0.0.22", "prosemirror-collab": "^1.3.1", "prosemirror-commands": "^1.7.0", "prosemirror-dropcursor": "^1.8.1", "prosemirror-gapcursor": "^1.3.2", "prosemirror-history": "^1.4.1", "prosemirror-inputrules": "^1.5.0", "prosemirror-keymap": "^1.2.2", "prosemirror-model": "^1.25.0", "prosemirror-schema-list": "^1.5.1", "prosemirror-state": "^1.4.3", "prosemirror-tables": "^1.6.4", "prosemirror-transform": "^1.10.3", "prosemirror-view": "^1.38.1", "sanitize-html": "^2.15.0", "showdown": "^2.1.0", "simple-peer": "^9.11.1", "socket.io": "^4.8.1", "socket.io-client": "^4.8.1", "spark-md5": "^3.0.2", "tinymce": "^6.8.5" }, "peerDependencies": { "typescript": "^5.4" } }, "League-of-Foundry-Developers-foundry-vtt-types-9fb8c6f", "sha512-HiERVZRGNrrWJ8aEmHcr1icHaEFDpXrVq1U/RtGJjctSdUXc4jF4n9TrlRG9biGJoUHxdpLONPSHZSzhCqx67Q=="],
 
     "get-browser-rtc": ["get-browser-rtc@1.1.0", "", {}, "sha512-MghbMJ61EJrRsDe7w1Bvqt3ZsBuqhce5nrn/XAwgwOXhcsz53/ltdxOse1h/8eKXj5slzxdsz56g5rzOFSGwfQ=="],
 
@@ -655,7 +656,7 @@
 
     "@pixi/app/@pixi/core": ["@pixi/core@7.4.3", "", { "dependencies": { "@pixi/color": "7.4.3", "@pixi/constants": "7.4.3", "@pixi/extensions": "7.4.3", "@pixi/math": "7.4.3", "@pixi/runner": "7.4.3", "@pixi/settings": "7.4.3", "@pixi/ticker": "7.4.3", "@pixi/utils": "7.4.3" } }, "sha512-5YDs11faWgVVTL8VZtLU05/Fl47vaP5Tnsbf+y/WRR0VSW3KhRRGTBU1J3Gdc2xEWbJhUK07KGP7eSZpvtPVgA=="],
 
-    "@pixi/core/@pixi/ticker": ["@pixi/ticker@github:foundry-vtt-types/pixi-ticker#6a27565", { "dependencies": { "@pixi/extensions": "7.4.3", "@pixi/settings": "7.4.3", "@pixi/utils": "github:foundry-vtt-types/pixi-utils#main" } }, "foundry-vtt-types-pixi-ticker-6a27565"],
+    "@pixi/core/@pixi/ticker": ["@pixi/ticker@github:foundry-vtt-types/pixi-ticker#6a27565", { "dependencies": { "@pixi/extensions": "7.4.3", "@pixi/settings": "7.4.3", "@pixi/utils": "github:foundry-vtt-types/pixi-utils#main" } }, "foundry-vtt-types-pixi-ticker-6a27565", "sha512-qpSlZYXtF72xioFnWoXX4Z7q3Tv95pVENIklxKixLEeACIZO8QCOfM2Cfv8FW2u3Ijd2khQt+4+Q/so18684hg=="],
 
     "@pixi/display/@pixi/core": ["@pixi/core@7.4.3", "", { "dependencies": { "@pixi/color": "7.4.3", "@pixi/constants": "7.4.3", "@pixi/extensions": "7.4.3", "@pixi/math": "7.4.3", "@pixi/runner": "7.4.3", "@pixi/settings": "7.4.3", "@pixi/ticker": "7.4.3", "@pixi/utils": "7.4.3" } }, "sha512-5YDs11faWgVVTL8VZtLU05/Fl47vaP5Tnsbf+y/WRR0VSW3KhRRGTBU1J3Gdc2xEWbJhUK07KGP7eSZpvtPVgA=="],
 
