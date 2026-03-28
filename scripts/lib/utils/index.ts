@@ -35,4 +35,4 @@ export async function readPackageJson(): Promise<PackageJson> {
 export const fileExists = async (path: string) =>
   !!(await stat(path).catch(() => false));
 
-export const assertNever = (value: never) => {};
+export const assertNever = (_value: never) => {};

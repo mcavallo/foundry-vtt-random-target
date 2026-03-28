@@ -25,7 +25,7 @@ export class MacroMigration {
     }
 
     const pack = game.packs.get(this.compendiumId) as
-      | CompendiumCollection<"Macro">
+      | CompendiumCollection<'Macro'>
       | undefined;
     const compendiumMacros = (await pack?.getDocuments()) ?? [];
     const latestMacro = compendiumMacros.find(

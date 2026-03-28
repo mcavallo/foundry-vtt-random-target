@@ -70,7 +70,9 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
     },
   };
 
-  constructor(...args: ConstructorParameters<typeof foundry.applications.api.ApplicationV2>) {
+  constructor(
+    ...args: ConstructorParameters<typeof foundry.applications.api.ApplicationV2>
+  ) {
     super(...args);
     this.lastKnownScrollTop = 0;
     this.reRenderTimeout = undefined;

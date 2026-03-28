@@ -1,16 +1,11 @@
 {
   "extends": "../tsconfig.json",
-  "include": [
-    "./**/*.ts",
-    "test-globals.d.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ],
+  "include": ["./**/*.ts", "test-globals.d.ts"],
+  "exclude": ["node_modules"],
   "compilerOptions": {
     "types": ["bun-types", "fvtt-types"],
 
     // Paths
-    "baseUrl": "..",
+    "baseUrl": ".."
   }
 }

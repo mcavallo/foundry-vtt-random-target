@@ -1,43 +1,52 @@
-<div class='scrollable-content'>
+<div class="scrollable-content">
   {{#if (gt totalTokens 0)}}
-    <section class='content'>
+    <section class="content">
       {{#each categories}}
-        <div class='tab {{#if (eq @root.activeTabId tabId)}}active{{/if}}' data-tab='{{tabId}}'
-             data-group='{{@root.tabGroupName}}'>
-          <div class='target-item'>
+        <div
+          class="tab {{rt_ifeq @root.activeTabId tabId 'active'}}"
+          data-tab="{{tabId}}"
+          data-group="{{@root.tabGroupName}}"
+        >
+          <div class="target-item">
             <input
-              type='checkbox'
-              class='toggleSelection'
+              type="checkbox"
+              class="toggleSelection"
               value={{id}}
-              id='{{concat "toggleSelection." id}}'
-              data-dtype='Boolean'
+              id="{{concat 'toggleSelection.' id}}"
+              data-dtype="Boolean"
             />
-            <label for='{{concat "toggleSelection." id}}'>
+            <label for="{{concat 'toggleSelection.' id}}">
               <span>{{@root.translations.toggleSelection}}</span>
             </label>
           </div>
           {{#each items}}
-            <div class='target-item {{#if defeated}} target-defeated{{/if}}'>
+            <div class="target-item {{rt_iff defeated 'target-defeated'}}">
               <input
-                type='checkbox'
-                name='selectedTokens'
+                type="checkbox"
+                name="selectedTokens"
                 value={{id}}
-                id='{{concat "selectedTokens." id}}'
-                data-dtype='String'
+                id="{{concat 'selectedTokens.' id}}"
+                data-dtype="String"
                 {{checked selected}}
               />
-              <label class='target-label' for='{{concat "selectedTokens." id}}'>
+              <label class="target-label" for="{{concat 'selectedTokens.' id}}">
                 <div class="target-image">
                   {{#if image.animated}}
-                    <video src='{{img.src}}' autoplay muted loop></video>
+                    <video src="{{img.src}}" autoplay muted loop></video>
                   {{else}}
-                    <img src='{{image.src}}' />
+                    <img src="{{image.src}}" />
                   {{/if}}
                 </div>
                 <div class="target-name">
-                  <div class='target-name-text'>{{name}}</div>
-                  {{#if hidden}}<i class='icon fa-solid fa-eye-slash' title='Hidden'></i>{{/if}}
-                  {{#if defeated}}<i class='icon fa-solid fa-skull' title='Defeated'></i>{{/if}}
+                  <div class="target-name-text">{{name}}</div>
+                  {{#if hidden}}<i
+                      class="icon fa-solid fa-eye-slash"
+                      title="Hidden"
+                    ></i>{{/if}}
+                  {{#if defeated}}<i
+                      class="icon fa-solid fa-skull"
+                      title="Defeated"
+                    ></i>{{/if}}
                 </div>
               </label>
             </div>
