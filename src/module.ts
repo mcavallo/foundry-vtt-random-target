@@ -6,7 +6,7 @@ import { NotificationsManager } from '@/lib/NotificationsManager';
 import { RandomManager } from '@/lib/RandomManager';
 import { SettingsManager } from '@/lib/SettingsManager';
 
-import './module.scss';
+import './module.css';
 
 Hooks.once('ready', () => {
   const seed = Math.floor(Math.random() * 100000);
