@@ -4,8 +4,7 @@ import type { GameManager } from '@/lib/GameManager.ts';
 import type { NotificationsManager } from '@/lib/NotificationsManager.ts';
 import type { RandomManager } from '@/lib/RandomManager.ts';
 import type { SettingsManager } from '@/lib/SettingsManager.ts';
-// @ts-expect-error this import has issues but the types are working fine
-import type ApplicationV2 from 'fvtt-types/src/foundry/client/applications/api/application';
+import ApplicationV2 = foundry.applications.api.ApplicationV2;
 
 type LeafPath<T, Prev extends string = ''> = {
   [K in keyof T & string]: T[K] extends Record<string, any>
@@ -54,13 +53,7 @@ export interface CategoryItem {
   hidden: boolean;
 }
 
-export interface RandomTargetChatMessage extends ChatMessage {
-  flags: ChatMessage['flags'] & {
-    randomTarget?: {
-      type?: string;
-    };
-  };
-}
+export interface RandomTargetChatMessage extends ChatMessage {}
 
 export interface TargetAppRenderingContext {
   activeTabId: string | null;

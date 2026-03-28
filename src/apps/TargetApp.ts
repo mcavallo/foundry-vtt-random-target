@@ -15,8 +15,7 @@ import {
 } from '@/constants';
 import { CategoryList } from '@/lib/CategoryList';
 import { $M, formatTabId, isInputEvent, isValidFormSubmit, t } from '@/lib/utils.ts';
-// @ts-expect-error this import has issues but the types are working fine
-import type ApplicationV2 from 'fvtt-types/src/foundry/client/applications/api/application';
+import ApplicationV2 = foundry.applications.api.ApplicationV2;
 import SupportDialog from './SupportDialog';
 
 export default class TargetApp extends foundry.applications.api.HandlebarsApplicationMixin(
@@ -35,7 +34,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
     id: MODULE.ID,
     position: {
       width: 450,
-      height: 'auto' as ApplicationV2.Position,
+      height: 'auto' as const,
     },
     tag: 'form',
     window: {
@@ -71,7 +70,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
     },
   };
 
-  constructor(...args: ConstructorParameters<typeof ApplicationV2>) {
+  constructor(...args: ConstructorParameters<typeof foundry.applications.api.ApplicationV2>) {
     super(...args);
     this.lastKnownScrollTop = 0;
     this.reRenderTimeout = undefined;
@@ -114,7 +113,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
       },
     });
 
-    return super._initializeApplicationOptions(newOptions);
+    return super._initializeApplicationOptions(newOptions as typeof options);
   }
 
   /**
@@ -219,8 +218,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
   /**
    * Handles the 'closeApp' action
    */
-  static async #handleCloseAppAction() {
-    // @ts-expect-error fix types here
+  static async #handleCloseAppAction(this: TargetApp) {
     void this.close();
   }
 
@@ -269,8 +267,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
 
     // Close dialog
     if ($M().settings.get(SETTING_IDS.CLOSE_AFTER)) {
-      // @ts-expect-error fix types here
-      void this.close();
+      void (this as unknown as TargetApp).close();
     }
   }
 
@@ -324,7 +321,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
    * Creates context data for the UI.
    */
   async _prepareContext(
-    options: ApplicationV2.RenderContext
+    options: Partial<ApplicationV2.RenderOptions> & { isFirstRender: boolean }
   ): Promise<TargetAppRenderingContext> {
     let prevContext = await super._prepareContext(options);
     const sceneTokens = $M().game.getSceneTokens();
@@ -422,7 +419,7 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
   async _onRender(context: TargetAppRenderingContext) {
     // Restore last window position
     const prevPosition = $M().settings.get(SETTING_IDS.PREV_WINDOW_POSITION);
-    if (prevPosition && prevPosition?.left && prevPosition?.top) {
+    if (prevPosition?.left && prevPosition?.top) {
       super.setPosition({ left: prevPosition.left, top: prevPosition.top });
     }
 
@@ -559,23 +556,20 @@ export default class TargetApp extends foundry.applications.api.HandlebarsApplic
    * Given a list of categories, it returns the list of available tabs.
    */
   _computeAvailableTabs(categories: Category[]): Record<string, ApplicationV2.Tab> {
-    if (categories.length === 0) {
-      return {};
+    const tabs: Record<string, ApplicationV2.Tab> = {};
+
+    for (const category of categories) {
+      const isActive = this.tabGroups?.[TAB_GROUP] === category.tabId;
+      tabs[category.tabId] = {
+        active: isActive,
+        cssClass: isActive ? 'active' : '',
+        group: TAB_GROUP,
+        id: category.tabId,
+        label: `${category.label} (${category.totalItems})`,
+      };
     }
 
-    return categories.reduce(
-      (acc, category) => {
-        acc[category.tabId] = {
-          cssClass: this.tabGroups?.[TAB_GROUP] === category.tabId ? 'active' : '',
-          group: TAB_GROUP,
-          id: category.tabId,
-          label: `${category.label} (${category.totalItems})`,
-        };
-
-        return acc;
-      },
-      {} as Record<string, ApplicationV2.Tab>
-    );
+    return tabs;
   }
 
   /**

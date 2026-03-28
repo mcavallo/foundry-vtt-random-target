@@ -5,8 +5,7 @@ import { $M, isElementEvent, t } from '@/lib/utils.ts';
 const { FormApplication } = foundry.appv1.api;
 
 export class CategoriesSettings extends FormApplication {
-  // @ts-expect-error fix types here
-  #dragEndHandler;
+  #dragEndHandler: (() => void) | null = null;
   private draggedId: string | null;
 
   constructor(...args: ConstructorParameters<typeof FormApplication>) {
@@ -35,7 +34,9 @@ export class CategoriesSettings extends FormApplication {
   }
 
   async close(options: FormApplication.CloseOptions) {
-    document.removeEventListener('keydown', this.#dragEndHandler);
+    if (this.#dragEndHandler) {
+      document.removeEventListener('keydown', this.#dragEndHandler);
+    }
     return super.close(options);
   }
 

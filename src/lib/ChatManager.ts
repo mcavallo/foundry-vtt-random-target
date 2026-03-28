@@ -91,7 +91,6 @@ export class ChatManager {
       speaker: { alias: MODULE.NAME },
       whisper: recipients,
       flags: {
-        // @ts-expect-error types need fixing here
         randomTarget: {
           type: 'target',
         },

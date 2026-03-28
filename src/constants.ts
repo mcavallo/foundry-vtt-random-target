@@ -9,7 +9,7 @@ export const MODULE = {
   NAMESPACE: 'randomTarget',
   MACRO_COMPENDIUM: 'random-target-macros',
   MACRO_ID: 'oIVhNA8Po9HpYdJc',
-};
+} as const;
 
 export const SETTING_IDS = {
   AVOID_SELECTING_SAME_TARGET: 'avoidSelectingSameTarget',
@@ -22,7 +22,7 @@ export const SETTING_IDS = {
   PREV_SELECTION: 'previousSelection',
   PREV_TARGET_ID: 'previousTargetId',
   PREV_WINDOW_POSITION: 'previousWindowPosition',
-};
+} as const;
 
 export const FOUNDRY_SETTING_IDS = [
   SETTING_IDS.AVOID_SELECTING_SAME_TARGET,
@@ -60,13 +60,13 @@ export const BASE_CATEGORIES = [
 export const PREFERRED_IMAGE = {
   TOKEN: 'TOKEN',
   ACTOR: 'ACTOR',
-};
+} as const;
 
 export const CHAT_NOTIFICATIONS = {
   DISABLED: 'DISABLED',
   GM_ONLY: 'GM_ONLY',
   PUBLIC: 'PUBLIC',
-};
+} as const;
 
 export const TAB_GROUP = 'categories';
 export const MIN_CATEGORY_TOKENS = 1;
@@ -79,6 +79,8 @@ export const POSITION_UPDATE_DEBOUNCE_TIME = 1000;
 export const SETTINGS_URL =
   'https://github.com/mcavallo/foundry-vtt-random-target/wiki/Settings';
 export const SUPPORT_URL = 'https://buymeacoffee.com/ikindred';
+export const SUPPORT_GIF_URL =
+  'https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3N2YzZWJqOGl0c2VsM2k0cGx3NjQ0Z2c0ZXdwM2k5em1vcnMyaXRjcSZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/a3IWyhkEC0p32/giphy.gif';
 
 export const EMPTY_TARGET_CONTEXT: TargetAppRenderingContext = {
   activeTabId: null,

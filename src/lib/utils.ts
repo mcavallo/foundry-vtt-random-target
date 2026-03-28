@@ -155,9 +155,8 @@ export const localizeStringOrUseFallback = (key: string) => {
     return translation;
   }
 
-  const fallback = foundry.utils.getProperty(defaultTranslations, key);
-
-  if (fallback) {
+  if (foundry.utils.hasProperty(defaultTranslations, key)) {
+    const fallback = String(foundry.utils.getProperty(defaultTranslations, key));
     console.warn(`Using fallback for translation '${key}'.`);
     return fallback;
   }
