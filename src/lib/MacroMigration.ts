@@ -10,10 +10,11 @@ export class MacroMigration {
   }
 
   _getGameMacros() {
-    // @ts-expect-error fix types here
-    const macros = Array.from(game.macros);
+    if (!game.macros) {
+      return [];
+    }
 
-    return (macros as Macro[]).filter(
+    return Array.from(game.macros).filter(
       (macro) => macro._stats.compendiumSource === this.macroSourceId
     );
   }
@@ -23,13 +24,14 @@ export class MacroMigration {
       return null;
     }
 
-    const pack = game.packs.get(this.compendiumId);
+    const pack = game.packs.get(this.compendiumId) as
+      | CompendiumCollection<"Macro">
+      | undefined;
     const compendiumMacros = (await pack?.getDocuments()) ?? [];
     const latestMacro = compendiumMacros.find(
       (macro) => macro._id === MODULE.MACRO_ID
     );
 
-    // @ts-expect-error fix types here
     return latestMacro ? latestMacro.command : null;
   }
 

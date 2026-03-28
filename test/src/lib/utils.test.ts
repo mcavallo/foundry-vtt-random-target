@@ -98,6 +98,7 @@ describe(`localizeStringOrUseFallback`, () => {
   });
 
   it(`returns the fallback translation and emits a warning when the key could not be localized`, () => {
+    hasPropertyMock.mockImplementation(() => true);
     getPropertyMock.mockImplementation((_, key: string) => `fallback:${key}`);
 
     expect(localizeStringOrUseFallback('foo')).toEqual('fallback:foo');
@@ -107,7 +108,7 @@ describe(`localizeStringOrUseFallback`, () => {
   });
 
   it(`returns the key and emits a warning when no fallback was found`, () => {
-    getPropertyMock.mockImplementation(() => undefined);
+    hasPropertyMock.mockImplementation(() => false);
 
     expect(localizeStringOrUseFallback('foo')).toEqual('foo');
     expect(consoleWarnMock).toHaveBeenCalledWith(`Missing translation 'foo'.`);

@@ -10,20 +10,37 @@ import {
 } from '../constants.js';
 import { stripSettingNamespace, t } from './utils.js';
 
+type ChatNotificationsValue =
+  (typeof CHAT_NOTIFICATIONS)[keyof typeof CHAT_NOTIFICATIONS];
+type PreferredImageValue = (typeof PREFERRED_IMAGE)[keyof typeof PREFERRED_IMAGE];
+
+interface SettingsMap {
+  avoidSelectingSameTarget: boolean;
+  categories: string[];
+  chatNotifications: ChatNotificationsValue;
+  closeAfter: boolean;
+  formSettings: { width: number; height: number };
+  panToTarget: boolean;
+  imagePriority: PreferredImageValue;
+  previousSelection: string[];
+  previousTargetId: string;
+  previousWindowPosition: { left?: number; top?: number };
+}
+
 export class SettingsManager {
+  settings!: SettingsMap;
+
   constructor() {
     this._registerSettings();
     this._updateSettings();
   }
 
-  get(key: string) {
-    // @ts-expect-error fix types
+  get<K extends keyof SettingsMap>(key: K): SettingsMap[K] {
     return this.settings[key];
   }
 
-  set(key: string, value: unknown) {
-    // @ts-expect-error fix types
-    game.settings!.set(MODULE.ID, key, value);
+  set<K extends keyof SettingsMap>(key: K, value: SettingsMap[K]) {
+    game.settings!.set(MODULE.ID, key as never, value as never);
   }
 
   isModuleSetting(key: string) {
@@ -35,11 +52,13 @@ export class SettingsManager {
       return false;
     }
 
-    return [
-      SETTING_IDS.CATEGORIES,
-      SETTING_IDS.PREFERRED_IMAGE,
-      SETTING_IDS.CHAT_NOTIFICATIONS,
-    ].includes(stripSettingNamespace(key));
+    return (
+      [
+        SETTING_IDS.CATEGORIES,
+        SETTING_IDS.PREFERRED_IMAGE,
+        SETTING_IDS.CHAT_NOTIFICATIONS,
+      ] as string[]
+    ).includes(stripSettingNamespace(key));
   }
 
   _registerSettings() {
@@ -53,12 +72,10 @@ export class SettingsManager {
       label: t('settings.categoryFilters.label'),
       hint: t('settings.categoryFilters.hint'),
       icon: 'fa fa-list-check',
-      // @ts-expect-error fix types
       type: CategoriesSettings,
       restricted: true,
     });
 
-    // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.CATEGORIES, {
       scope: 'world',
       config: false,
@@ -67,7 +84,6 @@ export class SettingsManager {
       onChange: this._updateSettings.bind(this),
     });
 
-    // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.CLOSE_AFTER, {
       name: t('settings.closeAfterSelection.name'),
       hint: t('settings.closeAfterSelection.hint'),
@@ -78,7 +94,6 @@ export class SettingsManager {
       onChange: this._updateSettings.bind(this),
     });
 
-    // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.CHAT_NOTIFICATIONS, {
       name: t('settings.chatNotifications.name'),
       hint: t('settings.chatNotifications.hint'),
@@ -96,7 +111,6 @@ export class SettingsManager {
       onChange: this._updateSettings.bind(this),
     });
 
-    // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.AVOID_SELECTING_SAME_TARGET, {
       name: t('settings.avoidSameTarget.name'),
       hint: t('settings.avoidSameTarget.hint'),
@@ -107,7 +121,6 @@ export class SettingsManager {
       onChange: this._updateSettings.bind(this),
     });
 
-    // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.PAN_TO_TARGET, {
       name: t('settings.panToTarget.name'),
       hint: t('settings.panToTarget.hint'),
@@ -118,7 +131,6 @@ export class SettingsManager {
       onChange: this._updateSettings.bind(this),
     });
 
-    // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.PREFERRED_IMAGE, {
       name: t('settings.preferredTargetImage.name'),
       hint: t('settings.preferredTargetImage.hint'),
@@ -134,7 +146,6 @@ export class SettingsManager {
       requiresReload: false,
     });
 
-    // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.PREV_TARGET_ID, {
       scope: 'world',
       config: false,
@@ -143,7 +154,6 @@ export class SettingsManager {
       onChange: this._updateSettings.bind(this),
     });
 
-    // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.PREV_SELECTION, {
       scope: 'world',
       config: false,
@@ -152,7 +162,6 @@ export class SettingsManager {
       onChange: this._updateSettings.bind(this),
     });
 
-    // @ts-expect-error fix types
     game.settings.register(MODULE.ID, SETTING_IDS.PREV_WINDOW_POSITION, {
       scope: 'world',
       config: false,
@@ -176,26 +185,21 @@ export class SettingsManager {
   }
 
   _updateSettings() {
-    // @ts-expect-error fix types
     this.settings = this._computeSettings();
   }
 
-  _computeSettings() {
-    const baseSettings = FOUNDRY_SETTING_IDS.reduce(
-      (accum, value) => ({
-        ...accum,
-        // @ts-expect-error fix types
-        [value]: game.settings!.get(MODULE.ID, value),
-      }),
-      {}
-    );
+  _computeSettings(): SettingsMap {
+    const settings: Partial<SettingsMap> = {};
 
-    return {
-      ...baseSettings,
-      [SETTING_IDS.FORM_SETTINGS]: {
-        width: 500,
-        height: 352,
-      },
+    for (const key of FOUNDRY_SETTING_IDS) {
+      (settings as Record<string, unknown>)[key] = game.settings!.get(MODULE.ID, key);
+    }
+
+    settings[SETTING_IDS.FORM_SETTINGS] = {
+      width: 500,
+      height: 352,
     };
+
+    return settings as SettingsMap;
   }
 }
