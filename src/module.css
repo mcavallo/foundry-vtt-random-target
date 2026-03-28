@@ -1,50 +1,38 @@
-$module: 'random-target';
-$namespace: 'rt';
-
-$maxVisible: 6;
-$inputWidth: 32;
-$rowHeight: 36;
-$rowVerticalPadding: 4;
-
-$imageSize: $rowHeight;
-$rowLabelHeight: $rowHeight + (2 * $rowVerticalPadding);
-$scrollableMaxHeight: $rowLabelHeight + (($maxVisible - 1) * ($rowLabelHeight + 1)) * 1px;
-
 body {
-  &.theme-light .application.#{$module} {
-    --#{$namespace}-color-bg-selected: rgba(255, 255, 255, .3);
-    --#{$namespace}-color-border: rgba(0, 0, 0, .2);
-    --#{$namespace}-color-default: var(--color-dark-1);
-    --#{$namespace}-color-defeated: var(--color-warm-3);
-    --#{$namespace}-color-selected: var(--color-warm-2);
-    --#{$namespace}-color-icon: var(--color-dark-6);
-    --#{$namespace}-color-tabs-text-hover: var(--color-dark-1);
-    --#{$namespace}-color-tabs-text-active: white;
-    --#{$namespace}-color-tabs-bg: rgba(0 0 0 / 10%);
-    --#{$namespace}-color-tabs-bg-hover: rgba(0 0 0 / 15%);
-    --#{$namespace}-color-tabs-bg-active: var(--color-warm-2);
-    --#{$namespace}-color-tabs-border: var(--color-dark-5);
-    --#{$namespace}-color-status: var(--color-dark-6);
-    --#{$namespace}-color-tabs-indicator-border: #d8d6ca;
-    --#{$namespace}-opacity-status-muted: 0.6;
+  &.theme-light .application.random-target {
+    --rt-color-bg-selected: rgba(255, 255, 255, .3);
+    --rt-color-border: rgba(0, 0, 0, .2);
+    --rt-color-default: var(--color-dark-1);
+    --rt-color-defeated: var(--color-warm-3);
+    --rt-color-selected: var(--color-warm-2);
+    --rt-color-icon: var(--color-dark-6);
+    --rt-color-tabs-text-hover: var(--color-dark-1);
+    --rt-color-tabs-text-active: white;
+    --rt-color-tabs-bg: rgba(0 0 0 / 10%);
+    --rt-color-tabs-bg-hover: rgba(0 0 0 / 15%);
+    --rt-color-tabs-bg-active: var(--color-warm-2);
+    --rt-color-tabs-border: var(--color-dark-5);
+    --rt-color-status: var(--color-dark-6);
+    --rt-color-tabs-indicator-border: #d8d6ca;
+    --rt-opacity-status-muted: 0.6;
   }
 
-  &.theme-dark .application.#{$module} {
-    --#{$namespace}-color-bg-selected: rgba(255, 255, 255, .05);
-    --#{$namespace}-color-border: rgba(255, 255, 255, .1);
-    --#{$namespace}-color-default: var(--color-light-1);
-    --#{$namespace}-color-defeated: var(--color-warm-3);
-    --#{$namespace}-color-selected: var(--color-text-accent);
-    --#{$namespace}-color-icon: var(--color-light-5);
-    --#{$namespace}-color-tabs-text-hover: white;
-    --#{$namespace}-color-tabs-text-active: white;
-    --#{$namespace}-color-tabs-bg: var(--color-cool-5-50);
-    --#{$namespace}-color-tabs-bg-hover: var(--color-cool-5-50);
-    --#{$namespace}-color-tabs-bg-active: var(--color-warm-2);
-    --#{$namespace}-color-tabs-border: var(--color-light-5);
-    --#{$namespace}-color-status: var(--color-light-6);
-    --#{$namespace}-color-tabs-indicator-border: rgba(0, 0, 0, .75);
-    --#{$namespace}-opacity-status-muted: 0.75;
+  &.theme-dark .application.random-target {
+    --rt-color-bg-selected: rgba(255, 255, 255, .05);
+    --rt-color-border: rgba(255, 255, 255, .1);
+    --rt-color-default: var(--color-light-1);
+    --rt-color-defeated: var(--color-warm-3);
+    --rt-color-selected: var(--color-text-accent);
+    --rt-color-icon: var(--color-light-5);
+    --rt-color-tabs-text-hover: white;
+    --rt-color-tabs-text-active: white;
+    --rt-color-tabs-bg: var(--color-cool-5-50);
+    --rt-color-tabs-bg-hover: var(--color-cool-5-50);
+    --rt-color-tabs-bg-active: var(--color-warm-2);
+    --rt-color-tabs-border: var(--color-light-5);
+    --rt-color-status: var(--color-light-6);
+    --rt-color-tabs-indicator-border: rgba(0, 0, 0, .75);
+    --rt-opacity-status-muted: 0.75;
   }
 }
 
@@ -53,7 +41,7 @@ body {
  */
 
 body:not(.theme-dark.system-wfrp4e) {
-  .application.#{$module} {
+  .application.random-target {
     nav.tabs {
       gap: 6px;
       line-height: 1;
@@ -65,22 +53,22 @@ body:not(.theme-dark.system-wfrp4e) {
       [data-tab] {
         padding: 6px 6px 5px;
         border-radius: 4px;
-        background: var(--#{$namespace}-color-tabs-bg);
-        border: 1px solid var(--#{$namespace}-color-tabs-border);
+        background: var(--rt-color-tabs-bg);
+        border: 1px solid var(--rt-color-tabs-border);
         font-size: 13px;
 
         &:hover {
-          color: var(--#{$namespace}-color-tabs-text-hover);
-          background: var(--#{$namespace}-color-tabs-bg-hover);
+          color: var(--rt-color-tabs-text-hover);
+          background: var(--rt-color-tabs-bg-hover);
         }
 
         &.active {
-          background: var(--#{$namespace}-color-tabs-bg-active);
-          border-color: var(--#{$namespace}-color-tabs-bg-active);
+          background: var(--rt-color-tabs-bg-active);
+          border-color: var(--rt-color-tabs-bg-active);
         }
 
         &.active, &:hover.active {
-          color: var(--#{$namespace}-color-tabs-text-active);
+          color: var(--rt-color-tabs-text-active);
         }
 
         &:hover, &.active, &:hover.active {
@@ -92,7 +80,7 @@ body:not(.theme-dark.system-wfrp4e) {
 
   .form-status {
     .status-value.status-value-muted {
-      opacity: var(--#{$namespace}-opacity-status-muted);
+      opacity: var(--rt-opacity-status-muted);
     }
   }
 }
@@ -101,7 +89,7 @@ body:not(.theme-dark.system-wfrp4e) {
  * Main app styles
  */
 
-.application.#{$module} {
+.application.random-target {
   [data-application-part="error"] {
     display: none !important;
   }
@@ -115,7 +103,6 @@ body:not(.theme-dark.system-wfrp4e) {
       display: none !important;
     }
   }
-
 
   nav.tabs {
     [data-tab] {
@@ -131,7 +118,7 @@ body:not(.theme-dark.system-wfrp4e) {
         height: 8px;
         top: -2px;
         right: -2px;
-        box-shadow: 0 0 0 1px var(--#{$namespace}-color-tabs-indicator-border);
+        box-shadow: 0 0 0 1px var(--rt-color-tabs-indicator-border);
         pointer-events: none;
         opacity: 0;
         transition: all 150ms ease;
@@ -155,7 +142,7 @@ body:not(.theme-dark.system-wfrp4e) {
     border-top: 1px solid var(--color-tabs-border);
 
     button {
-      --button-size: calc(#{$imageSize * 1px});
+      --button-size: 36px;
       flex: 1;
       transition: all 100ms ease;
 
@@ -172,7 +159,7 @@ body:not(.theme-dark.system-wfrp4e) {
     padding: 6px 8px 6px;
 
     .status-value {
-      color: var(--#{$namespace}-color-status);
+      color: var(--rt-color-status);
       font-size: 13px;
       display: flex;
       flex-direction: row;
@@ -190,7 +177,7 @@ body:not(.theme-dark.system-wfrp4e) {
   .scrollable-content {
     overflow-y: auto;
     height: auto;
-    max-height: $scrollableMaxHeight;
+    max-height: 269px;
     scrollbar-width: thin;
     display: flex;
 
@@ -216,11 +203,11 @@ body:not(.theme-dark.system-wfrp4e) {
     flex-direction: row;
     align-items: center;
     justify-content: stretch;
-    height: $rowHeight * 1px;
-    padding: ($rowVerticalPadding * 1px) 0;
+    height: 36px;
+    padding: 4px 0;
     box-sizing: content-box;
     position: relative;
-    border-top: 1px solid var(--#{$namespace}-color-border);
+    border-top: 1px solid var(--rt-color-border);
 
     &:first-of-type {
       border-top: 0;
@@ -229,7 +216,7 @@ body:not(.theme-dark.system-wfrp4e) {
 
     &.target-defeated {
       .target-name-text {
-        color: var(--#{$namespace}-color-defeated);
+        color: var(--rt-color-defeated);
         text-decoration: line-through;
       }
     }
@@ -242,20 +229,20 @@ body:not(.theme-dark.system-wfrp4e) {
     }
 
     label {
-      height: $rowLabelHeight * 1px;
+      height: 44px;
       flex: 1;
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: stretch;
-      color: var(--#{$namespace}-color-default);
+      color: var(--rt-color-default);
       overflow: hidden;
       position: absolute;
       left: 0;
       top: 0;
       right: 0;
       z-index: 1;
-      padding-left: $inputWidth * 1px;
+      padding-left: 32px;
       transition: background 150ms ease;
 
       span {
@@ -265,8 +252,8 @@ body:not(.theme-dark.system-wfrp4e) {
     }
 
     input[type="checkbox"]:checked ~ label.target-label {
-      background: var(--#{$namespace}-color-bg-selected);
-      color: var(--#{$namespace}-color-selected);
+      background: var(--rt-color-bg-selected);
+      color: var(--rt-color-selected);
     }
 
     .target-name {
@@ -282,7 +269,7 @@ body:not(.theme-dark.system-wfrp4e) {
       i {
         flex: 0 0 auto;
         font-size: 12px;
-        color: var(--#{$namespace}-color-icon);
+        color: var(--rt-color-icon);
       }
     }
 
@@ -295,9 +282,9 @@ body:not(.theme-dark.system-wfrp4e) {
     }
 
     .target-image {
-      flex: 0 0 $imageSize * 1px;
-      width: $imageSize * 1px;
-      height: $imageSize * 1px;
+      flex: 0 0 36px;
+      width: 36px;
+      height: 36px;
       position: relative;
       display: flex;
       align-items: center;
@@ -322,8 +309,8 @@ body:not(.theme-dark.system-wfrp4e) {
  * Chat styles
  */
 
-.#{$module}-message {
-  .#{$module}-message-target {
+.random-target-message {
+  .random-target-message-target {
     font-weight: bold;
     border-radius: 3px;
 
@@ -376,7 +363,7 @@ body:not(.theme-dark.system-wfrp4e) {
  * Category settings styles
  */
 
-##{$module}-categories-setting {
+#random-target-categories-setting {
   .item-list {
     margin-bottom: 12px;
 
@@ -441,7 +428,7 @@ body:not(.theme-dark.system-wfrp4e) {
  * Support dialog styles
  */
 
-##{$module}-support-dialog {
+#random-target-support-dialog {
   .dialog-content {
     display: flex;
     flex-direction: column;
@@ -472,7 +459,7 @@ body:not(.theme-dark.system-wfrp4e) {
  */
 
 body.theme-dark.system-wfrp4e {
-  .application.#{$module} {
+  .application.random-target {
     .window-content {
       padding: 14px 12px;
     }
@@ -518,8 +505,8 @@ body.theme-dark.system-wfrp4e {
     }
   }
 
-  .#{$module}-message {
-    .#{$module}-message-target {
+  .random-target-message {
+    .random-target-message-target {
       i {
         color: black;
       }
@@ -534,7 +521,7 @@ body.theme-dark.system-wfrp4e {
     }
   }
 
-  ##{$module}-categories-setting {
+  #random-target-categories-setting {
     .item {
       .category-details {
         .description {
