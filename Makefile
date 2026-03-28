@@ -26,7 +26,7 @@ run_tests:
 	bun test
 
 run_ts_lint:
-	bunx tsc --noEmit --incremental
+	bunx tsgo --noEmit
 
 foundry_link:
 	bun --bun run scripts/foundrySymlink link
