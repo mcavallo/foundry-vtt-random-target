@@ -19,7 +19,7 @@ release:
     bun --bun run scripts/foundryRelease
 
 test:
-    bun test
+    bunx vitest run
 
 typecheck:
     bunx tsgo --noEmit

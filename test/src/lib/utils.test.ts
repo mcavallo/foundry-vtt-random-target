@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, jest } from 'bun:test';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TranslationKeys } from '#/types/module.ts';
 import {
   formatLocalizedString,
@@ -11,10 +11,10 @@ import {
 const originalFoundry = globalThis.foundry;
 const originalGame = globalThis.game;
 
-const getPropertyMock = jest.fn();
-const hasPropertyMock = jest.fn();
-const i18nMock = jest.fn();
-const consoleWarnMock = jest.fn();
+const getPropertyMock = vi.fn();
+const hasPropertyMock = vi.fn();
+const i18nMock = vi.fn();
+const consoleWarnMock = vi.fn();
 
 const localizeStub = (input: string) => `localized:${input}`;
 
@@ -129,7 +129,9 @@ describe(`t`, () => {
     hasPropertyMock.mockImplementation(() => true);
 
     const key = 'hello {name}' as TranslationKeys;
-    expect(t(key, { name: 'world' })).toEqual(`localized:random-target.hello world`);
+    expect(t(key, { name: 'world' })).toEqual(
+      `localized:random-target.hello world`
+    );
   });
 
   it(`returns the key and emits a warning when called before i18n is initialized`, () => {
