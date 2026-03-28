@@ -129,9 +129,7 @@ describe(`t`, () => {
     hasPropertyMock.mockImplementation(() => true);
 
     const key = 'hello {name}' as TranslationKeys;
-    expect(t(key, { name: 'world' })).toEqual(
-      `localized:random-target.hello world`
-    );
+    expect(t(key, { name: 'world' })).toEqual(`localized:random-target.hello world`);
   });
 
   it(`returns the key and emits a warning when called before i18n is initialized`, () => {
