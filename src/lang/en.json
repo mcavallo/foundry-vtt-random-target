@@ -5,7 +5,7 @@
     },
     "targetApp": {
       "window": {
-        "title":"Random Target",
+        "title": "Random Target",
         "controls": {
           "openSettings": "Settings",
           "openHelp": "Help",
@@ -38,11 +38,11 @@
               "label": "Silent",
               "tooltip": "Will not post to chat"
             },
-            "gmOnly":{
+            "gmOnly": {
               "label": "Private",
               "tooltip": "Will post GM-only messages to chat"
             },
-            "public":{
+            "public": {
               "label": "Public",
               "tooltip": "Will post public messages to chat"
             }
@@ -52,7 +52,7 @@
     },
     "supportDialog": {
       "window": {
-        "title":"Support this module"
+        "title": "Support this module"
       },
       "ui": {
         "buttons": {
@@ -96,7 +96,7 @@
     },
     "categoriesSettings": {
       "window": {
-        "title":"Random Target: Categories"
+        "title": "Random Target: Categories"
       },
       "ui": {
         "buttons": {

@@ -8,6 +8,11 @@ import { SettingsManager } from '@/lib/SettingsManager';
 
 import './module.css';
 
+Handlebars.registerHelper('rt_ifeq', (a, b, yes, no) =>
+  a === b ? yes : (no ?? '')
+);
+Handlebars.registerHelper('rt_iff', (cond, yes, no) => (cond ? yes : (no ?? '')));
+
 Hooks.once('ready', () => {
   const seed = Math.floor(Math.random() * 100000);
 

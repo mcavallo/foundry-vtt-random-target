@@ -5,7 +5,7 @@
     },
     "targetApp": {
       "window": {
-        "title":"Random Target",
+        "title": "Random Target",
         "controls": {
           "openSettings": "Ustawienia",
           "openHelp": "Pomoc",
@@ -38,11 +38,11 @@
               "label": "Ukryty",
               "tooltip": "Nie publikować na czacie"
             },
-            "gmOnly":{
+            "gmOnly": {
               "label": "Prywatny",
               "tooltip": "Będzie publikować wiadomości przeznaczone wyłącznie dla MG na czacie"
             },
-            "public":{
+            "public": {
               "label": "Publiczny",
               "tooltip": "Będzie publikować publiczne wiadomości na czacie"
             }
@@ -52,7 +52,7 @@
     },
     "supportDialog": {
       "window": {
-        "title":"Wesprzyj ten moduł"
+        "title": "Wesprzyj ten moduł"
       },
       "ui": {
         "buttons": {
@@ -96,7 +96,7 @@
     },
     "categoriesSettings": {
       "window": {
-        "title":"Random Target: Kategorie"
+        "title": "Random Target: Kategorie"
       },
       "ui": {
         "buttons": {

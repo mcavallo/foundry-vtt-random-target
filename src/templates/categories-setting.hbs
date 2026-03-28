@@ -1,27 +1,36 @@
-<form class='flexcol'>
+<form class="flexcol">
   <div>
     <p>{{@root.translations.instructions}}</p>
-    <div class='item-list'>
+    <div class="item-list">
       {{#each categories}}
-        <div class='item'>
-          <input type='checkbox' value='{{id}}' data-dtype='String' name='categories' {{checked enabled}} />
-          <div class='category-details'>
-            <div class='label'>
+        <div class="item">
+          <input
+            type="checkbox"
+            value="{{id}}"
+            data-dtype="String"
+            name="categories"
+            {{checked enabled}}
+          />
+          <div class="category-details">
+            <div class="label">
               {{{label}}}
             </div>
-            <div class='description'>
+            <div class="description">
               {{{description}}}
-              {{#if info}}<i class='fa fa-circle-info' data-tooltip='{{info}}'></i>{{/if}}
+              {{#if info}}<i
+                  class="fa fa-circle-info"
+                  data-tooltip="{{info}}"
+                ></i>{{/if}}
             </div>
           </div>
-          <i class='fa fa-grip-dots-vertical'></i>
+          <i class="fa fa-grip-dots-vertical"></i>
         </div>
       {{/each}}
     </div>
   </div>
-  <footer class='sheet-footer flexrow'>
-    <button type='submit' name='submit'>
-      <i class='fa fa-save'></i>
+  <footer class="sheet-footer flexrow">
+    <button type="submit" name="submit">
+      <i class="fa fa-save"></i>
       {{@root.translations.buttons.save}}
     </button>
   </footer>

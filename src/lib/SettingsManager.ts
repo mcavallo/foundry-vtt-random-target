@@ -192,7 +192,10 @@ export class SettingsManager {
     const settings: Partial<SettingsMap> = {};
 
     for (const key of FOUNDRY_SETTING_IDS) {
-      (settings as Record<string, unknown>)[key] = game.settings!.get(MODULE.ID, key);
+      (settings as Record<string, unknown>)[key] = game.settings!.get(
+        MODULE.ID,
+        key
+      );
     }
 
     settings[SETTING_IDS.FORM_SETTINGS] = {

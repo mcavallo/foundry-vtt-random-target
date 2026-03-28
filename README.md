@@ -10,8 +10,7 @@ See the module in action [here](https://youtu.be/YFAZ51cCMI4).
 
 # Settings
 
-The module features a settings page that lets you customize the experience to your liking, such as choosing which 
-categories are displayed, whether a notification should appear in the chat, and whether the selection window should remain open after use. Read more about it [here](https://github.com/mcavallo/foundry-vtt-random-target/wiki/Settings).
+The module features a settings page that lets you customize the experience to your liking, such as choosing which categories are displayed, whether a notification should appear in the chat, and whether the selection window should remain open after use. Read more about it [here](https://github.com/mcavallo/foundry-vtt-random-target/wiki/Settings).
 
 # Installation / Usage
 
@@ -44,6 +43,7 @@ Please [reach out](https://github.com/mcavallo/foundry-vtt-random-target/issues)
 # Localization
 
 The module is fully localized in the following languages:
+
 - English (🇺🇸/🇬🇧)
 - Japanese (🇯🇵 日本語)
 - Polish (🇵🇱 Polski)

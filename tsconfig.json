@@ -1,12 +1,6 @@
 {
-  "include": [
-    "scripts/**/*",
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "test"
-  ],
+  "include": ["scripts/**/*", "src/**/*"],
+  "exclude": ["node_modules", "test"],
   "compilerOptions": {
     "types": ["bun-types", "fvtt-types"],
 
@@ -36,7 +30,7 @@
     // Paths
     "paths": {
       "@/*": ["./src/*"],
-      "#/*": ["./*"],
+      "#/*": ["./*"]
     }
   }
 }

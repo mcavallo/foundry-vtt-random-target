@@ -37,7 +37,7 @@ export const run = async (rootDir: string) => {
     .andThen(trySendDryRunRequest)
     .andTee(trySendReleaseRequest)
     .match(
-      (v) => {
+      (_v) => {
         logger.info(`All good.`);
         process.exit(0);
       },
