@@ -21,6 +21,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
       - name: Bump and tag new version
         id: bump
         uses: mathieudutour/github-tag-action@a22cf08638b34d5badda920f9daf6e72c477b07b # v6.2
@@ -38,39 +39,41 @@ jobs:
       - versioning
     steps:
       - uses: actions/checkout@v6
+
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version-file: '.bun-version'
+          bun-version-file: ".bun-version"
+
+      - uses: taiki-e/install-action@a164de717a0ee9284c2d9db1c6016a4c339cd333 # v2.69.14
+        with:
+          tool: just
+
       - name: Install deps
-        shell: bash
-        run: bun i
+        run: bun i --frozen-lockfile
+
       - name: Create .env
-        shell: bash
         run: |
-          echo -n "" > .env
-          echo FOUNDRY_RELEASE_TOKEN="\"${{ secrets.FOUNDRY_RELEASE_TOKEN }}\"" >> .env
-          echo GH_API_TOKEN=${{ secrets.GH_API_TOKEN }} >> .env
+          cat <<EOF > .env
+          FOUNDRY_RELEASE_TOKEN="${{ secrets.FOUNDRY_RELEASE_TOKEN }}"
+          GH_API_TOKEN=${{ secrets.GH_API_TOKEN }}
+          EOF
+
       - name: Build
-        shell: 'bash'
+        id: build
         run: |
-          RELEASE_VERSION=${{ needs.versioning.outputs.new_tag }} make build
-      - name: Read foundryModule.id
-        id: module_id
-        shell: bash
-        run: |
-          echo "out=$(cat package.json | jq -r '.foundryModule.id')" >> $GITHUB_OUTPUT
+          RELEASE_VERSION=${{ needs.versioning.outputs.new_tag }} just build
+          echo "module_id=$(jq -r '.foundryModule.id' package.json)" >> $GITHUB_OUTPUT
+
       - name: Create zip
-        run: |
-          cd dist/
-          zip -r ../${{ steps.module_id.outputs.out }}_${{ needs.versioning.outputs.new_tag }}.zip *
+        run: cd dist/ && zip -r ../${{ steps.build.outputs.module_id }}_${{ needs.versioning.outputs.new_tag }}.zip *
+
       - name: Create Github release
         uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
           token: ${{ secrets.GH_TOKEN }}
           tag: ${{ needs.versioning.outputs.new_tag }}
-          artifacts: "./dist/module.json,${{ steps.module_id.outputs.out }}_${{ needs.versioning.outputs.new_tag }}.zip"
+          artifacts: "./dist/module.json,${{ steps.build.outputs.module_id }}_${{ needs.versioning.outputs.new_tag }}.zip"
           body: ${{ needs.versioning.outputs.changelog }}
+
       - name: Push release to Foundry
-        shell: bash
-        run: |
-          make release
+        run: just release
