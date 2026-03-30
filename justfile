@@ -15,9 +15,6 @@ dev:
 check-translations:
     bun --bun run scripts/checkTranslations
 
-release:
-    bun --bun run scripts/foundryRelease
-
 test:
     bunx vitest run
 

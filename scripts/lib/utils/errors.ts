@@ -60,11 +60,3 @@ export const handlePipelineGenericError = (logger: Logger, error: unknown) => {
       break;
   }
 };
-
-export const isGenericError = (error: unknown) => {
-  if (error instanceof ArgsFailedToParseError) {
-    return true;
-  }
-
-  return false;
-};

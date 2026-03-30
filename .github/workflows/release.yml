@@ -39,24 +39,10 @@ jobs:
       - versioning
     steps:
       - uses: actions/checkout@v6
-
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version-file: ".bun-version"
-
-      - uses: taiki-e/install-action@a164de717a0ee9284c2d9db1c6016a4c339cd333 # v2.69.14
-        with:
-          tool: just
-
-      - name: Install deps
-        run: bun i --frozen-lockfile
+      - uses: ./.github/actions/setup
 
       - name: Create .env
-        run: |
-          cat <<EOF > .env
-          FOUNDRY_RELEASE_TOKEN="${{ secrets.FOUNDRY_RELEASE_TOKEN }}"
-          GH_API_TOKEN=${{ secrets.GH_API_TOKEN }}
-          EOF
+        run: echo "GH_API_TOKEN=${{ secrets.GH_API_TOKEN }}" > .env
 
       - name: Build
         id: build
@@ -65,15 +51,22 @@ jobs:
           echo "module_id=$(jq -r '.foundryModule.id' package.json)" >> $GITHUB_OUTPUT
 
       - name: Create zip
-        run: cd dist/ && zip -r ../${{ steps.build.outputs.module_id }}_${{ needs.versioning.outputs.new_tag }}.zip *
+        id: zip
+        run: |
+          zip_file="${{ steps.build.outputs.module_id }}_${{ needs.versioning.outputs.new_tag }}.zip"
+          cd dist/ && zip -r "../$zip_file" *
+          echo "name=$zip_file" >> $GITHUB_OUTPUT
 
       - name: Create Github release
         uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
           token: ${{ secrets.GH_TOKEN }}
           tag: ${{ needs.versioning.outputs.new_tag }}
-          artifacts: "./dist/module.json,${{ steps.build.outputs.module_id }}_${{ needs.versioning.outputs.new_tag }}.zip"
+          artifacts: "./dist/module.json,${{ steps.zip.outputs.name }}"
           body: ${{ needs.versioning.outputs.changelog }}
 
       - name: Push release to Foundry
-        run: just release
+        uses: mcavallo/foundry-vtt-release@v1
+        with:
+          foundry-release-token: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}
+          manifest-path: dist/module.json
