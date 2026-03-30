@@ -11,8 +11,6 @@ export class InvalidSchemaError extends Error {
   }
 }
 
-export class InvalidResponseSchemaError extends InvalidSchemaError {}
 export class InvalidArgsSchemaError extends InvalidSchemaError {}
 export class InvalidEnvSchemaError extends InvalidSchemaError {}
-export class InvalidModuleJsonSchemaError extends InvalidSchemaError {}
 export class InvalidPackageJsonSchemaError extends InvalidSchemaError {}

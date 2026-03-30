@@ -1,0 +1,17 @@
+name: Setup
+description: Install Bun, Just, and project dependencies
+
+runs:
+  using: composite
+  steps:
+    - uses: oven-sh/setup-bun@v2
+      with:
+        bun-version-file: ".bun-version"
+
+    - uses: taiki-e/install-action@a164de717a0ee9284c2d9db1c6016a4c339cd333 # v2.69.14
+      with:
+        tool: just
+
+    - name: Install deps
+      shell: bash
+      run: bun i --frozen-lockfile
