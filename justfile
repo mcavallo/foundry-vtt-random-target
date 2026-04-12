@@ -5,7 +5,7 @@ build: cleanup
     bun --bun run scripts/build.ts
 
 rebuild:
-    bun --bun run scripts/build.ts
+    DEV=1 bun --bun run scripts/build.ts
 
 [no-exit-message]
 dev:
