@@ -17,7 +17,7 @@
     "title": "Random Target",
     "description": "Adds a dialog to choose a random target between the tokens present in the scene.",
     "compatibilityMinimum": "13",
-    "compatibilityVerified": "13.351"
+    "compatibilityVerified": "14.360"
   },
   "private": true,
   "type": "module",
