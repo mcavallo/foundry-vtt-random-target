@@ -5,8 +5,8 @@
     "": {
       "name": "foundry-vtt-random-target",
       "devDependencies": {
-        "@mcavallo/foundry-build": "^1.4.2",
-        "@mcavallo/foundry-i18n-check": "^1.0.4",
+        "@mcavallo/foundry-build": "^1.4.3",
+        "@mcavallo/foundry-i18n-check": "^1.0.5",
         "@mcavallo/foundry-manifest": "^1.3.0",
         "@mcavallo/foundry-symlink": "^1.3.1",
         "@types/bun": "^1.3.11",
@@ -72,9 +72,9 @@
 
     "@marijn/find-cluster-break": ["@marijn/find-cluster-break@1.0.2", "", {}, "sha512-l0h88YhZFyKdXIFNfSWpyjStDjGHwZ/U7iobcK1cQQD8sejsONdQtTVU+1wVN1PBw40PiiHB1vA5S7VTfQiP9g=="],
 
-    "@mcavallo/foundry-build": ["@mcavallo/foundry-build@1.4.2", "https://npm.pkg.github.com/download/@mcavallo/foundry-build/1.4.2/495bc7274f81805271eaa71700e5fd02cbe6b32e", { "dependencies": { "@effect/platform": "^0.96.0", "@mcavallo/foundry-manifest": "1.3.0", "effect": "^3.21.0" }, "peerDependencies": { "classic-level": "^2.0.0" }, "bin": { "foundry-build": "dist/bin.js" } }, "sha512-DbrWtoQfPe8H/viloXWxGHlPxbNG7DGINeIdRtm8w4oJryG5r4IBdxvyh9xwR2sIq661mZUKoZ7p3nVVpBAjuQ=="],
+    "@mcavallo/foundry-build": ["@mcavallo/foundry-build@1.4.3", "https://npm.pkg.github.com/download/@mcavallo/foundry-build/1.4.3/d59aade1ffae1ba8da28636810c69b3d8267065c", { "dependencies": { "@effect/platform": "^0.96.0", "@mcavallo/foundry-manifest": "1.3.0", "effect": "^3.21.0" }, "peerDependencies": { "classic-level": "^2.0.0" }, "bin": { "foundry-build": "dist/bin.js" } }, "sha512-YDIjzw501t2mULVaLdr67fuH+xWFf+xrt9a/nlGKmoCKe4Egl5WlXdLlY0SDX84BdodxQZugx+3ox1Z2I41WXg=="],
 
-    "@mcavallo/foundry-i18n-check": ["@mcavallo/foundry-i18n-check@1.0.4", "https://npm.pkg.github.com/download/@mcavallo/foundry-i18n-check/1.0.4/595d5bb12c745fb890646b38937f311eb5722827", { "dependencies": { "@mcavallo/foundry-build": "1.4.2" }, "bin": { "foundry-i18n-check": "dist/bin.js" } }, "sha512-JriO3gi0xe0qcSSE2CNjqAxm4HNmbn1cszrf479vkpLIiOo5HOL3WibXoNAiGQSouDLr2rk2VBrweJL7qKLHsg=="],
+    "@mcavallo/foundry-i18n-check": ["@mcavallo/foundry-i18n-check@1.0.5", "https://npm.pkg.github.com/download/@mcavallo/foundry-i18n-check/1.0.5/70e0e24a487baba146be3a8e1f7dc9ff5dc80dae", { "dependencies": { "@mcavallo/foundry-build": "1.4.3" }, "bin": { "foundry-i18n-check": "dist/bin.js" } }, "sha512-NrAThKa5ijA7/jYTfnSWZYZZ5F3XBVtX0e/oI/0J6PPyhFkju1/rQzuqbXp3sEU2zspoAHHs7vZe329nTJr1Lg=="],
 
     "@mcavallo/foundry-manifest": ["@mcavallo/foundry-manifest@1.3.0", "https://npm.pkg.github.com/download/@mcavallo/foundry-manifest/1.3.0/5c93ddec6ec84a7f3204f6fddcec087eaf7e6116", { "dependencies": { "@effect/platform": "^0.96.0", "effect": "^3.21.0" } }, "sha512-4LnNqIheHd7CEfYU7gfYCAxS33O4eAzZx1Ru/Kxsxpooaf4kqyQWQUHGouwuRvTGH0JjCRgDRxRr9aLfQWmjOg=="],
 
