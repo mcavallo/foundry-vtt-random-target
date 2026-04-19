@@ -12,33 +12,20 @@
     "type": "git",
     "url": "https://github.com/mcavallo/foundry-vtt-random-target"
   },
-  "foundryModule": {
-    "id": "random-target",
-    "title": "Random Target",
-    "description": "Adds a dialog to choose a random target between the tokens present in the scene.",
-    "compatibilityMinimum": "13",
-    "compatibilityVerified": "13.351"
-  },
   "private": true,
   "type": "module",
   "license": "GPLV3",
   "devDependencies": {
+    "@mcavallo/foundry-build": "^1.4.2",
+    "@mcavallo/foundry-i18n-check": "^1.0.4",
+    "@mcavallo/foundry-manifest": "^1.3.0",
+    "@mcavallo/foundry-symlink": "^1.3.1",
     "@types/bun": "^1.3.11",
-    "@types/fs-extra": "^11.0.4",
-    "@types/js-yaml": "^4.0.9",
-    "@types/yargs-parser": "^21.0.3",
-    "@typescript/native-preview": "7.0.0-dev.20260327.2",
-    "fs-extra": "^11.3.4",
+    "@typescript/native-preview": "7.0.0-dev.20260419.1",
+    "classic-level": "^2.0.0",
     "fvtt-types": "github:League-of-Foundry-Developers/foundry-vtt-types#main",
-    "js-yaml": "^4.1.1",
-    "neverthrow": "^8.2.0",
-    "nodemon": "^3.1.14",
-    "oxfmt": "^0.42.0",
-    "oxlint": "^1.57.0",
-    "remeda": "^2.33.6",
-    "rimraf": "^6.1.3",
-    "vitest": "^4.1.2",
-    "yargs-parser": "^22.0.0",
-    "zod": "^4.3.6"
+    "oxfmt": "^0.45.0",
+    "oxlint": "^1.60.0",
+    "vitest": "^4.1.4"
   }
 }

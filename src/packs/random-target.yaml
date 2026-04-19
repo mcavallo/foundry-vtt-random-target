@@ -1,20 +1,24 @@
-- _id: oIVhNA8Po9HpYdJc
-  name: Random Target
-  type: script
-  author: 7tqz3PRTfwzOb562
-  img: modules/random-target/assets/icons/random-target.svg
-  scope: global
-  command: |
-    try {
-      window.randomTarget.run();
-    } catch (err) {
-      ui.notifications.error(game.i18n.localize('random-target.macro.unexpectedError'));
-      console.error(err);
-    }
-  folder:
-  sort: 0
-  permission:
-    default: 0
-  flags:
-    random-target:
-      version: 4.6.0
+name: random-target-macros
+label: Random Target
+type: Macro
+documents:
+  - _id: oIVhNA8Po9HpYdJc
+    name: Random Target
+    type: script
+    author: 7tqz3PRTfwzOb562
+    img: modules/random-target/assets/icons/random-target.svg
+    scope: global
+    command: |
+      try {
+        window.randomTarget.run();
+      } catch (err) {
+        ui.notifications.error(game.i18n.localize('random-target.macro.unexpectedError'));
+        console.error(err);
+      }
+    folder:
+    sort: 0
+    permission:
+      default: 0
+    flags:
+      random-target:
+        version: 4.8.0
