@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.8.1](https://github.com/mcavallo/foundry-vtt-random-target/compare/v4.8.0...v4.8.1) (2026-04-19)
+
+
+### Bug Fixes
+
+* Build output format ([972f0cf](https://github.com/mcavallo/foundry-vtt-random-target/commit/972f0cf434318524160e7e610a3a1801350b7177))
+
 ## [4.8.0](https://github.com/mcavallo/foundry-vtt-random-target/compare/v4.7.5...v4.8.0) (2026-04-19)
 
 
