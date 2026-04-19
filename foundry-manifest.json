@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/@mcavallo/foundry-manifest/dist/schema.json",
+  "type": "module",
+  "id": "random-target",
+  "title": "Random Target",
+  "description": "Adds a dialog to choose a random target between the tokens present in the scene.",
+  "repo": "mcavallo/foundry-vtt-random-target",
+  "authors": [
+    {
+      "name": "iKindred",
+      "discord": "iKindred#8997",
+      "url": "https://github.com/mcavallo/"
+    }
+  ],
+  "compatibility": {
+    "minimum": "13",
+    "verified": "14.360"
+  }
+}
